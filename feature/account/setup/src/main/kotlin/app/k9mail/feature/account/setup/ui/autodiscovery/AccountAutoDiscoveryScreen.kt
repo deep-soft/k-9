@@ -1,5 +1,6 @@
 package app.k9mail.feature.account.setup.ui.autodiscovery
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -12,13 +13,14 @@ import app.k9mail.core.ui.compose.theme.ThunderbirdTheme
 import app.k9mail.feature.account.setup.R
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Effect
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Event
+import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.State
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.ViewModel
 import app.k9mail.feature.account.setup.ui.common.AccountSetupBottomBar
 import app.k9mail.feature.account.setup.ui.common.AccountSetupTopHeader
 
 @Composable
 internal fun AccountAutoDiscoveryScreen(
-    onNext: () -> Unit,
+    onNext: (State) -> Unit,
     onBack: () -> Unit,
     viewModel: ViewModel,
     modifier: Modifier = Modifier,
@@ -26,8 +28,12 @@ internal fun AccountAutoDiscoveryScreen(
     val (state, dispatch) = viewModel.observe { effect ->
         when (effect) {
             Effect.NavigateBack -> onBack()
-            Effect.NavigateNext -> onNext()
+            Effect.NavigateNext -> onNext(viewModel.state.value)
         }
+    }
+
+    BackHandler {
+        dispatch(Event.OnBackClicked)
     }
 
     Scaffold(
