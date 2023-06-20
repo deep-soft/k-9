@@ -1,18 +1,19 @@
 name: Update Gradle build cache
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '.idea/**'
-      - '.gitattributes'
-      - '.github/**.json'
-      - '.gitignore'
-      - '.gitmodules'
-      - '**.md'
-      - 'LICENSE'
-      - 'NOTICE'
+#  push:
+#    branches:
+#      - main
+#    paths-ignore:
+#      - '.idea/**'
+#      - '.gitattributes'
+#      - '.github/**.json'
+#      - '.gitignore'
+#      - '.gitmodules'
+#      - '**.md'
+#      - 'LICENSE'
+#      - 'NOTICE'
+  workflow_dispatch:
 
 jobs:
   build:
