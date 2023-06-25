@@ -91,6 +91,7 @@ class Pop3Connection {
             throw new MessagingException(
                     "Unable to open connection to POP server due to security error.", gse);
         } catch (IOException ioe) {
+            close();
             throw new MessagingException("Unable to open connection to POP server.", ioe);
         }
     }
@@ -165,7 +166,7 @@ class Pop3Connection {
     }
 
     private void performAuthentication(AuthType authType, String serverGreeting)
-            throws MessagingException {
+            throws MessagingException, IOException {
         switch (authType) {
             case PLAIN:
                 if (capabilities.authPlain) {
@@ -250,30 +251,27 @@ class Pop3Connection {
         return capabilities;
     }
 
-    private void login() throws MessagingException {
+    private void login() throws MessagingException, IOException {
         executeSimpleCommand(USER_COMMAND + " " + settings.getUsername());
         try {
             executeSimpleCommand(PASS_COMMAND + " " + settings.getPassword(), true);
         } catch (Pop3ErrorResponse e) {
-            throw new AuthenticationFailedException(
-                    "POP3 login authentication failed: " + e.getMessage(), e);
+            throw new AuthenticationFailedException("USER/PASS failed", e, e.getResponseText());
         }
     }
 
-    private void authPlain() throws MessagingException {
+    private void authPlain() throws MessagingException, IOException {
         executeSimpleCommand("AUTH PLAIN");
         try {
             byte[] encodedBytes = Base64.encodeBase64(("\000" + settings.getUsername()
                     + "\000" + settings.getPassword()).getBytes());
             executeSimpleCommand(new String(encodedBytes), true);
         } catch (Pop3ErrorResponse e) {
-            throw new AuthenticationFailedException(
-                    "POP3 SASL auth PLAIN authentication failed: "
-                            + e.getMessage(), e);
+            throw new AuthenticationFailedException("AUTH PLAIN failed", e, e.getResponseText());
         }
     }
 
-    private void authAPOP(String serverGreeting) throws MessagingException {
+    private void authAPOP(String serverGreeting) throws MessagingException, IOException {
         // regex based on RFC 2449 (3.) "Greeting"
         String timestamp = serverGreeting.replaceFirst(
                 "^\\+OK *(?:\\[[^\\]]+\\])?[^<]*(<[^>]*>)?[^<]*$", "$1");
@@ -293,25 +291,22 @@ class Pop3Connection {
         try {
             executeSimpleCommand("APOP " + settings.getUsername() + " " + hexDigest, true);
         } catch (Pop3ErrorResponse e) {
-            throw new AuthenticationFailedException(
-                    "POP3 APOP authentication failed: " + e.getMessage(), e);
+            throw new AuthenticationFailedException("APOP failed", e, e.getResponseText());
         }
     }
 
-    private void authCramMD5() throws MessagingException {
+    private void authCramMD5() throws MessagingException, IOException {
         String b64Nonce = executeSimpleCommand("AUTH CRAM-MD5").replace("+ ", "");
 
         String b64CRAM = Authentication.computeCramMd5(settings.getUsername(), settings.getPassword(), b64Nonce);
         try {
             executeSimpleCommand(b64CRAM, true);
         } catch (Pop3ErrorResponse e) {
-            throw new AuthenticationFailedException(
-                    "POP3 CRAM-MD5 authentication failed: "
-                            + e.getMessage(), e);
+            throw new AuthenticationFailedException("AUTH CRAM-MD5 failed", e, e.getResponseText());
         }
     }
 
-    private void authExternal() throws MessagingException {
+    private void authExternal() throws MessagingException, IOException {
         try {
             executeSimpleCommand(
                     String.format("AUTH EXTERNAL %s",
@@ -336,36 +331,29 @@ class Pop3Connection {
         out.flush();
     }
 
-    String executeSimpleCommand(String command) throws MessagingException {
+    String executeSimpleCommand(String command) throws IOException, Pop3ErrorResponse {
         return executeSimpleCommand(command, false);
     }
 
-    private String executeSimpleCommand(String command, boolean sensitive) throws MessagingException {
-        try {
-            if (command != null) {
-                if (K9MailLib.isDebug() && DEBUG_PROTOCOL_POP3) {
-                    if (sensitive && !K9MailLib.isDebugSensitive()) {
-                        Timber.d(">>> [Command Hidden, Enable Sensitive Debug Logging To Show]");
-                    } else {
-                        Timber.d(">>> %s", command);
-                    }
+    private String executeSimpleCommand(String command, boolean sensitive) throws IOException, Pop3ErrorResponse {
+        if (command != null) {
+            if (K9MailLib.isDebug() && DEBUG_PROTOCOL_POP3) {
+                if (sensitive && !K9MailLib.isDebugSensitive()) {
+                    Timber.d(">>> [Command Hidden, Enable Sensitive Debug Logging To Show]");
+                } else {
+                    Timber.d(">>> %s", command);
                 }
-
-                writeLine(command);
             }
 
-            String response = readLine();
-            if (response.length() == 0 || response.charAt(0) != '+') {
-                throw new Pop3ErrorResponse(response);
-            }
-
-            return response;
-        } catch (MessagingException me) {
-            throw me;
-        } catch (Exception e) {
-            close();
-            throw new MessagingException("Unable to execute POP3 command", e);
+            writeLine(command);
         }
+
+        String response = readLine();
+        if (response.length() == 0 || response.charAt(0) != '+') {
+            throw new Pop3ErrorResponse(response);
+        }
+
+        return response;
     }
 
     String readLine() throws IOException {
