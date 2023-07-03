@@ -39,6 +39,7 @@ include(
 )
 
 include(
+    ":feature:launcher",
     ":feature:account:setup",
     ":feature:account:oauth",
     ":feature:onboarding",
@@ -51,6 +52,7 @@ include(
 
 include(
     ":core:common",
+    ":core:featureflags",
     ":core:testing",
     ":core:android:common",
     ":core:android:testing",

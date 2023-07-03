@@ -28,6 +28,9 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.commitNow
 import app.k9mail.core.android.common.contact.CachingRepository
 import app.k9mail.core.android.common.contact.ContactRepository
+import app.k9mail.core.featureflag.FeatureFlagKey
+import app.k9mail.core.featureflag.FeatureFlagProvider
+import app.k9mail.feature.launcher.FeatureLauncherActivity
 import com.fsck.k9.Account
 import com.fsck.k9.K9
 import com.fsck.k9.K9.SplitViewMode
@@ -91,6 +94,7 @@ open class MessageList :
     private val generalSettingsManager: GeneralSettingsManager by inject()
     private val messagingController: MessagingController by inject()
     private val contactRepository: ContactRepository by inject()
+    private val featureFlagProvider: FeatureFlagProvider by inject()
 
     private val permissionUiHelper: PermissionUiHelper = K9PermissionUiHelper(this)
 
@@ -153,7 +157,14 @@ open class MessageList :
         deleteIncompleteAccounts(accounts)
         val hasAccountSetup = accounts.any { it.isFinishedSetup }
         if (!hasAccountSetup) {
-            OnboardingActivity.launch(this)
+            featureFlagProvider.provide(FeatureFlagKey("new_onboarding")).onEnabled {
+                FeatureLauncherActivity.launchOnboarding(this)
+            }.onDisabled {
+                OnboardingActivity.launch(this)
+            }.onUnavailable {
+                Timber.d("Feature flag 'new_onboarding' is unavailable, falling back to old onboarding")
+                OnboardingActivity.launch(this)
+            }
             finish()
             return
         }
@@ -1392,7 +1403,7 @@ open class MessageList :
         private const val ACTION_SHORTCUT = "shortcut"
         private const val EXTRA_SPECIAL_FOLDER = "special_folder"
 
-        private const val EXTRA_ACCOUNT = "account_uuid"
+        const val EXTRA_ACCOUNT = "account_uuid"
         private const val EXTRA_MESSAGE_REFERENCE = "message_reference"
         private const val EXTRA_MESSAGE_VIEW_ONLY = "message_view_only"
 

@@ -10,9 +10,12 @@ dependencies {
     implementation(projects.feature.autodiscovery.providersxml)
     implementation(projects.mail.common)
     implementation(projects.uiUtils.toolbarBottomSheet)
+
+    implementation(projects.core.featureflags)
+    implementation(projects.feature.launcher)
+    // TODO: Remove AccountOauth dependency
     implementation(projects.feature.account.oauth)
 
-    // Remove AccountSetupIncoming's dependency on these
     compileOnly(projects.mail.protocols.imap)
 
     implementation(projects.plugins.openpgpApiLib.openpgpApi)
