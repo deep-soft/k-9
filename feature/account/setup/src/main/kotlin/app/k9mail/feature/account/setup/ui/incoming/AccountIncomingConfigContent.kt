@@ -25,13 +25,13 @@ import app.k9mail.core.ui.compose.designsystem.template.ResponsiveWidthContainer
 import app.k9mail.core.ui.compose.theme.K9Theme
 import app.k9mail.core.ui.compose.theme.MainTheme
 import app.k9mail.core.ui.compose.theme.ThunderbirdTheme
+import app.k9mail.feature.account.common.ui.item.ErrorItem
+import app.k9mail.feature.account.common.ui.item.LoadingItem
+import app.k9mail.feature.account.common.ui.item.SuccessItem
+import app.k9mail.feature.account.common.ui.item.defaultItemPadding
 import app.k9mail.feature.account.setup.R
 import app.k9mail.feature.account.setup.domain.entity.ConnectionSecurity
 import app.k9mail.feature.account.setup.domain.entity.IncomingProtocolType
-import app.k9mail.feature.account.setup.ui.common.item.ErrorItem
-import app.k9mail.feature.account.setup.ui.common.item.LoadingItem
-import app.k9mail.feature.account.setup.ui.common.item.SuccessItem
-import app.k9mail.feature.account.setup.ui.common.item.defaultItemPadding
 import app.k9mail.feature.account.setup.ui.common.mapper.toResourceString
 import app.k9mail.feature.account.setup.ui.common.toResourceString
 import app.k9mail.feature.account.setup.ui.incoming.AccountIncomingConfigContract.Event
@@ -194,13 +194,22 @@ internal fun AccountIncomingConfigContent(
                     }
 
                     item {
-                        TextInput(
-                            text = state.imapPrefix.value,
-                            errorMessage = state.imapPrefix.error?.toResourceString(resources),
-                            onTextChange = { onEvent(Event.ImapPrefixChanged(it)) },
-                            label = stringResource(id = R.string.account_setup_incoming_config_imap_prefix_label),
-                            contentPadding = defaultItemPadding(),
-                        )
+                        if (state.imapAutodetectNamespaceEnabled) {
+                            TextInput(
+                                onTextChange = {},
+                                label = stringResource(id = R.string.account_setup_incoming_config_imap_prefix_label),
+                                contentPadding = defaultItemPadding(),
+                                isEnabled = false,
+                            )
+                        } else {
+                            TextInput(
+                                text = state.imapPrefix.value,
+                                errorMessage = state.imapPrefix.error?.toResourceString(resources),
+                                onTextChange = { onEvent(Event.ImapPrefixChanged(it)) },
+                                label = stringResource(id = R.string.account_setup_incoming_config_imap_prefix_label),
+                                contentPadding = defaultItemPadding(),
+                            )
+                        }
                     }
 
                     item {
@@ -208,6 +217,15 @@ internal fun AccountIncomingConfigContent(
                             text = stringResource(id = R.string.account_setup_incoming_config_imap_compression_label),
                             checked = state.imapUseCompression,
                             onCheckedChange = { onEvent(Event.ImapUseCompressionChanged(it)) },
+                            contentPadding = defaultItemPadding(),
+                        )
+                    }
+
+                    item {
+                        CheckboxInput(
+                            text = stringResource(R.string.account_setup_incoming_config_imap_send_client_id_label),
+                            checked = state.imapSendClientId,
+                            onCheckedChange = { onEvent(Event.ImapSendClientIdChanged(it)) },
                             contentPadding = defaultItemPadding(),
                         )
                     }
