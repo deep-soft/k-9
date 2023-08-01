@@ -1,5 +1,6 @@
 package app.k9mail.feature.account.setup.domain.usecase
 
+import app.k9mail.feature.account.setup.ui.validation.InMemoryAuthStateStorage
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.fsck.k9.mail.AuthType
@@ -11,13 +12,15 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 class ValidateServerSettingsTest {
+    private val authStateStorage = InMemoryAuthStateStorage()
 
     @Test
     fun `should check with imap validator when protocol is imap`() = runTest {
         val testSubject = ValidateServerSettings(
-            imapValidator = { ServerSettingsValidationResult.Success },
-            pop3Validator = { ServerSettingsValidationResult.NetworkError(IOException("Failed POP3")) },
-            smtpValidator = { ServerSettingsValidationResult.NetworkError(IOException("Failed SMTP")) },
+            authStateStorage = authStateStorage,
+            imapValidator = { _, _ -> ServerSettingsValidationResult.Success },
+            pop3Validator = { _, _ -> ServerSettingsValidationResult.NetworkError(IOException("Failed POP3")) },
+            smtpValidator = { _, _ -> ServerSettingsValidationResult.NetworkError(IOException("Failed SMTP")) },
         )
 
         val result = testSubject.execute(IMAP_SERVER_SETTINGS)
@@ -29,9 +32,10 @@ class ValidateServerSettingsTest {
     fun `should check with imap validator when protocol is imap and return failure`() = runTest {
         val failure = ServerSettingsValidationResult.ServerError("Failed")
         val testSubject = ValidateServerSettings(
-            imapValidator = { failure },
-            pop3Validator = { ServerSettingsValidationResult.NetworkError(IOException("Failed POP3")) },
-            smtpValidator = { ServerSettingsValidationResult.NetworkError(IOException("Failed SMTP")) },
+            authStateStorage = authStateStorage,
+            imapValidator = { _, _ -> failure },
+            pop3Validator = { _, _ -> ServerSettingsValidationResult.NetworkError(IOException("Failed POP3")) },
+            smtpValidator = { _, _ -> ServerSettingsValidationResult.NetworkError(IOException("Failed SMTP")) },
         )
 
         val result = testSubject.execute(IMAP_SERVER_SETTINGS)
@@ -42,9 +46,10 @@ class ValidateServerSettingsTest {
     @Test
     fun `should check with pop3 validator when protocol is pop3`() = runTest {
         val testSubject = ValidateServerSettings(
-            imapValidator = { ServerSettingsValidationResult.NetworkError(IOException("Failed IMAP")) },
-            pop3Validator = { ServerSettingsValidationResult.Success },
-            smtpValidator = { ServerSettingsValidationResult.NetworkError(IOException("Failed SMTP")) },
+            authStateStorage = authStateStorage,
+            imapValidator = { _, _ -> ServerSettingsValidationResult.NetworkError(IOException("Failed IMAP")) },
+            pop3Validator = { _, _ -> ServerSettingsValidationResult.Success },
+            smtpValidator = { _, _ -> ServerSettingsValidationResult.NetworkError(IOException("Failed SMTP")) },
         )
 
         val result = testSubject.execute(POP3_SERVER_SETTINGS)
@@ -56,9 +61,10 @@ class ValidateServerSettingsTest {
     fun `should check with pop3 validator when protocol is pop3 and return failure`() = runTest {
         val failure = ServerSettingsValidationResult.ServerError("Failed POP3")
         val testSubject = ValidateServerSettings(
-            imapValidator = { ServerSettingsValidationResult.NetworkError(IOException("Failed IMAP")) },
-            pop3Validator = { failure },
-            smtpValidator = { ServerSettingsValidationResult.NetworkError(IOException("Failed SMTP")) },
+            authStateStorage = authStateStorage,
+            imapValidator = { _, _ -> ServerSettingsValidationResult.NetworkError(IOException("Failed IMAP")) },
+            pop3Validator = { _, _ -> failure },
+            smtpValidator = { _, _ -> ServerSettingsValidationResult.NetworkError(IOException("Failed SMTP")) },
         )
 
         val result = testSubject.execute(POP3_SERVER_SETTINGS)
@@ -69,9 +75,10 @@ class ValidateServerSettingsTest {
     @Test
     fun `should check with smtp validator when protocol is smtp`() = runTest {
         val testSubject = ValidateServerSettings(
-            imapValidator = { ServerSettingsValidationResult.NetworkError(IOException("Failed IMAP")) },
-            pop3Validator = { ServerSettingsValidationResult.NetworkError(IOException("Failed POP3")) },
-            smtpValidator = { ServerSettingsValidationResult.Success },
+            authStateStorage = authStateStorage,
+            imapValidator = { _, _ -> ServerSettingsValidationResult.NetworkError(IOException("Failed IMAP")) },
+            pop3Validator = { _, _ -> ServerSettingsValidationResult.NetworkError(IOException("Failed POP3")) },
+            smtpValidator = { _, _ -> ServerSettingsValidationResult.Success },
         )
 
         val result = testSubject.execute(SMTP_SERVER_SETTINGS)
@@ -83,9 +90,10 @@ class ValidateServerSettingsTest {
     fun `should check with smtp validator when protocol is smtp and return failure`() = runTest {
         val failure = ServerSettingsValidationResult.ServerError("Failed SMTP")
         val testSubject = ValidateServerSettings(
-            imapValidator = { ServerSettingsValidationResult.NetworkError(IOException("Failed IMAP")) },
-            pop3Validator = { ServerSettingsValidationResult.NetworkError(IOException("Failed POP3")) },
-            smtpValidator = { failure },
+            authStateStorage = authStateStorage,
+            imapValidator = { _, _ -> ServerSettingsValidationResult.NetworkError(IOException("Failed IMAP")) },
+            pop3Validator = { _, _ -> ServerSettingsValidationResult.NetworkError(IOException("Failed POP3")) },
+            smtpValidator = { _, _ -> failure },
         )
 
         val result = testSubject.execute(SMTP_SERVER_SETTINGS)
