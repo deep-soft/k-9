@@ -18,8 +18,8 @@ internal fun AccountSetupState.toAccountOptionsState(): State {
             accountName = StringInputField(options.accountName),
             displayName = StringInputField(options.displayName),
             emailSignature = StringInputField(options.emailSignature ?: ""),
-            checkFrequency = EmailCheckFrequency.valueOf(options.checkFrequencyInMinutes.toString()),
-            messageDisplayCount = EmailDisplayCount.valueOf(options.messageDisplayCount.toString()),
+            checkFrequency = EmailCheckFrequency.fromMinutes(options.checkFrequencyInMinutes),
+            messageDisplayCount = EmailDisplayCount.fromCount(options.messageDisplayCount),
             showNotification = options.showNotification,
         )
     }
@@ -29,7 +29,7 @@ internal fun State.toAccountOptions(): AccountOptions {
     return AccountOptions(
         accountName = accountName.value,
         displayName = displayName.value,
-        emailSignature = emailSignature.value,
+        emailSignature = emailSignature.value.takeIf { it.isNotEmpty() },
         checkFrequencyInMinutes = checkFrequency.minutes,
         messageDisplayCount = messageDisplayCount.count,
         showNotification = showNotification,
