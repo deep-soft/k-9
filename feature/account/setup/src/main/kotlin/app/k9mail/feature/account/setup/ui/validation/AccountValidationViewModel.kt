@@ -2,11 +2,14 @@ package app.k9mail.feature.account.setup.ui.validation
 
 import androidx.lifecycle.viewModelScope
 import app.k9mail.core.ui.compose.common.mvi.BaseViewModel
+import app.k9mail.feature.account.common.domain.AccountDomainContract
+import app.k9mail.feature.account.oauth.domain.AccountOAuthDomainContract
 import app.k9mail.feature.account.oauth.domain.entity.OAuthResult
+import app.k9mail.feature.account.oauth.domain.entity.isOAuth
 import app.k9mail.feature.account.oauth.ui.AccountOAuthContract
+import app.k9mail.feature.account.servercertificate.domain.AccountServerCertificateDomainContract
+import app.k9mail.feature.account.servercertificate.domain.entity.ServerCertificateError
 import app.k9mail.feature.account.setup.domain.DomainContract
-import app.k9mail.feature.account.setup.domain.entity.CertificateError
-import app.k9mail.feature.account.setup.domain.entity.isOAuth
 import app.k9mail.feature.account.setup.ui.validation.AccountValidationContract.Effect
 import app.k9mail.feature.account.setup.ui.validation.AccountValidationContract.Error
 import app.k9mail.feature.account.setup.ui.validation.AccountValidationContract.Event
@@ -15,27 +18,26 @@ import com.fsck.k9.mail.server.ServerSettingsValidationResult
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import app.k9mail.feature.account.oauth.domain.DomainContract as OAuthDomainContract
 
 private const val CONTINUE_NEXT_DELAY = 2000L
 
 @Suppress("TooManyFunctions")
 internal class AccountValidationViewModel(
     private val validateServerSettings: DomainContract.UseCase.ValidateServerSettings,
-    private val accountSetupStateRepository: DomainContract.AccountSetupStateRepository,
-    private val authorizationStateRepository: OAuthDomainContract.AuthorizationStateRepository,
-    private val certificateErrorRepository: DomainContract.CertificateErrorRepository,
+    private val accountStateRepository: AccountDomainContract.AccountStateRepository,
+    private val authorizationStateRepository: AccountOAuthDomainContract.AuthorizationStateRepository,
+    private val certificateErrorRepository: AccountServerCertificateDomainContract.ServerCertificateErrorRepository,
     override val oAuthViewModel: AccountOAuthContract.ViewModel,
     override val isIncomingValidation: Boolean = true,
     initialState: State? = null,
 ) : BaseViewModel<State, Event, Effect>(
-    initialState = initialState ?: accountSetupStateRepository.getState().toValidationState(isIncomingValidation),
+    initialState = initialState ?: accountStateRepository.getState().toValidationState(isIncomingValidation),
 ),
     AccountValidationContract.ViewModel {
 
     override fun event(event: Event) {
         when (event) {
-            Event.LoadAccountSetupStateAndValidate -> loadAccountSetupStateAndValidate()
+            Event.LoadAccountStateAndValidate -> loadAccountStateAndValidate()
             is Event.OnOAuthResult -> onOAuthResult(event.result)
             Event.ValidateServerSettings -> onValidateConfig()
             Event.OnNextClicked -> navigateNext()
@@ -45,9 +47,9 @@ internal class AccountValidationViewModel(
         }
     }
 
-    private fun loadAccountSetupStateAndValidate() {
+    private fun loadAccountStateAndValidate() {
         updateState {
-            accountSetupStateRepository.getState().toValidationState(isIncomingValidation)
+            accountStateRepository.getState().toValidationState(isIncomingValidation)
         }
         onValidateConfig()
     }
@@ -63,7 +65,7 @@ internal class AccountValidationViewModel(
     }
 
     private fun checkOAuthState() {
-        val authorizationState = accountSetupStateRepository.getState().authorizationState
+        val authorizationState = accountStateRepository.getState().authorizationState
         if (authorizationState != null) {
             if (authorizationStateRepository.isAuthorized(authorizationState)) {
                 validateServerSettings()
@@ -100,7 +102,7 @@ internal class AccountValidationViewModel(
 
     private fun onOAuthResult(result: OAuthResult) {
         if (result is OAuthResult.Success) {
-            accountSetupStateRepository.saveAuthorizationState(result.authorizationState)
+            accountStateRepository.saveAuthorizationState(result.authorizationState)
             updateState {
                 it.copy(
                     needsAuthorization = false,
@@ -168,7 +170,7 @@ internal class AccountValidationViewModel(
             val serverSettings = checkNotNull(state.value.serverSettings)
 
             certificateErrorRepository.setCertificateError(
-                CertificateError(
+                ServerCertificateError(
                     hostname = serverSettings.host!!,
                     port = serverSettings.port,
                     certificateChain = error.certificateChain,
