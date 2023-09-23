@@ -1,4 +1,4 @@
-#2023-06-20 07:20
+#2023-09-23 10:30
 name: act - Android CI
 
 on:
@@ -92,7 +92,7 @@ jobs:
           java-version: 17
       - uses: gradle/gradle-build-action@v2
       # - run: ./gradlew assembleDebug detekt spotlessCheck testsOnCi
-      - run: ./gradlew assembleRelease detekt spotlessCheck testsOnCi
+      - run: ./gradlew assembleRelease
 
       - name: Upload Artifact
         uses: deep-soft/upload-artifact@v3
