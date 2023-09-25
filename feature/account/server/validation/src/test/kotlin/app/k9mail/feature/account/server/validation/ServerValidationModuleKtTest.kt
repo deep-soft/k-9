@@ -2,6 +2,7 @@ package app.k9mail.feature.account.server.validation
 
 import android.content.Context
 import app.k9mail.core.common.oauth.OAuthConfigurationFactory
+import app.k9mail.feature.account.common.AccountCommonExternalContract
 import app.k9mail.feature.account.common.domain.AccountDomainContract
 import app.k9mail.feature.account.common.domain.entity.AccountState
 import app.k9mail.feature.account.server.certificate.domain.ServerCertificateDomainContract
@@ -16,12 +17,13 @@ import org.junit.runner.RunWith
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.module.Module
+import org.koin.core.qualifier.named
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.check.checkModules
 import org.koin.test.verify.verify
-import org.mockito.Mockito
+import org.mockito.Mockito.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
@@ -41,7 +43,9 @@ class ServerValidationModuleKtTest : KoinTest {
                 }
             }
         }
-        single<LocalKeyStore> { Mockito.mock() }
+        single<LocalKeyStore> { mock() }
+        factory<AccountCommonExternalContract.AccountStateLoader> { mock() }
+        single(named("ClientIdAppName")) { "App Name" }
     }
 
     @OptIn(KoinExperimentalAPI::class)
@@ -51,6 +55,7 @@ class ServerValidationModuleKtTest : KoinTest {
             extraTypes = listOf(
                 ServerValidationContract.State::class,
                 AccountDomainContract.AccountStateRepository::class,
+                AccountCommonExternalContract.AccountStateLoader::class,
                 ServerCertificateDomainContract.ServerCertificateErrorRepository::class,
                 ServerCertificateErrorContract.State::class,
                 AccountState::class,
