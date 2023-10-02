@@ -28,7 +28,7 @@
   <string name="changelog_snackbar_text">Zjistěte, co je v tomto vydání nového</string>
   <!--Button text of the "snack bar" that is displayed when the app was updated.-->
   <string name="changelog_snackbar_button_text">Zobrazit</string>
-    <!--Default signature-->
+  <!--Default signature-->
   <string name="default_signature">-- \nOdesláno aplikací K-9 Mail ze systému Android. Omluvte prosím moji stručnost.</string>
   <!--General strings that include the app name-->
   <string name="account_delete_dlg_instructions_fmt">Účet \"<xliff:g id="account">%s</xliff:g>\" bude odstraněn z K-9 Mail.</string>
@@ -195,8 +195,8 @@
   <string name="message_view_cc_label">Kopie:</string>
   <string name="message_view_bcc_label">Skrytá kopie (Bcc):</string>
   <string name="message_view_status_attachment_not_saved">Přílohu se nedaří uložit.</string>
-  <!--Displayed in the message view screen in front of the recipient list. For most languages this should end with a space.-->
-  <string name="message_view_recipient_prefix">"komu "</string>
+  <!--Used to display the recipient list in the message view screen.-->
+  <string name="message_view_recipients_format">komu <xliff:g id="recipients">%s</xliff:g></string>
   <!--Displayed in the message view screen in front of the number of additional recipients (the ones that are not displayed).-->
   <string name="message_view_additional_recipient_prefix">+</string>
   <!--Displayed in the message view screen if the message was addressed to the user. Make sure this works with 'message_view_recipient_prefix'. In English it's "to me".-->
@@ -1096,4 +1096,5 @@ Tuto zprávu si můžete ponechat a použít jí jako zálohu svého tajného kl
   <!--A user visible label for the name and email address copied to the clipboard-->
   <string name="clipboard_label_name_and_email_address">Jméno a adresa</string>
   <!--Might be displayed in a notification when deleting an account (in the background)-->
+  <!--For unread messages the first line of a message list item is modified by this to improve the experience for people with screen readers.-->
 </resources>

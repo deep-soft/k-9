@@ -28,7 +28,7 @@
   <string name="changelog_snackbar_text">Descubre las novedades de esta versión</string>
   <!--Button text of the "snack bar" that is displayed when the app was updated.-->
   <string name="changelog_snackbar_button_text">Leer</string>
-    <!--Default signature-->
+  <!--Default signature-->
   <string name="default_signature">-- \nEnviado desde mi dispositivo Android con K-9 Mail. Por favor, disculpa mi brevedad.</string>
   <!--General strings that include the app name-->
   <string name="account_delete_dlg_instructions_fmt">La cuenta \"<xliff:g id="account">%s</xliff:g>\" será eliminada de K-9 Mail.</string>
@@ -192,8 +192,8 @@
   <string name="message_view_cc_label">Cc:</string>
   <string name="message_view_bcc_label">Cco:</string>
   <string name="message_view_status_attachment_not_saved">No se puede guardar el adjunto.</string>
-  <!--Displayed in the message view screen in front of the recipient list. For most languages this should end with a space.-->
-  <string name="message_view_recipient_prefix">"para "</string>
+  <!--Used to display the recipient list in the message view screen.-->
+  <string name="message_view_recipients_format">para <xliff:g id="recipients">%s</xliff:g></string>
   <!--Displayed in the message view screen in front of the number of additional recipients (the ones that are not displayed).-->
   <string name="message_view_additional_recipient_prefix">+</string>
   <!--Displayed in the message view screen if the message was addressed to the user. Make sure this works with 'message_view_recipient_prefix'. In English it's "to me".-->
@@ -1089,4 +1089,7 @@ Puedes guardar este mensaje y usarlo como copia de seguridad de tu clave secreta
   <!--A user visible label for the name and email address copied to the clipboard-->
   <string name="clipboard_label_name_and_email_address">Nombre y dirección de correo</string>
   <!--Might be displayed in a notification when deleting an account (in the background)-->
+  <string name="background_work_notification_remove_account">Borrando cuenta…</string>
+  <!--For unread messages the first line of a message list item is modified by this to improve the experience for people with screen readers.-->
+  <string name="message_list_content_description_unread_prefix">sin leer, %s</string>
 </resources>

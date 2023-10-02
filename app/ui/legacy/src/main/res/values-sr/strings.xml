@@ -22,7 +22,7 @@
   <string name="changelog_version_title">Верзија %s</string>
   <!--Displayed in a "snack bar" at the bottom of the screen when the app was updated.-->
   <!--Button text of the "snack bar" that is displayed when the app was updated.-->
-    <!--Default signature-->
+  <!--Default signature-->
   <string name="default_signature">-- \nПослато К-9 Поштом са мог Андроид уређаја. Извините због сажетости.</string>
   <!--General strings that include the app name-->
   <string name="account_delete_dlg_instructions_fmt">Налог „<xliff:g id="account">%s</xliff:g>“ ће бити уклоњен из К-9 Поште.</string>
@@ -173,7 +173,7 @@
   <string name="message_view_cc_label">Коп:</string>
   <string name="message_view_bcc_label">СКоп:</string>
   <string name="message_view_status_attachment_not_saved">Не могу да сачувам прилог.</string>
-  <!--Displayed in the message view screen in front of the recipient list. For most languages this should end with a space.-->
+  <!--Used to display the recipient list in the message view screen.-->
   <!--Displayed in the message view screen in front of the number of additional recipients (the ones that are not displayed).-->
   <!--Displayed in the message view screen if the message was addressed to the user. Make sure this works with 'message_view_recipient_prefix'. In English it's "to me".-->
   <!--Text of the button that is displayed below the message header when the message body references one or more remote images-->
@@ -983,4 +983,5 @@
   <string name="clipboard_label_email_address">Адреса е-поште</string>
   <!--A user visible label for the name and email address copied to the clipboard-->
   <!--Might be displayed in a notification when deleting an account (in the background)-->
+  <!--For unread messages the first line of a message list item is modified by this to improve the experience for people with screen readers.-->
 </resources>
