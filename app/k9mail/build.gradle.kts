@@ -50,8 +50,8 @@ android {
         applicationId = "com.fsck.k9"
         testApplicationId = "com.fsck.k9.tests"
 
-        versionCode = 37010
-        versionName = "6.711-SNAPSHOT"
+        versionCode = 37011
+        versionName = "6.712-SNAPSHOT"
 
         // Keep in sync with the resource string array "supported_languages"
         resourceConfigurations.addAll(
@@ -84,7 +84,9 @@ android {
     buildTypes {
         release {
             signingConfigs.findByName("release")?.let { releaseSigningConfig ->
-                signingConfig = releaseSigningConfig
+                // The comment in the line below is necessary to prevent F-Droid's build tools from breaking our Gradle
+                // config when stripping the signing config.
+                signingConfig = releaseSigningConfig // F-Droid hack
             }
 
             isMinifyEnabled = true
