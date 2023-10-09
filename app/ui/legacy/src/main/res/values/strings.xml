@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- === App-specific strings ============================================================= -->
 
@@ -41,7 +41,6 @@
 
     <!-- General strings that include the app name -->
     <string name="account_delete_dlg_instructions_fmt">The account \"<xliff:g id="account">%s</xliff:g>\" will be removed from K-9 Mail.</string>
-
 
 
     <!-- === General strings ================================================================== -->
@@ -267,10 +266,12 @@
     <string name="global_settings_messageview_fixedwidth_summary">Use a fixed-width font when showing plain-text messages</string>
     <string name="global_settings_messageview_autofit_width_label">Auto-fit messages</string>
     <string name="global_settings_messageview_autofit_width_summary">Shrink messages to fit the screen</string>
-    <string name="global_settings_messageview_return_to_list_label">Return to list after delete</string>
-    <string name="global_settings_messageview_return_to_list_summary">Return to message list after message deletion</string>
-    <string name="global_settings_messageview_show_next_label">Show next message after delete</string>
-    <string name="global_settings_messageview_show_next_summary">Show next message by default after message deletion</string>
+
+    <!-- Name of the setting to configure the navigation action to perform after the user has deleted or moved a message from the message view screen -->
+    <string name="general_settings_post_remove_action_title">After deleting or moving a message</string>
+    <string name="general_settings_post_remove_action_return_to_list">Return to message list</string>
+    <string name="general_settings_post_remove_action_show_previous_message">Show previous message</string>
+    <string name="general_settings_post_remove_action_show_next_message">Show next message</string>
 
     <string name="global_settings_confirm_actions_title">Confirm actions</string>
     <string name="global_settings_confirm_actions_summary">Show a dialog whenever you perform selected actions</string>
@@ -351,7 +352,7 @@
     <string name="account_setup_basics_show_password_biometrics_subtitle">Unlock to view your password</string>
     <string name="account_setup_basics_manual_setup_action">Manual setup</string>
 
-    <string name="account_setup_check_settings_title"/>
+    <string name="account_setup_check_settings_title" />
     <string name="account_setup_check_settings_retr_info_msg">Retrieving account information\u2026</string>
     <string name="account_setup_check_settings_check_incoming_msg">Checking incoming server settings\u2026</string>
     <string name="account_setup_check_settings_check_outgoing_msg">Checking outgoing server settings\u2026</string>
