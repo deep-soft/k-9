@@ -16,7 +16,6 @@
     <string name="get_help_title">Obtenir de l’aide</string>
     <string name="user_forum_title">Forum des utilisateurs</string>
     <string name="about_fediverse_title">Fédivers</string>
-    <string name="about_twitter_title">Twitter</string>
     <string name="about_libraries">Bibliothèques</string>
     <string name="license">Licence</string>
     <string name="changelog_title">Journal des changements</string>
@@ -292,7 +291,6 @@
     <string name="account_setup_basics_show_password_biometrics_title">Confirmer votre identité</string>
     <string name="account_setup_basics_show_password_biometrics_subtitle">Déverrouiller l’écran pour visualiser votre mot de passe</string>
     <string name="account_setup_basics_manual_setup_action">Configuration manuelle</string>
-    <string name="account_setup_check_settings_title" />
     <string name="account_setup_check_settings_retr_info_msg">Récupération des renseignements de compte\u2026</string>
     <string name="account_setup_check_settings_check_incoming_msg">Vérification des paramètres du serveur entrant\u2026</string>
     <string name="account_setup_check_settings_check_outgoing_msg">Vérification des paramètres du serveur sortant\u2026</string>

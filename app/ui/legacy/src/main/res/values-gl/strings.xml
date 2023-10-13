@@ -14,7 +14,6 @@
     <string name="about_website_title">Páxina web</string>
     <string name="user_forum_title">Foro da persoa usuaria</string>
     <string name="about_fediverse_title">Fediverso</string>
-    <string name="about_twitter_title">Twitter</string>
     <string name="about_libraries">Bibliotecas</string>
     <string name="license">Licenza</string>
     <string name="changelog_title">Rexistro dos cambios</string>
@@ -264,7 +263,6 @@
     <string name="account_setup_basics_show_password_biometrics_title">Verificar a túa identidade</string>
     <string name="account_setup_basics_show_password_biometrics_subtitle">Desbloquea para ver o teu contrasinal</string>
     <string name="account_setup_basics_manual_setup_action">Configuración Manual</string>
-    <string name="account_setup_check_settings_title" />
     <string name="account_setup_check_settings_retr_info_msg">Recuperando información da conta\u2026</string>
     <string name="account_setup_check_settings_check_incoming_msg">Comprobando Configuración do servidor de entrada\u2026</string>
     <string name="account_setup_check_settings_check_outgoing_msg">Comprobando Configuración do servidor de saída\u2026</string>

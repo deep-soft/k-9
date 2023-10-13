@@ -16,7 +16,6 @@
     <string name="get_help_title">Dapatkan bantuan</string>
     <string name="user_forum_title">Forum Pengguna</string>
     <string name="about_fediverse_title">Fediverse</string>
-    <string name="about_twitter_title">Twitter</string>
     <string name="about_libraries">Perpustakaan</string>
     <string name="license">Lisensi</string>
     <string name="changelog_title">Catatan Perubahan</string>
@@ -249,7 +248,6 @@
     <!--Displayed below the 'account_setup_oauth_description' text-->
     <!--Please use the same translation for "screen lock" as is used in the 'Security' section in Android's settings app-->
     <string name="account_setup_basics_manual_setup_action">Manual</string>
-    <string name="account_setup_check_settings_title" />
     <string name="account_setup_check_settings_retr_info_msg">Mengambil informasi akun\u2026</string>
     <string name="account_setup_check_settings_check_incoming_msg">Memeriksa pengaturan server masuk\u2026</string>
     <string name="account_setup_check_settings_check_outgoing_msg">Memeriksa pengaturan server keluar\u2026</string>

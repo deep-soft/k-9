@@ -1,5 +1,6 @@
 pluginManagement {
     repositories {
+        includeBuild("build-plugin")
         gradlePluginPortal()
         google()
         mavenCentral()
@@ -7,7 +8,7 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     repositories {
         google()
         mavenCentral()
@@ -18,8 +19,6 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "k-9"
-
-includeBuild("build-plugin")
 
 include(
     ":app-feature-preview",
@@ -55,7 +54,6 @@ include(
 
 include(
     ":feature:autodiscovery:api",
-    ":feature:autodiscovery:providersxml",
     ":feature:autodiscovery:srvrecords",
     ":feature:autodiscovery:autoconfig",
     ":feature:autodiscovery:service",

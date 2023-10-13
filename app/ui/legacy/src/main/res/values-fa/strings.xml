@@ -16,7 +16,6 @@
     <string name="get_help_title">کمک گرفتن</string>
     <string name="user_forum_title">انجمن کاربری</string>
     <string name="about_fediverse_title">فِدیوِرس</string>
-    <string name="about_twitter_title">توئیتر</string>
     <string name="about_libraries">کتابخانه‌ها</string>
     <string name="license">مجوز</string>
     <string name="changelog_title">گزارش تغییرات</string>
@@ -289,7 +288,6 @@
     <string name="account_setup_basics_show_password_biometrics_title">هویت‌تان را تایید کنید</string>
     <string name="account_setup_basics_show_password_biometrics_subtitle">برای دیدن گذرواژه، قفل را باز کنید</string>
     <string name="account_setup_basics_manual_setup_action">تنظیم دستی</string>
-    <string name="account_setup_check_settings_title" />
     <string name="account_setup_check_settings_retr_info_msg">بازیابی اطلاعات حساب کاربری\u2026</string>
     <string name="account_setup_check_settings_check_incoming_msg">بررسی تنظیمات کارساز ورودی\u2026</string>
     <string name="account_setup_check_settings_check_outgoing_msg">بررسی تنظیمات کارساز خروجی\u2026</string>

@@ -16,7 +16,6 @@
     <string name="get_help_title">Abiteave</string>
     <string name="user_forum_title">Foorum huvilistele</string>
     <string name="about_fediverse_title">Fediverse</string>
-    <string name="about_twitter_title">Twitter</string>
     <string name="about_libraries">Teegid</string>
     <string name="license">Litsents</string>
     <string name="changelog_title">Muudatuste logi</string>
@@ -289,7 +288,6 @@
     <string name="account_setup_basics_show_password_biometrics_title">Tuvasta oma isik</string>
     <string name="account_setup_basics_show_password_biometrics_subtitle">Oma salasõna vaatamiseks eemalda lukustus</string>
     <string name="account_setup_basics_manual_setup_action">Käsitsi seadistamine</string>
-    <string name="account_setup_check_settings_title" />
     <string name="account_setup_check_settings_retr_info_msg">Konto info hankimine\u2026</string>
     <string name="account_setup_check_settings_check_incoming_msg">Kontrollib sissetuleva meiliserveri sätteid\u2026</string>
     <string name="account_setup_check_settings_check_outgoing_msg">Kontrollib väljamineva meiliserveri sätteid\u2026</string>
