@@ -5,67 +5,46 @@ import app.k9mail.feature.account.common.domain.entity.AccountOptions
 import app.k9mail.feature.account.common.domain.entity.AccountState
 import app.k9mail.feature.account.common.domain.entity.AuthorizationState
 import app.k9mail.feature.account.common.domain.entity.MailConnectionSecurity
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
+import assertk.assertions.prop
 import com.fsck.k9.mail.AuthType
 import com.fsck.k9.mail.ServerSettings
-import kotlin.test.DefaultAsserter.fail
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 class LoadAccountStateTest {
 
     @Test
-    fun `should load account state WHEN account in state repository has different UUID`() = runTest {
+    fun `should load account state and update account state repository`() = runTest {
+        val accountStateRepository = InMemoryAccountStateRepository()
         val testSubject = LoadAccountState(
             accountStateLoader = { _ ->
                 ACCOUNT_STATE
             },
-            accountStateRepository = InMemoryAccountStateRepository(
-                state = ACCOUNT_STATE.copy(uuid = "differentUuid"),
-            ),
+            accountStateRepository = accountStateRepository,
         )
 
         val result = testSubject.execute(ACCOUNT_UUID)
 
         assertThat(result).isEqualTo(ACCOUNT_STATE)
+        assertThat(accountStateRepository.getState()).isEqualTo(ACCOUNT_STATE)
     }
 
     @Test
-    fun `should return account state WHEN account in state repository has same UUID`() = runTest {
-        val testSubject = LoadAccountState(
-            accountStateLoader = { _ ->
-                fail("AccountStateLoader should not be called in this test")
-            },
-            accountStateRepository = InMemoryAccountStateRepository(
-                state = ACCOUNT_STATE,
-            ),
-        )
-
-        val result = testSubject.execute(ACCOUNT_UUID)
-
-        assertThat(result).isEqualTo(ACCOUNT_STATE)
-    }
-
-    @Test
-    fun `should return empty account state WHEN account loader returns null`() = runTest {
+    fun `should throw exception WHEN account loader returns null`() = runTest {
         val testSubject = LoadAccountState(
             accountStateLoader = { null },
             accountStateRepository = InMemoryAccountStateRepository(),
         )
 
-        val result = testSubject.execute(ACCOUNT_UUID)
-
-        assertThat(result).isEqualTo(
-            AccountState(
-                uuid = ACCOUNT_UUID,
-                emailAddress = null,
-                incomingServerSettings = null,
-                outgoingServerSettings = null,
-                authorizationState = null,
-                options = null,
-            ),
-        )
+        assertFailure {
+            testSubject.execute(ACCOUNT_UUID)
+        }.isInstanceOf<IllegalStateException>()
+            .prop(IllegalStateException::message)
+            .isEqualTo("Account state for $ACCOUNT_UUID not found")
     }
 
     private companion object {
