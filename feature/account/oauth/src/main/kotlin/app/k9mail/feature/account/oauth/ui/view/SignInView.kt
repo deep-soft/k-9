@@ -7,7 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import app.k9mail.core.ui.compose.common.DevicePreviews
+import app.k9mail.core.ui.compose.common.PreviewDevices
 import app.k9mail.core.ui.compose.designsystem.atom.button.Button
 import app.k9mail.core.ui.compose.designsystem.atom.text.TextCaption
 import app.k9mail.core.ui.compose.theme.MainTheme
@@ -18,6 +18,7 @@ internal fun SignInView(
     onSignInClick: () -> Unit,
     isGoogleSignIn: Boolean,
     modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -32,17 +33,19 @@ internal fun SignInView(
         if (isGoogleSignIn) {
             SignInWithGoogleButton(
                 onClick = onSignInClick,
+                enabled = isEnabled,
             )
         } else {
             Button(
                 text = stringResource(id = R.string.account_oauth_sign_in_button),
                 onClick = onSignInClick,
+                enabled = isEnabled,
             )
         }
     }
 }
 
-@DevicePreviews
+@PreviewDevices
 @Composable
 internal fun SignInViewPreview() {
     SignInView(
@@ -51,7 +54,7 @@ internal fun SignInViewPreview() {
     )
 }
 
-@DevicePreviews
+@PreviewDevices
 @Composable
 internal fun SignInViewWithGooglePreview() {
     SignInView(
