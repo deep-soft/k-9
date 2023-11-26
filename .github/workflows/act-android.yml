@@ -1,4 +1,4 @@
-#2023-09-23 10:30
+#2023-11-26 18:30
 name: act - Android CI
 
 on:
@@ -66,16 +66,16 @@ jobs:
 
       - name: Create source archive
         continue-on-error: true
-        shell: bash
-        run: |
-          staging="${{ env.PRG_NAME }}-src-${{ env.PRG_VERSION }}-${{ env.TAG_BUILD }}"
-          touch "$staging.tar.xz"
-          tar --exclude=*.tar* -cv . | xz -9 > "$staging.tar.xz"
-          echo "ASSET_SRC=$staging.tar.xz" >> $GITHUB_ENV
-          if [ "${{ env.DEBUG_LS }}" = "yes" ]; then
-            echo "source archive name: "
-            ls -l "$staging.tar.xz"
-          fi
+        uses: deep-soft/zip-release@v2
+        with:
+          type: 'tar.xz'
+          filename: "${{ env.PRG_NAME }}-src-${{ env.PRG_VERSION }}-${{ env.TAG_BUILD }}"
+          directory: '.'
+          exclusions: ''
+          recursive_exclusions: ''
+          path: '.'
+          env_variable: ASSET_SRC
+        # archive name is ${{ env.ZIP_RELEASE_ARCHIVE }}
 
       - name: Publish src archive
         continue-on-error: true
