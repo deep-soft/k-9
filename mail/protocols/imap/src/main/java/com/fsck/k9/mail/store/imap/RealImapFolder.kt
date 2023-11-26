@@ -320,8 +320,41 @@ internal class RealImapFolder(
             return null
         }
 
+        checkOpen()
+
+        return if (connection.hasCapability(Capabilities.MOVE)) {
+            moveMessagesUsingMoveExtension(messages, folder)
+        } else {
+            moveMessagesUsingCopyAndDelete(messages, folder)
+        }
+    }
+
+    private fun moveMessagesUsingMoveExtension(messages: List<ImapMessage>, folder: ImapFolder): Map<String, String>? {
+        require(folder is RealImapFolder) { "'folder' needs to be a RealImapFolder instance" }
+
+        val uids = messages.map { it.uid.toLong() }.toSet()
+        val encodedDestinationFolderName = folderNameCodec.encode(folder.prefixedName)
+        val escapedDestinationFolderName = ImapUtility.encodeString(encodedDestinationFolderName)
+
+        return try {
+            val imapResponses = connection!!.executeCommandWithIdSet(
+                Commands.UID_MOVE,
+                escapedDestinationFolderName,
+                uids,
+            )
+
+            UidCopyResponse.parse(imapResponses)?.uidMapping
+        } catch (ioe: IOException) {
+            throw ioExceptionHandler(connection, ioe)
+        }
+    }
+
+    private fun moveMessagesUsingCopyAndDelete(messages: List<ImapMessage>, folder: ImapFolder): Map<String, String>? {
+        val uids = messages.map { it.uid }
+
         val uidMapping = copyMessages(messages, folder)
         setFlags(messages, setOf(Flag.DELETED), true)
+        expungeUidsOnly(uids)
 
         return uidMapping
     }
@@ -1080,8 +1113,15 @@ internal class RealImapFolder(
         }
     }
 
-    @Throws(MessagingException::class)
     override fun expungeUids(uids: List<String>) {
+        expungeUids(uids, fullExpungeFallback = true)
+    }
+
+    private fun expungeUidsOnly(uids: List<String>) {
+        expungeUids(uids, fullExpungeFallback = false)
+    }
+
+    private fun expungeUids(uids: List<String>, fullExpungeFallback: Boolean) {
         require(uids.isNotEmpty()) { "expungeUids() must be called with a non-empty set of UIDs" }
 
         open(OpenMode.READ_WRITE)
@@ -1091,8 +1131,10 @@ internal class RealImapFolder(
             if (connection!!.isUidPlusCapable) {
                 val longUids = uids.map { it.toLong() }.toSet()
                 connection!!.executeCommandWithIdSet(Commands.UID_EXPUNGE, "", longUids)
-            } else {
+            } else if (fullExpungeFallback) {
                 executeSimpleCommand("EXPUNGE")
+            } else {
+                Timber.v("Server doesn't support expunging individual messages: %s", uids)
             }
         } catch (ioe: IOException) {
             throw ioExceptionHandler(connection, ioe)
@@ -1221,6 +1263,10 @@ internal class RealImapFolder(
             }
         }
     }
+}
+
+private fun ImapConnection?.hasCapability(capability: String): Boolean {
+    return this?.hasCapability(capability) == true
 }
 
 enum class OpenMode {

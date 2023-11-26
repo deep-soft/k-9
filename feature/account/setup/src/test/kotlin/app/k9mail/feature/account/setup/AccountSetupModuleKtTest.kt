@@ -12,8 +12,8 @@ import app.k9mail.feature.account.server.settings.ui.outgoing.OutgoingServerSett
 import app.k9mail.feature.account.server.validation.ui.ServerValidationContract
 import app.k9mail.feature.account.setup.AccountSetupExternalContract.AccountCreator
 import app.k9mail.feature.account.setup.AccountSetupExternalContract.AccountCreator.AccountCreatorResult
-import app.k9mail.feature.account.setup.ui.AccountSetupContract
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract
+import app.k9mail.feature.account.setup.ui.createaccount.CreateAccountContract
 import app.k9mail.feature.account.setup.ui.options.AccountOptionsContract
 import com.fsck.k9.mail.oauth.AuthStateStorage
 import com.fsck.k9.mail.oauth.OAuth2TokenProvider
@@ -65,7 +65,6 @@ class AccountSetupModuleKtTest : KoinTest {
         featureAccountSetupModule.verify(
             extraTypes = listOf(
                 AccountCommonExternalContract.AccountStateLoader::class,
-                AccountSetupContract.State::class,
                 AccountAutoDiscoveryContract.State::class,
                 AccountOAuthContract.State::class,
                 ServerValidationContract.State::class,
@@ -79,6 +78,7 @@ class AccountSetupModuleKtTest : KoinTest {
                 Boolean::class,
                 Class.forName("net.openid.appauth.AppAuthConfiguration").kotlin,
                 InteractionMode::class,
+                CreateAccountContract.State::class,
             ),
         )
 

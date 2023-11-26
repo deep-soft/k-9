@@ -9,9 +9,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import app.k9mail.feature.account.setup.navigation.nestedAccountSetupRoute
+import app.k9mail.feature.account.setup.navigation.AccountSetupNavHost
+import app.k9mail.feature.onboarding.permissions.domain.PermissionsDomainContract.UseCase.HasRuntimePermissions
 import app.k9mail.feature.onboarding.permissions.ui.PermissionsScreen
 import app.k9mail.feature.onboarding.welcome.ui.OnboardingScreen
+import org.koin.compose.koinInject
 
 private const val NESTED_NAVIGATION_ROUTE_WELCOME = "welcome"
 private const val NESTED_NAVIGATION_ROUTE_ACCOUNT_SETUP = "account_setup"
@@ -28,8 +30,8 @@ private fun NavController.navigateToPermissions() {
 @Composable
 fun OnboardingNavHost(
     onImport: () -> Unit,
-    onBack: () -> Unit,
     onFinish: (String) -> Unit,
+    hasRuntimePermissions: HasRuntimePermissions = koinInject(),
 ) {
     val navController = rememberNavController()
     var accountUuid by rememberSaveable { mutableStateOf<String?>(null) }
@@ -45,14 +47,19 @@ fun OnboardingNavHost(
             )
         }
 
-        nestedAccountSetupRoute(
-            route = NESTED_NAVIGATION_ROUTE_ACCOUNT_SETUP,
-            onBack = onBack,
-            onFinish = { createdAccountUuid ->
-                accountUuid = createdAccountUuid
-                navController.navigateToPermissions()
-            },
-        )
+        composable(route = NESTED_NAVIGATION_ROUTE_ACCOUNT_SETUP) {
+            AccountSetupNavHost(
+                onBack = { navController.popBackStack() },
+                onFinish = { createdAccountUuid: String ->
+                    accountUuid = createdAccountUuid
+                    if (hasRuntimePermissions()) {
+                        navController.navigateToPermissions()
+                    } else {
+                        onFinish(createdAccountUuid)
+                    }
+                },
+            )
+        }
 
         composable(route = NESTED_NAVIGATION_ROUTE_PERMISSIONS) {
             PermissionsScreen(
