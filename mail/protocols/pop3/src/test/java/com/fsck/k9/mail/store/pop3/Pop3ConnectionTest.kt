@@ -1,7 +1,6 @@
 package com.fsck.k9.mail.store.pop3
 
 import assertk.assertFailure
-import assertk.assertions.hasMessage
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.prop
@@ -17,6 +16,7 @@ import com.fsck.k9.mail.ConnectionSecurity.NONE
 import com.fsck.k9.mail.ConnectionSecurity.SSL_TLS_REQUIRED
 import com.fsck.k9.mail.ConnectionSecurity.STARTTLS_REQUIRED
 import com.fsck.k9.mail.MessagingException
+import com.fsck.k9.mail.MissingCapabilityException
 import com.fsck.k9.mail.helpers.TestTrustedSocketFactory
 import com.fsck.k9.mail.ssl.TrustedSocketFactory
 import java.io.IOException
@@ -78,14 +78,17 @@ class Pop3ConnectionTest {
         createAndOpenPop3Connection(settings, mockSocketFactory)
     }
 
-    @Test(expected = CertificateValidationException::class)
-    fun `open() with STLS capability unavailable should throw CertificateValidationException`() {
+    @Test
+    fun `open() with STLS capability unavailable should throw`() {
         val server = startServer {
             setupServerWithAuthenticationMethods("PLAIN")
         }
         val settings = server.createSettings(connectionSecurity = STARTTLS_REQUIRED)
 
-        createAndOpenPop3Connection(settings)
+        assertFailure {
+            createAndOpenPop3Connection(settings)
+        }.isInstanceOf<MissingCapabilityException>()
+            .prop(MissingCapabilityException::capabilityName).isEqualTo("STLS")
     }
 
     @Test(expected = Pop3ErrorResponse::class)
@@ -300,11 +303,9 @@ class Pop3ConnectionTest {
 
         assertFailure {
             createAndOpenPop3Connection(settings)
-        }.isInstanceOf<CertificateValidationException>()
-            .prop(CertificateValidationException::getReason)
-            .isEqualTo(CertificateValidationException.Reason.MissingCapability)
+        }.isInstanceOf<MissingCapabilityException>()
+            .prop(MissingCapabilityException::capabilityName).isEqualTo("SASL EXTERNAL")
 
-        server.verifyConnectionStillOpen()
         server.verifyInteractionCompleted()
     }
 
@@ -319,8 +320,7 @@ class Pop3ConnectionTest {
 
         assertFailure {
             createAndOpenPop3Connection(settings)
-        }.isInstanceOf<CertificateValidationException>()
-            .hasMessage("POP3 client certificate authentication failed: -ERR Invalid certificate")
+        }.isInstanceOf<AuthenticationFailedException>()
 
         server.verifyInteractionCompleted()
     }
