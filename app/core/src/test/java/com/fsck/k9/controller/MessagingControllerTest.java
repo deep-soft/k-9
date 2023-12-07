@@ -16,6 +16,7 @@ import com.fsck.k9.backend.BackendManager;
 import com.fsck.k9.backend.api.Backend;
 import com.fsck.k9.mail.AuthType;
 import com.fsck.k9.mail.AuthenticationFailedException;
+import com.fsck.k9.mail.CertificateChainException;
 import com.fsck.k9.mail.CertificateValidationException;
 import com.fsck.k9.mail.ConnectionSecurity;
 import com.fsck.k9.mail.Flag;
@@ -46,6 +47,7 @@ import org.mockito.stubbing.Answer;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.shadows.ShadowLog;
 
+import static java.util.Collections.emptyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.ArgumentMatchers.eq;
@@ -355,7 +357,8 @@ public class MessagingControllerTest extends K9RobolectricTest {
     @Test
     public void sendPendingMessagesSynchronous_withCertificateFailure_shouldNotify() throws MessagingException {
         setupAccountWithMessageToSend();
-        doThrow(new CertificateValidationException("Test")).when(backend).sendMessage(localMessageToSend1);
+        doThrow(new CertificateValidationException(emptyList(), new CertificateChainException("", null, null)))
+            .when(backend).sendMessage(localMessageToSend1);
 
         controller.sendPendingMessagesSynchronous(account);
 
