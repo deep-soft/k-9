@@ -96,7 +96,7 @@ class SpecialFoldersViewModel(
                 state.copy(
                     isLoading = false,
                     isSuccess = false,
-                    error = SpecialFoldersContract.Failure.LoadFoldersFailed(exception.message ?: "unknown error"),
+                    error = SpecialFoldersContract.Failure.LoadFoldersFailed(exception.messageFromServer),
                 )
             }
             null
@@ -150,8 +150,10 @@ class SpecialFoldersViewModel(
         viewModelScope.coroutineContext.cancelChildren()
         updateState {
             it.copy(
+                isLoading = true,
                 error = null,
             )
         }
+        onLoadSpecialFolderOptions()
     }
 }
