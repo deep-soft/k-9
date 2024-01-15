@@ -48,7 +48,7 @@ jobs:
           _ref_org_=${{ env.TAG_REF }}
           _ref_len_="${#_ref_org_}"
           _ref_=$(echo ${_ref_all_::$_ref_len_})
-          _prg_version_=$(grep versionName "app/k9mail/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}')
+          _prg_version_=$(grep versionName "app-k9mail/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}')
           echo "TAG_REF=$_ref_" >> $GITHUB_ENV
           _build_=${{ env.TAG_BUILD }}.$_ref_
           echo "TAG_BUILD=$_build_" >> $GITHUB_ENV
@@ -99,16 +99,16 @@ jobs:
         with:
           name: upload-artifact
           path: |
-            ./app/${{ env.PRG_NAME }}/build/outputs/apk/
+            ./app-k9mail/${{ env.PRG_NAME }}/build/outputs/apk/
 
       - name: Copy apk from outputs/
         shell: bash
         run: |
           set -x
           mkdir -p signed-apk
-          echo "LIST: " ./app/${{ env.PRG_NAME }}/build/outputs/apk/release/
-          ls -l ./app/${{ env.PRG_NAME }}/build/outputs/apk/release/
-          cp ./app/${{ env.PRG_NAME }}/build/outputs/apk/release/* ./signed-apk/
+          echo "LIST: " ./app-k9mail/${{ env.PRG_NAME }}/build/outputs/apk/release/
+          ls -l ./app-k9mail/${{ env.PRG_NAME }}/build/outputs/apk/release/
+          cp ./app-k9mail/${{ env.PRG_NAME }}/build/outputs/apk/release/* ./signed-apk/
           echo "LIST: " ./signed-apk/
           ls -l ./signed-apk/
           mv ./signed-apk/k9mail-release-unsigned.apk ./signed-apk/${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-release.apk
