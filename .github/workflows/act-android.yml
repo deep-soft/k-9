@@ -1,4 +1,4 @@
-#2024-01-15 23:30
+#2024-01-15 23:40
 #act-android.yml
 name: act - Android CI
 
@@ -63,7 +63,8 @@ jobs:
           echo "TAG: ${{ env.TAG_VERSION }}
           echo "REF: ${{ env.TAG_REF }}
           echo "BLD: ${{ env.TAG_BUILD }}
-          echo "${{ env.TAG_NAME }}-${{ env.TAG_BUILD }}" > _tag_name_.txt
+          echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > _tag_name_.txt
+          echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-release-signed.txt
 
       - name: Create source archive
         continue-on-error: true
@@ -145,6 +146,7 @@ jobs:
           tag_name: ${{ env.TAG_NAME }}
           files: |
             ${{steps.sign-k9mail.outputs.signedReleaseFile}}
+            ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-release-signed.txt
             _tag_name_.txt
 
       - name: Publish version build - signed apk package
@@ -155,6 +157,7 @@ jobs:
           tag_name: ${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}${{ env.TAG_BUILD }}
           files: |
             ${{steps.sign-k9mail.outputs.signedReleaseFile}}
+            ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-release-signed.txt
             _tag_name_.txt
 
       - name: Publish unsigned apk package
