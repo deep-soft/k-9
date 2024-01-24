@@ -2,17 +2,12 @@ package com.fsck.k9.activity
 
 import android.content.Intent
 import android.os.Bundle
+import app.k9mail.feature.settings.import.ui.SettingsImportFragment
 import com.fsck.k9.ui.R
 import com.fsck.k9.ui.base.K9Activity
-import com.fsck.k9.ui.settings.import.SettingsImportFragment
-import com.fsck.k9.ui.settings.import.SettingsImportResultViewModel
-import com.fsck.k9.ui.settings.import.SettingsImportSuccess
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import app.k9mail.feature.settings.importing.R as SettingsImportR
 
 class FragmentLauncherActivity : K9Activity() {
-
-    private val settingsImportResultViewModel: SettingsImportResultViewModel by viewModel()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -25,16 +20,19 @@ class FragmentLauncherActivity : K9Activity() {
     }
 
     private fun setupSettingsFragment() {
-        setTitle(R.string.settings_import_title)
+        setTitle(SettingsImportR.string.settings_import_title)
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_launcher_container, SettingsImportFragment())
             .commit()
 
-        settingsImportResultViewModel.settingsImportResult.observe(this) {
-            if (it == SettingsImportSuccess) {
+        supportFragmentManager.setFragmentResultListener(
+            SettingsImportFragment.FRAGMENT_RESULT_KEY,
+            this,
+        ) { _, result: Bundle ->
+            if (result.getBoolean(SettingsImportFragment.FRAGMENT_RESULT_ACCOUNT_IMPORTED, false)) {
                 launchMessageList()
-                finish()
             }
+            finish()
         }
     }
 

@@ -50,9 +50,9 @@
 
     <activity
         android:id="@+id/addAccountScreen"
-        android:name="com.fsck.k9.activity.setup.AccountSetupBasics"
-        android:label="@string/account_setup_basics_title"
-        tools:layout="@layout/account_setup_basics"/>
+        android:name="app.k9mail.feature.launcher.FeatureLauncherActivity"
+        android:data="app://account/setup"
+        android:label="@string/account_setup_basics_title" />
 
     <fragment
         android:id="@+id/settingsExportScreen"
@@ -62,7 +62,7 @@
 
     <fragment
         android:id="@+id/settingsImportScreen"
-        android:name="com.fsck.k9.ui.settings.import.SettingsImportFragment"
+        android:name="app.k9mail.feature.settings.import.ui.SettingsImportFragment"
         android:label="@string/settings_import_title"
         tools:layout="@layout/fragment_settings_import"/>
 
