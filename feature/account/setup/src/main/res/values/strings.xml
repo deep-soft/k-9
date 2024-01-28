@@ -10,10 +10,11 @@
     <string name="account_setup_auto_discovery_validation_error_email_address_not_allowed">This email address is not allowed.</string>
     <string name="account_setup_auto_discovery_validation_error_email_address_not_supported">This email address is not supported.</string>
     <string name="account_setup_auto_discovery_validation_error_email_address_invalid">This is not recognized as a valid email address.</string>
+    <string name="account_setup_auto_discovery_validation_error_password_required">Password is required.</string>
 
     <string name="account_setup_auto_discovery_connection_security_start_tls">StartTLS</string>
     <string name="account_setup_auto_discovery_connection_security_ssl">SSL/TLS</string>
-    <string name="account_setup_auto_discovery_loading_message">Finding email details</string>
+    <string name="account_setup_auto_discovery_loading_message">Looking up configuration…</string>
     <string name="account_setup_auto_discovery_loading_error">Failed to load email configuration</string>
     <string name="account_setup_auto_discovery_status_header_title_configuration_found">Configuration found</string>
     <string name="account_setup_auto_discovery_result_header_title_configuration_not_found">Configuration not found</string>
@@ -38,7 +39,6 @@
     <string name="account_setup_special_folders_trash_folder_label">Trash folder</string>
     <string name="account_setup_special_folders_folder_none">None</string>
     <string name="account_setup_special_folders_folder_automatic">Automatic (%s)</string>
-    <string name="account_setup_special_folders_edit_folders_button_label">Edit special folders</string>
 
     <string name="account_setup_options_top_bar_title">Account options</string>
     <string name="account_setup_options_section_display_options">Display options</string>
