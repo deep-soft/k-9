@@ -88,13 +88,18 @@ jobs:
           files: |
             ${{ env.ASSET_SRC }}
 
-      - uses: deep-soft/setup-java@v4
+      - name: Setup java v4
+        uses: deep-soft/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
-      - uses: gradle/gradle-build-action@v2
+
+      - name: Gradle Build v3
+        uses: gradle/gradle-build-action@v3
+
       # - run: ./gradlew assembleDebug detekt spotlessCheck testsOnCi
-      - run: ./gradlew assembleRelease
+      - name: gradlew assembleRelease
+        run: ./gradlew assembleRelease
 
       - name: Upload Artifact
         uses: deep-soft/upload-artifact@v4
