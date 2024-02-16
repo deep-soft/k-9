@@ -34,15 +34,15 @@ android {
         applicationId = "com.fsck.k9"
         testApplicationId = "com.fsck.k9.tests"
 
-        versionCode = 37015
-        versionName = "6.716-SNAPSHOT"
+        versionCode = 37016
+        versionName = "6.717-SNAPSHOT"
 
         // Keep in sync with the resource string array "supported_languages"
         resourceConfigurations.addAll(
             listOf(
                 "in", "br", "ca", "cs", "cy", "da", "de", "et", "en", "en_GB", "es", "eo", "eu", "fr", "gd", "gl",
                 "hr", "is", "it", "lv", "lt", "hu", "nl", "nb", "pl", "pt_PT", "pt_BR", "ru", "ro", "sq", "sk", "sl",
-                "fi", "sv", "tr", "el", "be", "bg", "sr", "uk", "iw", "ar", "fa", "ml", "ko", "zh_CN", "zh_TW", "ja",
+                "fi", "sv", "tr", "el", "be", "bg", "sr", "uk", "ar", "fa", "ml", "zh_CN", "zh_TW", "ja",
                 "fy",
             ),
         )
