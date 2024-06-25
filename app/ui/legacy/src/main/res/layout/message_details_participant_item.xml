@@ -9,21 +9,21 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
+<!--    TODO replace with ImageView-->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/contact_picture"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:src="@drawable/ic_contact_picture"
+        android:src="@drawable/ic_account_circle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/top_guideline" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceBody1"
-        android:textColor="?android:attr/textColorPrimary"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toTopOf="@+id/email"
         app:layout_constraintEnd_toStartOf="@+id/menu_add_contact"
@@ -35,13 +35,13 @@
         app:layout_goneMarginBottom="12dp"
         tools:text="Alice" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
-        android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="?android:attr/textColorSecondary"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorSecondary"
         android:layout_marginStart="16dp"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toTopOf="@+id/bottom_guideline"
@@ -63,7 +63,7 @@
         android:paddingHorizontal="12dp"
         app:layout_constraintEnd_toStartOf="@id/menu_overflow"
         app:layout_constraintTop_toTopOf="@+id/menu_overflow"
-        app:srcCompat="?attr/messageDetailsAddContactIcon" />
+        app:srcCompat="@drawable/ic_person_add" />
 
     <ImageView
         android:id="@+id/menu_overflow"
@@ -79,7 +79,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/dots_vertical" />
+        app:srcCompat="@drawable/ic_more_vert" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/top_guideline"

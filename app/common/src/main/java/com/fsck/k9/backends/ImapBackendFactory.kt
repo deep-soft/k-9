@@ -2,6 +2,7 @@ package com.fsck.k9.backends
 
 import android.content.Context
 import com.fsck.k9.Account
+import com.fsck.k9.Account.Expunge
 import com.fsck.k9.backend.BackendFactory
 import com.fsck.k9.backend.api.Backend
 import com.fsck.k9.backend.imap.ImapBackend
@@ -10,7 +11,7 @@ import com.fsck.k9.mail.AuthType
 import com.fsck.k9.mail.power.PowerManager
 import com.fsck.k9.mail.ssl.TrustedSocketFactory
 import com.fsck.k9.mail.store.imap.IdleRefreshManager
-import com.fsck.k9.mail.store.imap.ImapClientId
+import com.fsck.k9.mail.store.imap.ImapClientInfo
 import com.fsck.k9.mail.store.imap.ImapStore
 import com.fsck.k9.mail.store.imap.ImapStoreConfig
 import com.fsck.k9.mail.transport.smtp.SmtpTransport
@@ -28,8 +29,8 @@ class ImapBackendFactory(
     private val backendStorageFactory: K9BackendStorageFactory,
     private val trustedSocketFactory: TrustedSocketFactory,
     private val context: Context,
-    private val clientIdAppName: String,
-    private val clientIdAppVersion: String,
+    private val clientInfoAppName: String,
+    private val clientInfoAppVersion: String,
 ) : BackendFactory {
     override fun createBackend(account: Account): Backend {
         val accountName = account.displayName
@@ -74,7 +75,9 @@ class ImapBackendFactory(
 
             override fun isSubscribedFoldersOnly() = account.isSubscribedFoldersOnly
 
-            override fun clientId() = ImapClientId(appName = clientIdAppName, appVersion = clientIdAppVersion)
+            override fun isExpungeImmediately() = account.expungePolicy == Expunge.EXPUNGE_IMMEDIATELY
+
+            override fun clientInfo() = ImapClientInfo(appName = clientInfoAppName, appVersion = clientInfoAppVersion)
         }
     }
 

@@ -12,12 +12,13 @@ import androidx.lifecycle.viewModelScope
 import app.k9mail.feature.settings.import.SettingsImportExternalContract.AccountActivator
 import com.fsck.k9.helper.SingleLiveEvent
 import com.fsck.k9.helper.measureRealtimeMillisWithResult
+import com.fsck.k9.preferences.ImportContents
+import com.fsck.k9.preferences.ImportResults
 import com.fsck.k9.preferences.SettingsImporter
-import com.fsck.k9.preferences.SettingsImporter.ImportResults
 import com.fsck.k9.ui.base.bundle.getEnum
 import com.fsck.k9.ui.base.bundle.putEnum
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -29,6 +30,7 @@ private typealias AccountNumber = Int
 
 internal class SettingsImportViewModel(
     private val context: Context,
+    private val settingsImporter: SettingsImporter,
     private val accountActivator: AccountActivator,
 ) : ViewModel() {
     private val uiModelLiveData = MutableLiveData<SettingsImportUiModel>()
@@ -226,9 +228,11 @@ internal class SettingsImportViewModel(
             updateCloseButtonAndImportStatusText()
         }
 
-        GlobalScope.launch(Dispatchers.IO) {
-            with(result) {
-                accountActivator.enableAccount(accountUuid, incomingServerPassword, outgoingServerPassword)
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(NonCancellable) {
+                with(result) {
+                    accountActivator.enableAccount(accountUuid, incomingServerPassword, outgoingServerPassword)
+                }
             }
         }
     }
@@ -242,8 +246,10 @@ internal class SettingsImportViewModel(
                 updateCloseButtonAndImportStatusText()
             }
 
-            GlobalScope.launch(Dispatchers.IO) {
-                accountActivator.enableAccount(accountUuid)
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(NonCancellable) {
+                    accountActivator.enableAccount(accountUuid)
+                }
             }
         }
     }
@@ -380,15 +386,21 @@ internal class SettingsImportViewModel(
         }
     }
 
-    private fun readSettings(contentUri: Uri): SettingsImporter.ImportContents {
-        return context.contentResolver.openInputStream(contentUri).use { inputStream ->
-            SettingsImporter.getImportStreamContents(inputStream)
+    private fun readSettings(contentUri: Uri): ImportContents {
+        val inputStream = context.contentResolver.openInputStream(contentUri)
+            ?: error("Failed to open settings file for reading: $contentUri")
+
+        return inputStream.use {
+            settingsImporter.getImportStreamContents(inputStream)
         }
     }
 
     private fun importSettings(contentUri: Uri, generalSettings: Boolean, accounts: List<AccountUuid>): ImportResults {
-        return context.contentResolver.openInputStream(contentUri).use { inputStream ->
-            SettingsImporter.importSettings(context, inputStream, generalSettings, accounts, false)
+        val inputStream = context.contentResolver.openInputStream(contentUri)
+            ?: error("Failed to open settings file for reading: $contentUri")
+
+        return inputStream.use {
+            settingsImporter.importSettings(inputStream, generalSettings, accounts)
         }
     }
 

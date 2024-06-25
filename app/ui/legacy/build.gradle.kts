@@ -5,6 +5,10 @@ plugins {
 
 dependencies {
     api(projects.app.ui.base)
+    api(projects.core.ui.legacy.designsystem)
+    // TODO: Remove once Theme2 is fully migrated
+    api(projects.core.ui.legacy.theme2.k9mail)
+
     implementation(projects.app.core)
     implementation(projects.mail.common)
     implementation(projects.uiUtils.toolbarBottomSheet)
@@ -43,7 +47,6 @@ dependencies {
     implementation(libs.fastadapter.extensions.utils)
     implementation(libs.circleImageView)
     implementation(libs.androidx.work.runtime)
-    api(libs.appauth)
 
     implementation(libs.commons.io)
     implementation(libs.androidx.core.ktx)
@@ -74,14 +77,5 @@ android {
 
     buildFeatures {
         buildConfig = true
-    }
-
-    buildTypes {
-        debug {
-            manifestPlaceholders["appAuthRedirectScheme"] = "FIXME: override this in your app project"
-        }
-        release {
-            manifestPlaceholders["appAuthRedirectScheme"] = "FIXME: override this in your app project"
-        }
     }
 }

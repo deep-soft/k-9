@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
-import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +24,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
+import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons
 import com.fsck.k9.FontSizes
 import com.fsck.k9.UiDensity
 import com.fsck.k9.contacts.ContactPictureLoader
@@ -33,7 +33,7 @@ import com.fsck.k9.mail.Address
 import com.fsck.k9.ui.R
 import com.fsck.k9.ui.helper.RelativeDateTimeFormatter
 import com.fsck.k9.ui.resolveColorAttribute
-import com.fsck.k9.ui.resolveDrawableAttribute
+import com.google.android.material.textview.MaterialTextView
 import kotlin.math.max
 
 private const val FOOTER_ID = 1L
@@ -51,22 +51,17 @@ class MessageListAdapter internal constructor(
     private val relativeDateTimeFormatter: RelativeDateTimeFormatter,
 ) : RecyclerView.Adapter<MessageListViewHolder>() {
 
-    private val forwardedIcon: Drawable = theme.resolveDrawableAttribute(R.attr.messageListForwarded)
-    private val answeredIcon: Drawable = theme.resolveDrawableAttribute(R.attr.messageListAnswered)
-    private val forwardedAnsweredIcon: Drawable = theme.resolveDrawableAttribute(R.attr.messageListAnsweredForwarded)
-    private val unreadTextColor: Int = theme.resolveColorAttribute(R.attr.messageListUnreadTextColor)
-    private val readTextColor: Int = theme.resolveColorAttribute(R.attr.messageListReadTextColor)
-    private val previewTextColor: Int = theme.resolveColorAttribute(R.attr.messageListPreviewTextColor)
+    private val forwardedIcon: Drawable = ResourcesCompat.getDrawable(res, Icons.Outlined.Forward, theme)!!
+    private val answeredIcon: Drawable = ResourcesCompat.getDrawable(res, Icons.Outlined.Reply, theme)!!
+    private val forwardedAnsweredIcon: Drawable =
+        ResourcesCompat.getDrawable(res, Icons.Outlined.CompareArrows, theme)!!
     private val activeItemBackgroundColor: Int = theme.resolveColorAttribute(
         colorAttrId = R.attr.messageListActiveItemBackgroundColor,
         alphaFractionAttrId = R.attr.messageListActiveItemBackgroundAlphaFraction,
         backgroundColorAttrId = R.attr.messageListActiveItemBackgroundAlphaBackground,
     )
-    private val selectedItemBackgroundColor: Int = theme.resolveColorAttribute(
-        colorAttrId = R.attr.messageListSelectedBackgroundColor,
-        alphaFractionAttrId = R.attr.messageListSelectedBackgroundAlphaFraction,
-        backgroundColorAttrId = R.attr.messageListSelectedBackgroundAlphaBackground,
-    )
+    private val selectedItemBackgroundColor: Int =
+        theme.resolveColorAttribute(com.google.android.material.R.attr.colorSurfaceContainerHigh)
     private val regularItemBackgroundColor: Int =
         theme.resolveColorAttribute(R.attr.messageListRegularItemBackgroundColor)
     private val readItemBackgroundColor: Int = theme.resolveColorAttribute(R.attr.messageListReadItemBackgroundColor)
@@ -317,11 +312,13 @@ class MessageListAdapter internal constructor(
                 textViewMarginTop = compactTextViewMarginTop
                 lineSpacingMultiplier = compactLineSpacingMultiplier
             }
+
             UiDensity.Default -> {
                 verticalPadding = defaultVerticalPadding
                 textViewMarginTop = defaultTextViewMarginTop
                 lineSpacingMultiplier = defaultLineSpacingMultiplier
             }
+
             UiDensity.Relaxed -> {
                 verticalPadding = relaxedVerticalPadding
                 textViewMarginTop = relaxedTextViewMarginTop
@@ -349,9 +346,11 @@ class MessageListAdapter internal constructor(
                 val messageListItem = getItem(position)
                 bindMessageViewHolder(holder as MessageViewHolder, messageListItem)
             }
+
             TYPE_FOOTER -> {
                 bindFooterViewHolder(holder as FooterViewHolder)
             }
+
             else -> {
                 error("Unsupported type: $viewType")
             }
@@ -373,7 +372,6 @@ class MessageListAdapter internal constructor(
         }
 
         with(messageListItem) {
-            val textColor = if (isRead) readTextColor else unreadTextColor
             val maybeBoldTypeface = if (isRead) Typeface.NORMAL else Typeface.BOLD
             val displayDate = relativeDateTimeFormatter.formatDate(messageDate)
             val displayThreadCount = if (appearance.showingThreadedList) threadCount else 0
@@ -407,13 +405,11 @@ class MessageListAdapter internal constructor(
                     messageStringBuilder.append(" – ").append(preview)
                 }
             }
-            holder.preview.setTextColor(textColor)
             holder.preview.setText(messageStringBuilder, TextView.BufferType.SPANNABLE)
 
             formatPreviewText(holder.preview, beforePreviewText, isRead)
 
             holder.subject.typeface = Typeface.create(holder.subject.typeface, maybeBoldTypeface)
-            holder.subject.setTextColor(textColor)
 
             val firstLineText = if (appearance.senderAboveSubject) displayName else subject
             holder.subject.text = firstLineText
@@ -425,7 +421,6 @@ class MessageListAdapter internal constructor(
             }
 
             holder.date.typeface = Typeface.create(holder.date.typeface, maybeBoldTypeface)
-            holder.date.setTextColor(textColor)
             holder.date.text = displayDate
             holder.attachment.isVisible = hasAttachments
 
@@ -443,19 +438,11 @@ class MessageListAdapter internal constructor(
         holder.text.text = footerText
     }
 
-    private fun formatPreviewText(preview: TextView, beforePreviewText: CharSequence, messageRead: Boolean) {
+    private fun formatPreviewText(preview: MaterialTextView, beforePreviewText: CharSequence, messageRead: Boolean) {
         val previewText = preview.text as Spannable
 
         val beforePreviewLength = beforePreviewText.length
         addBeforePreviewSpan(previewText, beforePreviewLength, messageRead)
-
-        // Set span (color) for preview message
-        previewText.setSpan(
-            ForegroundColorSpan(previewTextColor),
-            beforePreviewLength,
-            previewText.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
-        )
     }
 
     private fun addBeforePreviewSpan(text: Spannable, length: Int, messageRead: Boolean) {
@@ -480,7 +467,7 @@ class MessageListAdapter internal constructor(
         if (displayAddress != null) {
             contactsPictureLoader.setContactPicture(contactPictureView, displayAddress)
         } else {
-            contactPictureView.setImageResource(R.drawable.ic_contact_picture)
+            contactPictureView.setImageResource(Icons.Outlined.Check)
         }
     }
 

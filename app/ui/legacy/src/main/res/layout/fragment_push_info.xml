@@ -12,30 +12,30 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/notificationText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBody1"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/push_info_notification_explanation_text" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/learnMoreButton"
             style="?attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/push_info_learn_more_text"
-            android:textAppearance="?attr/textAppearanceBody1"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
             android:textColor="?attr/colorSecondaryVariant"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/notificationText" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/configureNotificationButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,18 +47,18 @@
             app:layout_constraintTop_toBottomOf="@+id/learnMoreButton"
             tools:visibility="visible" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/disablePushText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="56dp"
             android:text="@string/push_info_disable_push_text"
-            android:textAppearance="?attr/textAppearanceBody1"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/configureNotificationButton" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/disablePushButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

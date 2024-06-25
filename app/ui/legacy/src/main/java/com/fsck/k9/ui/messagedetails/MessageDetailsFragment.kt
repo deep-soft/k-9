@@ -2,6 +2,7 @@ package com.fsck.k9.ui.messagedetails
 
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.IntentSender.SendIntentException
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons
 import app.k9mail.ui.utils.bottomsheet.ToolbarBottomSheetDialog
 import app.k9mail.ui.utils.bottomsheet.ToolbarBottomSheetDialogFragment
 import com.fsck.k9.activity.MessageCompose
@@ -26,9 +28,9 @@ import com.fsck.k9.controller.MessageReference
 import com.fsck.k9.mail.Address
 import com.fsck.k9.mailstore.CryptoResultAnnotation
 import com.fsck.k9.ui.R
+import com.fsck.k9.ui.base.extensions.withArguments
 import com.fsck.k9.ui.folders.FolderIconProvider
 import com.fsck.k9.ui.observe
-import com.fsck.k9.ui.withArguments
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -36,6 +38,8 @@ import com.mikepenz.fastadapter.listeners.ClickEventHook
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import org.openintents.openpgp.util.OpenPgpIntentStarter
+import timber.log.Timber
 
 class MessageDetailsFragment : ToolbarBottomSheetDialogFragment() {
     private val viewModel: MessageDetailsViewModel by viewModel()
@@ -78,7 +82,7 @@ class MessageDetailsFragment : ToolbarBottomSheetDialogFragment() {
         val toolbar = checkNotNull(toolbar)
         toolbar.apply {
             title = getString(R.string.message_details_toolbar_title)
-            navigationIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_close)
+            navigationIcon = ContextCompat.getDrawable(requireContext(), Icons.Outlined.Close)
 
             setNavigationOnClickListener {
                 dismissAllowingStateLoss()
@@ -106,11 +110,13 @@ class MessageDetailsFragment : ToolbarBottomSheetDialogFragment() {
                     errorView.isVisible = false
                     recyclerView.isVisible = false
                 }
+
                 MessageDetailsState.Error -> {
                     progressBar.isVisible = false
                     errorView.isVisible = true
                     recyclerView.isVisible = false
                 }
+
                 is MessageDetailsState.DataLoaded -> {
                     progressBar.isVisible = false
                     errorView.isVisible = false
@@ -333,7 +339,11 @@ class MessageDetailsFragment : ToolbarBottomSheetDialogFragment() {
     }
 
     private fun showCryptoKeys(pendingIntent: PendingIntent) {
-        requireActivity().startIntentSender(pendingIntent.intentSender, null, 0, 0, 0)
+        try {
+            OpenPgpIntentStarter.startIntentSender(requireActivity(), pendingIntent.intentSender)
+        } catch (e: SendIntentException) {
+            Timber.e(e, "Error starting PendingIntent")
+        }
     }
 
     private fun searchCryptoKeys() {

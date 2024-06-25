@@ -37,14 +37,14 @@ the 'message view theme' setting).
                 android:visibility="gone"
                 tools:visibility="visible">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/show_pictures"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/message_view_show_remote_images_action"
-                    app:icon="@drawable/ic_attachment_image" />
+                    app:icon="@drawable/ic_image" />
 
             </FrameLayout>
 
@@ -82,7 +82,7 @@ the 'message view theme' setting).
                         style="@android:style/Widget.Holo.ProgressBar.Horizontal"
                         />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/message_progress"
@@ -105,7 +105,8 @@ the 'message view theme' setting).
 
     </com.fsck.k9.view.NonLockingScrollView>
 
-    <Button android:id="@+id/download_remainder"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/download_remainder"
         style="?attr/materialButtonOutlinedStyle"
         android:layout_marginHorizontal="16dp"
         android:text="@string/message_view_download_remainder"

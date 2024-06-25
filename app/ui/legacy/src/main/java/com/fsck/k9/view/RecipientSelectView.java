@@ -16,11 +16,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract.Contacts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.app.LoaderManager.LoaderCallbacks;
-import androidx.loader.content.Loader;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -31,22 +26,27 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.app.LoaderManager.LoaderCallbacks;
+import androidx.loader.content.Loader;
 import com.fsck.k9.DI;
 import com.fsck.k9.K9;
-import com.fsck.k9.ui.R;
-import com.fsck.k9.helper.ClipboardManager;
 import com.fsck.k9.activity.AlternateRecipientAdapter;
 import com.fsck.k9.activity.AlternateRecipientAdapter.AlternateRecipientListener;
 import com.fsck.k9.activity.compose.RecipientAdapter;
 import com.fsck.k9.activity.compose.RecipientLoader;
+import com.fsck.k9.helper.ClipboardManager;
 import com.fsck.k9.mail.Address;
+import com.fsck.k9.ui.R;
 import com.fsck.k9.ui.compose.RecipientCircleImageView;
 import com.fsck.k9.view.RecipientSelectView.Recipient;
+import com.google.android.material.textview.MaterialTextView;
 import com.tokenautocomplete.TokenCompleteTextView;
-import timber.log.Timber;
 import de.hdodenhof.circleimageview.CircleImageView;
+import timber.log.Timber;
 
 import static com.fsck.k9.FontSizes.FONT_DEFAULT;
 
@@ -141,7 +141,7 @@ public class RecipientSelectView extends TokenCompleteTextView<Recipient> implem
         // Since the recipient chip views are not part of the view hierarchy we need to manually invalidate this
         // RecipientSelectView whenever a contact picture was loaded in order for the image to be drawn.
         RecipientCircleImageView contactPhotoView = view.findViewById(R.id.contact_photo);
-        contactPhotoView.setOnSetImageDrawableListener(this::postInvalidate);
+        contactPhotoView.setOnSetImageDrawableListener(this::redrawTokens);
 
         return view;
     }
@@ -301,6 +301,7 @@ public class RecipientSelectView extends TokenCompleteTextView<Recipient> implem
         }
 
         invalidate();
+        redrawTokens();
         invalidateCursorPositionHack();
     }
 
@@ -484,6 +485,7 @@ public class RecipientSelectView extends TokenCompleteTextView<Recipient> implem
         }
 
         invalidate();
+        redrawTokens();
         invalidateCursorPositionHack();
     }
 
@@ -569,7 +571,6 @@ public class RecipientSelectView extends TokenCompleteTextView<Recipient> implem
 
     private class RecipientTokenSpan extends TokenImageSpan {
         private final View view;
-        private boolean initialLayoutPerformed = false;
 
         public RecipientTokenSpan(View view, Recipient recipient) {
             super(view, recipient);
@@ -582,52 +583,17 @@ public class RecipientSelectView extends TokenCompleteTextView<Recipient> implem
         }
 
         @Override
-        public int getSize(@NonNull Paint paint, CharSequence charSequence, int start, int end,
-                @Nullable Paint.FontMetricsInt fontMetricsInt) {
-            if (initialLayoutPerformed && view.isLayoutRequested()) {
-                relayoutView();
-            }
-
-            int size = super.getSize(paint, charSequence, start, end, fontMetricsInt);
-            initialLayoutPerformed = true;
-            return size;
-        }
-
-        @Override
         public void draw(@NonNull Canvas canvas, CharSequence text, int start, int end, float x, int top, int y,
                 int bottom, @NonNull Paint paint) {
-            if (initialLayoutPerformed && view.isLayoutRequested()) {
-                relayoutView();
-            }
-
             super.draw(canvas, text, start, end, x, top, y, bottom, paint);
 
             // Dispatch onPreDraw event so image loading using Glide will work properly.
             view.findViewById(R.id.contact_photo).getViewTreeObserver().dispatchOnPreDraw();
-
-            initialLayoutPerformed = true;
-        }
-
-        // Hack to support layout changes
-        // TODO: Remove once a TokenAutoComplete release includes https://github.com/splitwise/TokenAutoComplete/pull/403
-        private void relayoutView() {
-            int maxViewSpanWidth = getMaxViewSpanWidth();
-
-            int spec = View.MeasureSpec.AT_MOST;
-            if (maxViewSpanWidth == 0) {
-                //If the width is 0, allow the view to choose it's own content size
-                spec = View.MeasureSpec.UNSPECIFIED;
-            }
-            int widthSpec = View.MeasureSpec.makeMeasureSpec(maxViewSpanWidth, spec);
-            int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-
-            view.measure(widthSpec, heightSpec);
-            view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
         }
     }
 
     private static class RecipientTokenViewHolder {
-        final TextView vName;
+        final MaterialTextView vName;
         final CircleImageView vContactPhoto;
         final View cryptoStatusRed;
         final View cryptoStatusOrange;

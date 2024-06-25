@@ -3,23 +3,19 @@ package com.fsck.k9.activity
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
 import android.content.res.Configuration
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.ProgressBar
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isGone
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.fragment.app.FragmentManager
@@ -29,6 +25,7 @@ import androidx.fragment.app.commitNow
 import app.k9mail.core.android.common.compat.BundleCompat
 import app.k9mail.core.android.common.contact.CachingRepository
 import app.k9mail.core.android.common.contact.ContactRepository
+import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons
 import app.k9mail.feature.launcher.FeatureLauncherActivity
 import com.fsck.k9.Account
 import com.fsck.k9.K9
@@ -63,6 +60,7 @@ import com.fsck.k9.ui.messageview.MessageViewFragment.MessageViewFragmentListene
 import com.fsck.k9.ui.messageview.PlaceholderFragment
 import com.fsck.k9.view.ViewSwitcher
 import com.fsck.k9.view.ViewSwitcher.OnSwitchCompleteListener
+import com.google.android.material.textview.MaterialTextView
 import com.mikepenz.materialdrawer.util.getOptimalDrawerWidth
 import org.koin.android.ext.android.inject
 import org.koin.core.component.KoinComponent
@@ -164,23 +162,6 @@ open class MessageList :
                 secondOutAnimation = AnimationUtils.loadAnimation(this@MessageList, R.anim.slide_out_left)
                 setOnSwitchCompleteListener(this@MessageList)
             }
-        }
-
-        window.statusBarColor = Color.TRANSPARENT
-
-        val rootLayout = findViewById<View>(R.id.drawerLayout)
-
-        rootLayout.systemUiVisibility = rootLayout.systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        }
-
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setOnApplyWindowInsetsListener { view, insets ->
-            view.setPadding(view.paddingLeft, insets.systemWindowInsetTop, view.paddingRight, view.paddingBottom)
-            insets
         }
 
         val swipeRefreshLayout = findViewById<View>(R.id.material_drawer_swipe_refresh)
@@ -546,6 +527,7 @@ open class MessageList :
     private fun initializeActionBar() {
         actionBar = supportActionBar!!
         actionBar.setDisplayHomeAsUpEnabled(true)
+        actionBar.setDisplayShowTitleEnabled(false)
     }
 
     private fun initializeDrawer(savedInstanceState: Bundle?) {
@@ -900,7 +882,7 @@ open class MessageList :
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.message_list_option, menu)
+        menuInflater.inflate(R.menu.message_list_option_menu, menu)
 
         val searchItem = menu.findItem(R.id.search)
         initializeSearchMenuItem(searchItem)
@@ -951,9 +933,17 @@ open class MessageList :
         searchView?.isIconified = false
     }
 
-    fun setActionBarTitle(title: String, subtitle: String? = null) {
-        actionBar.title = title
-        actionBar.subtitle = subtitle
+    private fun setActionBarTitle(title: String, subtitle: String? = null) {
+        findViewById<MaterialTextView>(R.id.toolbarTitle).text = title
+        findViewById<MaterialTextView>(R.id.toolbarSubtitle).apply {
+            if (subtitle != null) {
+                text = subtitle
+                isGone = false
+            } else {
+                text = null
+                isGone = true
+            }
+        }
     }
 
     override fun setMessageListTitle(title: String, subtitle: String?) {
@@ -1285,49 +1275,17 @@ open class MessageList :
         messagingController.clearNotifications(search)
     }
 
-    override fun startIntentSenderForResult(
-        intent: IntentSender,
-        requestCode: Int,
-        fillInIntent: Intent?,
-        flagsMask: Int,
-        flagsValues: Int,
-        extraFlags: Int,
-    ) {
-        // If any of the high 16 bits are set it is not one of our request codes
-        if (requestCode and REQUEST_CODE_MASK != 0) {
-            super.startIntentSenderForResult(intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags)
-            return
-        }
-
-        val modifiedRequestCode = requestCode or REQUEST_FLAG_PENDING_INTENT
-        super.startIntentSenderForResult(intent, modifiedRequestCode, fillInIntent, flagsMask, flagsValues, extraFlags)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        // If any of the high 16 bits are set it is not one of our request codes
-        if (requestCode and REQUEST_CODE_MASK != 0) return
-
-        if (requestCode and REQUEST_FLAG_PENDING_INTENT != 0) {
-            val originalRequestCode = requestCode xor REQUEST_FLAG_PENDING_INTENT
-            if (messageViewContainerFragment != null) {
-                messageViewContainerFragment!!.onPendingIntentResult(originalRequestCode, resultCode, data)
-            }
-        }
-    }
-
     private val isAdditionalMessageListDisplayed: Boolean
         get() = supportFragmentManager.backStackEntryCount > 0
 
     private fun lockDrawer() {
         drawer!!.lock()
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
+        actionBar.setHomeAsUpIndicator(Icons.Outlined.ArrowBack)
     }
 
     private fun unlockDrawer() {
         drawer!!.unlock()
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu)
+        actionBar.setHomeAsUpIndicator(Icons.Outlined.Menu)
     }
 
     private fun initializeFromLocalSearch(search: LocalSearch?) {
@@ -1419,9 +1377,6 @@ open class MessageList :
         private const val FIRST_FRAGMENT_TRANSACTION = "first"
         private const val FRAGMENT_TAG_MESSAGE_VIEW_CONTAINER = "MessageViewContainerFragment"
         private const val FRAGMENT_TAG_PLACEHOLDER = "MessageViewPlaceholder"
-
-        private const val REQUEST_CODE_MASK = 0xFFFF0000.toInt()
-        private const val REQUEST_FLAG_PENDING_INTENT = 1 shl 15
 
         private val defaultFolderProvider: DefaultFolderProvider by inject()
 

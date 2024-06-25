@@ -1,48 +1,17 @@
 package com.fsck.k9.ui.folders
 
-import android.content.res.Resources
-import android.util.TypedValue
+import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons
 import com.fsck.k9.mailstore.FolderType
-import com.fsck.k9.ui.R
 
-class FolderIconProvider(private val theme: Resources.Theme) {
-    private val iconFolderInboxResId: Int
-    private val iconFolderOutboxResId: Int
-    private val iconFolderSentResId: Int
-    private val iconFolderTrashResId: Int
-    private val iconFolderDraftsResId: Int
-    private val iconFolderArchiveResId: Int
-    private val iconFolderSpamResId: Int
-    var iconFolderResId: Int
-
-    init {
-        iconFolderInboxResId = getResId(R.attr.iconFolderInbox)
-        iconFolderOutboxResId = getResId(R.attr.iconFolderOutbox)
-        iconFolderSentResId = getResId(R.attr.iconFolderSent)
-        iconFolderTrashResId = getResId(R.attr.iconFolderTrash)
-        iconFolderDraftsResId = getResId(R.attr.iconFolderDrafts)
-        iconFolderArchiveResId = getResId(R.attr.iconFolderArchive)
-        iconFolderSpamResId = getResId(R.attr.iconFolderSpam)
-        iconFolderResId = getResId(R.attr.iconFolder)
-    }
-
-    private fun getResId(resAttribute: Int): Int {
-        val typedValue = TypedValue()
-        val found = theme.resolveAttribute(resAttribute, typedValue, true)
-        if (!found) {
-            throw AssertionError("Couldn't find resource with attribute $resAttribute")
-        }
-        return typedValue.resourceId
-    }
-
+class FolderIconProvider {
     fun getFolderIcon(type: FolderType): Int = when (type) {
-        FolderType.INBOX -> iconFolderInboxResId
-        FolderType.OUTBOX -> iconFolderOutboxResId
-        FolderType.SENT -> iconFolderSentResId
-        FolderType.TRASH -> iconFolderTrashResId
-        FolderType.DRAFTS -> iconFolderDraftsResId
-        FolderType.ARCHIVE -> iconFolderArchiveResId
-        FolderType.SPAM -> iconFolderSpamResId
-        else -> iconFolderResId
+        FolderType.INBOX -> Icons.Outlined.Inbox
+        FolderType.OUTBOX -> Icons.Outlined.Outbox
+        FolderType.SENT -> Icons.Outlined.Send
+        FolderType.TRASH -> Icons.Outlined.Delete
+        FolderType.DRAFTS -> Icons.Outlined.Draft
+        FolderType.ARCHIVE -> Icons.Outlined.Archive
+        FolderType.SPAM -> Icons.Outlined.Report
+        FolderType.REGULAR -> Icons.Outlined.Folder
     }
 }

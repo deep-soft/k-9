@@ -9,16 +9,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.k9mail.core.common.provider.AppNameProvider
 import com.fsck.k9.ui.R
+import com.google.android.material.textview.MaterialTextView
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class AboutFragment : Fragment() {
+    private val appNameProvider: AppNameProvider by inject()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_about, container, false)
     }
@@ -26,7 +30,10 @@ class AboutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val versionTextView = view.findViewById<TextView>(R.id.version)
+        val titleTextView = view.findViewById<MaterialTextView>(R.id.about_title)
+        titleTextView.text = getString(R.string.about_title, appNameProvider.appName)
+
+        val versionTextView = view.findViewById<MaterialTextView>(R.id.version)
         versionTextView.text = getVersionNumber()
 
         val versionLayout = view.findViewById<View>(R.id.versionLayout)
@@ -55,11 +62,6 @@ class AboutFragment : Fragment() {
         val userForumLayout = view.findViewById<View>(R.id.userForumLayout)
         userForumLayout.setOnClickListener {
             openUrl(getString(R.string.user_forum_url))
-        }
-
-        val fediverseLayout = view.findViewById<View>(R.id.fediverseLayout)
-        fediverseLayout.setOnClickListener {
-            openUrl(getString(R.string.fediverse_url))
         }
 
         val manager = LinearLayoutManager(view.context)
@@ -197,8 +199,8 @@ private class LibrariesAdapter(private val dataset: Array<Library>) :
     RecyclerView.Adapter<LibrariesAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.findViewById(R.id.name)
-        val license: TextView = view.findViewById(R.id.license)
+        val name: MaterialTextView = view.findViewById(R.id.name)
+        val license: MaterialTextView = view.findViewById(R.id.license)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

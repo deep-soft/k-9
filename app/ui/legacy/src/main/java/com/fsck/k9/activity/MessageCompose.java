@@ -19,6 +19,7 @@ import android.content.IntentSender;
 import android.content.IntentSender.SendIntentException;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,7 +38,6 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,6 +46,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.content.IntentCompat;
 import androidx.core.os.BundleCompat;
+import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.fsck.k9.Account;
@@ -115,8 +116,10 @@ import com.fsck.k9.ui.compose.WrapUriTextWatcher;
 import com.fsck.k9.ui.helper.SizeFormatter;
 import com.fsck.k9.ui.messagelist.DefaultFolderProvider;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textview.MaterialTextView;
 import org.openintents.openpgp.OpenPgpApiManager;
 import org.openintents.openpgp.util.OpenPgpApi;
+import org.openintents.openpgp.util.OpenPgpIntentStarter;
 import timber.log.Timber;
 
 
@@ -221,7 +224,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
 
     private boolean requestReadReceipt = false;
 
-    private TextView chooseIdentityButton;
+    private MaterialTextView chooseIdentityView;
     private EditText subjectView;
     private EditText signatureView;
     private EditText messageContentView;
@@ -295,8 +298,8 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             return;
         }
 
-        chooseIdentityButton = findViewById(R.id.identity);
-        chooseIdentityButton.setOnClickListener(this);
+        chooseIdentityView = findViewById(R.id.identity);
+        chooseIdentityView.setOnClickListener(this);
 
         ReplyToView replyToView = new ReplyToView(this);
         replyToPresenter = new ReplyToPresenter(replyToView);
@@ -502,9 +505,9 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         boolean startedByExternalIntent = false;
         final String action = intent.getAction();
 
-        if (Intent.ACTION_VIEW.equals(action) || Intent.ACTION_SENDTO.equals(action)) {
+        if (Intent.ACTION_VIEW.equals(action) || Intent.ACTION_SENDTO.equals(action) || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
             /*
-             * Someone has clicked a mailto: link. The address is in the URI.
+             * Someone has clicked a mailto: link, or scanned an NFC tag. The address is in the URI.
              */
             if (intent.getData() != null) {
                 Uri uri = intent.getData();
@@ -934,7 +937,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
     }
 
     private void updateFrom() {
-        chooseIdentityButton.setText(identity.getEmail());
+        chooseIdentityView.setText(identity.getEmail());
     }
 
     private void updateSignature() {
@@ -1621,7 +1624,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
     public void onMessageBuildReturnPendingIntent(PendingIntent pendingIntent, int requestCode) {
         requestCode |= REQUEST_MASK_MESSAGE_BUILDER;
         try {
-            startIntentSenderForResult(pendingIntent.getIntentSender(), requestCode, null, 0, 0, 0);
+            OpenPgpIntentStarter.startIntentSenderForResult(this, pendingIntent.getIntentSender(), requestCode);
         } catch (SendIntentException e) {
             Timber.e(e, "Error starting pending intent from builder!");
         }
@@ -1630,9 +1633,9 @@ public class MessageCompose extends K9Activity implements OnClickListener,
     public void launchUserInteractionPendingIntent(PendingIntent pendingIntent, int requestCode) {
         requestCode |= REQUEST_MASK_RECIPIENT_PRESENTER;
         try {
-            startIntentSenderForResult(pendingIntent.getIntentSender(), requestCode, null, 0, 0, 0);
+            OpenPgpIntentStarter.startIntentSenderForResult(this, pendingIntent.getIntentSender(), requestCode);
         } catch (SendIntentException e) {
-            e.printStackTrace();
+            Timber.e(e, "Error starting pending intent from builder!");
         }
     }
 
@@ -1688,11 +1691,10 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         }
 
         @Override
-        public boolean startIntentSenderForMessageLoaderHelper(IntentSender si, int requestCode, Intent fillIntent,
-                int flagsMask, int flagValues, int extraFlags) {
+        public boolean startIntentSenderForMessageLoaderHelper(IntentSender intentSender, int requestCode) {
             try {
                 requestCode |= REQUEST_MASK_LOADER_HELPER;
-                startIntentSenderForResult(si, requestCode, fillIntent, flagsMask, flagValues, extraFlags);
+                OpenPgpIntentStarter.startIntentSenderForResult(MessageCompose.this, intentSender, requestCode);
             } catch (SendIntentException e) {
                 Timber.e(e, "Irrecoverable error calling PendingIntent!");
             }
@@ -1826,7 +1828,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
                 throw new IllegalArgumentException();
             }
 
-            TextView nameView = view.findViewById(R.id.attachment_name);
+            MaterialTextView nameView = view.findViewById(R.id.attachment_name);
             boolean hasMetadata = (attachment.state != Attachment.LoadingState.URI_ONLY);
             if (hasMetadata) {
                 nameView.setText(attachment.name);
@@ -1835,7 +1837,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             }
 
             if (attachment.size != null && attachment.size >= 0) {
-                TextView sizeView = view.findViewById(R.id.attachment_size);
+                MaterialTextView sizeView = view.findViewById(R.id.attachment_size);
                 sizeView.setText(sizeFormatter.formatSize(attachment.size));
             }
 
@@ -1844,7 +1846,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             if (isLoadingComplete) {
                 if (attachment.isSupportedImage()) {
                     ImageView attachmentTypeView = view.findViewById(R.id.attachment_type);
-                    attachmentTypeView.setImageResource(R.drawable.ic_attachment_image);
+                    attachmentTypeView.setImageResource(Icons.Outlined.Image);
 
                     ImageView preview = view.findViewById(R.id.attachment_preview);
                     preview.setVisibility(View.VISIBLE);

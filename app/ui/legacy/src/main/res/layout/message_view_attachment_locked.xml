@@ -29,13 +29,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:contentDescription="@null"
-                app:srcCompat="@drawable/status_signature_unknown"
+                app:srcCompat="@drawable/ic_help"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="?attr/openpgp_red" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/locked_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -43,8 +43,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/locked_attach_title"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="14sp"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
                 app:layout_constraintBottom_toTopOf="@+id/locked_info"
                 app:layout_constraintEnd_toStartOf="@+id/locked_button"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -52,14 +51,14 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/locked_info"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="@string/locked_attach_unencrypted"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="12sp"
+                android:textColor="?attr/colorSecondary"
+                android:textAppearance="?attr/textAppearanceBodySmall"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/locked_name"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -74,7 +73,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/locked_attach_unlock"
-                app:srcCompat="?attr/unencryptedAttachmentUnlock"
+                app:srcCompat="@drawable/ic_visibility"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/locked_name"

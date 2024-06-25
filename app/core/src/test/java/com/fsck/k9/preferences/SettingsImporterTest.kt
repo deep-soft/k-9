@@ -1,11 +1,8 @@
 package com.fsck.k9.preferences
 
-import android.content.Context
 import assertk.all
 import assertk.assertFailure
 import assertk.assertThat
-import assertk.assertions.containsExactly
-import assertk.assertions.extracting
 import assertk.assertions.first
 import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
@@ -13,25 +10,16 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isTrue
-import assertk.assertions.key
 import assertk.assertions.prop
 import com.fsck.k9.K9RobolectricTest
 import com.fsck.k9.Preferences
-import com.fsck.k9.mail.AuthType
-import com.fsck.k9.preferences.SettingsImporter.AccountDescription
-import com.fsck.k9.preferences.SettingsImporter.AccountDescriptionPair
-import com.fsck.k9.preferences.SettingsImporter.ImportContents
-import com.fsck.k9.preferences.SettingsImporter.ImportResults
-import com.fsck.k9.preferences.SettingsImporter.ImportedAccount
-import com.fsck.k9.preferences.SettingsImporter.ImportedIdentity
-import com.fsck.k9.preferences.SettingsImporter.ImportedServer
 import java.util.UUID
 import org.junit.Before
 import org.junit.Test
-import org.robolectric.RuntimeEnvironment
+import org.koin.test.inject
 
 class SettingsImporterTest : K9RobolectricTest() {
-    private val context: Context = RuntimeEnvironment.getApplication()
+    private val settingsImporter: SettingsImporter by inject()
 
     @Before
     fun before() {
@@ -49,7 +37,7 @@ class SettingsImporterTest : K9RobolectricTest() {
         val accountUuids = emptyList<String>()
 
         assertFailure {
-            SettingsImporter.importSettings(context, inputStream, true, accountUuids, true)
+            settingsImporter.importSettings(inputStream, globalSettings = true, accountUuids)
         }.isInstanceOf<SettingsImportExportException>()
     }
 
@@ -59,7 +47,7 @@ class SettingsImporterTest : K9RobolectricTest() {
         val accountUuids = emptyList<String>()
 
         assertFailure {
-            SettingsImporter.importSettings(context, inputStream, true, accountUuids, true)
+            settingsImporter.importSettings(inputStream, globalSettings = true, accountUuids)
         }.isInstanceOf<SettingsImportExportException>()
     }
 
@@ -69,7 +57,7 @@ class SettingsImporterTest : K9RobolectricTest() {
         val accountUuids = emptyList<String>()
 
         assertFailure {
-            SettingsImporter.importSettings(context, inputStream, true, accountUuids, true)
+            settingsImporter.importSettings(inputStream, globalSettings = true, accountUuids)
         }.isInstanceOf<SettingsImportExportException>()
     }
 
@@ -79,7 +67,7 @@ class SettingsImporterTest : K9RobolectricTest() {
         val accountUuids = emptyList<String>()
 
         assertFailure {
-            SettingsImporter.importSettings(context, inputStream, true, accountUuids, true)
+            settingsImporter.importSettings(inputStream, globalSettings = true, accountUuids)
         }.isInstanceOf<SettingsImportExportException>()
     }
 
@@ -89,7 +77,7 @@ class SettingsImporterTest : K9RobolectricTest() {
         val accountUuids = emptyList<String>()
 
         assertFailure {
-            SettingsImporter.importSettings(context, inputStream, true, accountUuids, true)
+            settingsImporter.importSettings(inputStream, globalSettings = true, accountUuids)
         }.isInstanceOf<SettingsImportExportException>()
     }
 
@@ -99,7 +87,7 @@ class SettingsImporterTest : K9RobolectricTest() {
         val accountUuids = emptyList<String>()
 
         assertFailure {
-            SettingsImporter.importSettings(context, inputStream, true, accountUuids, true)
+            settingsImporter.importSettings(inputStream, globalSettings = true, accountUuids)
         }.isInstanceOf<SettingsImportExportException>()
     }
 
@@ -109,92 +97,8 @@ class SettingsImporterTest : K9RobolectricTest() {
         val accountUuids = emptyList<String>()
 
         assertFailure {
-            SettingsImporter.importSettings(context, inputStream, true, accountUuids, true)
+            settingsImporter.importSettings(inputStream, globalSettings = true, accountUuids)
         }.isInstanceOf<SettingsImportExportException>()
-    }
-
-    @Test
-    fun `parseSettings() should return accounts`() {
-        val accountUuid = UUID.randomUUID().toString()
-        val inputStream =
-            """
-            <k9settings format="1" version="1">
-              <accounts>
-                <account uuid="$accountUuid">
-                  <name>Account</name>
-                </account>
-              </accounts>
-            </k9settings>
-            """.trimIndent().byteInputStream()
-        val accountUuids = listOf("1")
-
-        val results = SettingsImporter.parseSettings(inputStream, true, accountUuids, true)
-
-        assertThat(results.accounts).all {
-            hasSize(1)
-            key(accountUuid).all {
-                prop(ImportedAccount::uuid).isEqualTo(accountUuid)
-                prop(ImportedAccount::name).isEqualTo("Account")
-            }
-        }
-    }
-
-    @Test
-    fun `parseSettings() should return identities`() {
-        val accountUuid = UUID.randomUUID().toString()
-        val inputStream =
-            """
-            <k9settings format="1" version="1">
-              <accounts>
-                <account uuid="$accountUuid">
-                  <name>Account</name>
-                  <identities>
-                    <identity>
-                      <email>user@gmail.com</email>
-                    </identity>
-                  </identities>
-                </account>
-              </accounts>
-            </k9settings>
-            """.trimIndent().byteInputStream()
-        val accountUuids = listOf("1")
-
-        val results = SettingsImporter.parseSettings(inputStream, true, accountUuids, true)
-
-        assertThat(results.accounts).all {
-            hasSize(1)
-            key(accountUuid).all {
-                prop(ImportedAccount::uuid).isEqualTo(accountUuid)
-                prop(ImportedAccount::identities).extracting(ImportedIdentity::email).containsExactly("user@gmail.com")
-            }
-        }
-    }
-
-    @Test
-    fun `parseSettings() should parse incoming server authentication type`() {
-        val accountUuid = UUID.randomUUID().toString()
-        val inputStream =
-            """
-            <k9settings format="1" version="1">
-              <accounts>
-                <account uuid="$accountUuid">
-                  <name>Account</name>
-                  <incoming-server>
-                    <authentication-type>CRAM_MD5</authentication-type>
-                  </incoming-server>
-                </account>
-              </accounts>
-            </k9settings>
-            """.trimIndent().byteInputStream()
-        val accountUuids = listOf(accountUuid)
-
-        val results = SettingsImporter.parseSettings(inputStream, true, accountUuids, false)
-
-        assertThat(results.accounts)
-            .key(accountUuid)
-            .prop(ImportedAccount::incoming)
-            .prop(ImportedServer::authenticationType)
-            .isEqualTo(AuthType.CRAM_MD5)
     }
 
     @Test
@@ -232,7 +136,7 @@ class SettingsImporterTest : K9RobolectricTest() {
             """.trimIndent().byteInputStream()
         val accountUuids = listOf(accountUuid)
 
-        val results = SettingsImporter.importSettings(context, inputStream, true, accountUuids, false)
+        val results = settingsImporter.importSettings(inputStream, globalSettings = true, accountUuids)
 
         assertThat(results).all {
             prop(ImportResults::erroneousAccounts).isEmpty()
@@ -269,7 +173,7 @@ class SettingsImporterTest : K9RobolectricTest() {
             </k9settings>
             """.trimIndent().byteInputStream()
 
-        val results = SettingsImporter.getImportStreamContents(inputStream)
+        val results = settingsImporter.getImportStreamContents(inputStream)
 
         assertThat(results).all {
             prop(ImportContents::globalSettings).isFalse()
@@ -302,7 +206,7 @@ class SettingsImporterTest : K9RobolectricTest() {
             </k9settings>
             """.trimIndent().byteInputStream()
 
-        val results = SettingsImporter.getImportStreamContents(inputStream)
+        val results = settingsImporter.getImportStreamContents(inputStream)
 
         assertThat(results).all {
             prop(ImportContents::globalSettings).isFalse()

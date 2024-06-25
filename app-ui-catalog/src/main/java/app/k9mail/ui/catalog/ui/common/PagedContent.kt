@@ -12,15 +12,15 @@ import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.ScrollableTabRow
-import androidx.compose.material.Tab
-import androidx.compose.material.Text
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import app.k9mail.core.ui.compose.designsystem.template.ResponsiveContentWithBackground
-import app.k9mail.core.ui.compose.theme.MainTheme
+import app.k9mail.core.ui.compose.designsystem.template.ResponsiveContentWithSurface
+import app.k9mail.core.ui.compose.theme2.MainTheme
+import app.k9mail.ui.catalog.ui.common.list.fullSpanItem
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
@@ -58,14 +58,14 @@ fun <T> PagedContent(
                 )
             }
         }
-        ResponsiveContentWithBackground {
+        ResponsiveContentWithSurface {
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier
                     .fillMaxSize(),
             ) { page ->
                 LazyVerticalGrid(
-                    columns = GridCells.Adaptive(300.dp),
+                    columns = GridCells.Adaptive(MainTheme.sizes.larger),
                     modifier = Modifier
                         .fillMaxSize()
                         .imePadding(),
@@ -73,7 +73,7 @@ fun <T> PagedContent(
                     verticalArrangement = Arrangement.spacedBy(MainTheme.spacings.double),
                 ) {
                     onRenderPage(pages[page])
-                    item { Spacer(modifier = Modifier.height(MainTheme.sizes.smaller)) }
+                    fullSpanItem { Spacer(modifier = Modifier.height(MainTheme.sizes.smaller)) }
                 }
             }
         }

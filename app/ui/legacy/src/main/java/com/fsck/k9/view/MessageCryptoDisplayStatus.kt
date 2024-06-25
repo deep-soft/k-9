@@ -3,6 +3,7 @@ package com.fsck.k9.view
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons
 import com.fsck.k9.mailstore.CryptoResultAnnotation
 import com.fsck.k9.mailstore.CryptoResultAnnotation.CryptoError
 import com.fsck.k9.ui.R
@@ -42,29 +43,29 @@ enum class MessageCryptoDisplayStatus(
     LOADING(
         isEnabled = false,
         colorAttr = R.attr.openpgp_grey,
-        statusIconRes = R.drawable.status_lock_disabled,
+        statusIconRes = Icons.Outlined.NoEncryption,
     ),
     CANCELLED(
         colorAttr = R.attr.openpgp_black,
-        statusIconRes = R.drawable.status_lock_unknown,
+        statusIconRes = Icons.Outlined.Help,
         titleTextRes = R.string.crypto_msg_title_encrypted_unknown,
         descriptionTextRes = R.string.crypto_msg_cancelled,
     ),
     DISABLED(
         isEnabled = false,
         colorAttr = R.attr.openpgp_grey,
-        statusIconRes = R.drawable.status_lock_disabled,
+        statusIconRes = Icons.Outlined.NoEncryption,
         titleTextRes = R.string.crypto_msg_title_plaintext,
     ),
     UNENCRYPTED_SIGN_ERROR(
         colorAttr = R.attr.openpgp_grey,
-        statusIconRes = R.drawable.status_signature_unknown,
+        statusIconRes = Icons.Outlined.Help,
         titleTextRes = R.string.crypto_msg_title_plaintext,
         descriptionTextRes = R.string.crypto_msg_unencrypted_sign_error,
     ),
     INCOMPLETE_SIGNED(
         colorAttr = R.attr.openpgp_black,
-        statusIconRes = R.drawable.status_signature_unknown,
+        statusIconRes = Icons.Outlined.Help,
         titleTextRes = R.string.crypto_msg_title_plaintext,
         descriptionTextRes = R.string.crypto_msg_incomplete_signed,
     ),
@@ -76,36 +77,36 @@ enum class MessageCryptoDisplayStatus(
     ),
     UNENCRYPTED_SIGN_UNVERIFIED(
         colorAttr = R.attr.openpgp_blue,
-        statusIconRes = R.drawable.status_signature,
+        statusIconRes = Icons.Outlined.CheckCircle,
         titleTextRes = R.string.crypto_msg_title_unencrypted_signed_e2e,
     ),
     UNENCRYPTED_SIGN_UNKNOWN(
         colorAttr = R.attr.openpgp_orange,
-        statusIconRes = R.drawable.status_signature_unknown,
+        statusIconRes = Icons.Outlined.Help,
         titleTextRes = R.string.crypto_msg_title_unencrypted_signed,
         descriptionTextRes = R.string.crypto_msg_unencrypted_sign_unknown,
     ),
     UNENCRYPTED_SIGN_MISMATCH(
         colorAttr = R.attr.openpgp_grey,
-        statusIconRes = R.drawable.status_signature_unknown,
+        statusIconRes = Icons.Outlined.Help,
         titleTextRes = R.string.crypto_msg_title_unencrypted_signed,
         descriptionTextRes = R.string.crypto_msg_unencrypted_sign_mismatch,
     ),
     UNENCRYPTED_SIGN_EXPIRED(
         colorAttr = R.attr.openpgp_grey,
-        statusIconRes = R.drawable.status_signature_unknown,
+        statusIconRes = Icons.Outlined.Help,
         titleTextRes = R.string.crypto_msg_title_unencrypted_signed,
         descriptionTextRes = R.string.crypto_msg_unencrypted_sign_expired,
     ),
     UNENCRYPTED_SIGN_REVOKED(
         colorAttr = R.attr.openpgp_grey,
-        statusIconRes = R.drawable.status_signature_unknown,
+        statusIconRes = Icons.Outlined.Help,
         titleTextRes = R.string.crypto_msg_title_unencrypted_signed,
         descriptionTextRes = R.string.crypto_msg_unencrypted_sign_revoked,
     ),
     UNENCRYPTED_SIGN_INSECURE(
         colorAttr = R.attr.openpgp_grey,
-        statusIconRes = R.drawable.status_signature_unknown,
+        statusIconRes = Icons.Outlined.Help,
         titleTextRes = R.string.crypto_msg_title_unencrypted_signed,
         descriptionTextRes = R.string.crypto_msg_unencrypted_sign_insecure,
     ),
@@ -117,12 +118,12 @@ enum class MessageCryptoDisplayStatus(
     ),
     ENCRYPTED_SIGN_UNVERIFIED(
         colorAttr = R.attr.openpgp_green,
-        statusIconRes = R.drawable.status_lock,
+        statusIconRes = Icons.Outlined.Lock,
         titleTextRes = R.string.crypto_msg_title_encrypted_signed_e2e,
     ),
     ENCRYPTED_SIGN_UNKNOWN(
         colorAttr = R.attr.openpgp_orange,
-        statusIconRes = R.drawable.status_lock_unknown,
+        statusIconRes = Icons.Outlined.Help,
         titleTextRes = R.string.crypto_msg_title_encrypted_signed,
         descriptionTextRes = R.string.crypto_msg_encrypted_sign_unknown,
     ),
@@ -176,7 +177,7 @@ enum class MessageCryptoDisplayStatus(
     ),
     INCOMPLETE_ENCRYPTED(
         colorAttr = R.attr.openpgp_black,
-        statusIconRes = R.drawable.status_lock_unknown,
+        statusIconRes = Icons.Outlined.Help,
         titleTextRes = R.string.crypto_msg_title_encrypted_unknown,
         descriptionTextRes = R.string.crypto_msg_encrypted_incomplete,
     ),
@@ -194,7 +195,7 @@ enum class MessageCryptoDisplayStatus(
     ),
     UNSUPPORTED_SIGNED(
         colorAttr = R.attr.openpgp_grey,
-        statusIconRes = R.drawable.status_lock_disabled,
+        statusIconRes = Icons.Outlined.NoEncryption,
         titleTextRes = R.string.crypto_msg_title_encrypted_unknown,
         descriptionTextRes = R.string.crypto_msg_unsupported_signed,
     ),
@@ -215,6 +216,7 @@ enum class MessageCryptoDisplayStatus(
             UNENCRYPTED_SIGN_REVOKED,
             UNENCRYPTED_SIGN_INSECURE,
             -> true
+
             else -> false
         }
     }
@@ -230,6 +232,7 @@ enum class MessageCryptoDisplayStatus(
             UNENCRYPTED_SIGN_REVOKED,
             UNENCRYPTED_SIGN_INSECURE,
             -> true
+
             else -> false
         }
 
@@ -298,6 +301,7 @@ enum class MessageCryptoDisplayStatus(
                 RESULT_NO_SIGNATURE -> ENCRYPTED_UNSIGNED
                 RESULT_VALID_KEY_CONFIRMED, RESULT_VALID_KEY_UNCONFIRMED ->
                     getStatusForPgpEncryptedSenderStatusResult(signatureResult.senderStatusResult)
+
                 RESULT_KEY_MISSING -> ENCRYPTED_SIGN_UNKNOWN
                 RESULT_INVALID_SIGNATURE -> ENCRYPTED_SIGN_ERROR
                 RESULT_INVALID_KEY_EXPIRED -> ENCRYPTED_SIGN_EXPIRED
@@ -326,6 +330,7 @@ enum class MessageCryptoDisplayStatus(
                 RESULT_NO_SIGNATURE -> DISABLED
                 RESULT_VALID_KEY_CONFIRMED, RESULT_VALID_KEY_UNCONFIRMED ->
                     getStatusForPgpUnencryptedSenderStatusResult(signatureResult.senderStatusResult)
+
                 RESULT_KEY_MISSING -> UNENCRYPTED_SIGN_UNKNOWN
                 RESULT_INVALID_SIGNATURE -> UNENCRYPTED_SIGN_ERROR
                 RESULT_INVALID_KEY_EXPIRED -> UNENCRYPTED_SIGN_EXPIRED

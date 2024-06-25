@@ -11,7 +11,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.view.ActionMode
@@ -57,6 +56,7 @@ import com.fsck.k9.ui.messagelist.MessageListFragment.MessageListFragmentListene
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textview.MaterialTextView
 import java.util.concurrent.Future
 import kotlinx.datetime.Clock
 import net.jcip.annotations.GuardedBy
@@ -268,7 +268,7 @@ class MessageListFragment :
     }
 
     private fun initializeErrorLayout(view: View) {
-        val errorMessageView = view.findViewById<TextView>(R.id.message_list_error_message)
+        val errorMessageView = view.findViewById<MaterialTextView>(R.id.message_list_error_message)
         errorMessageView.text = getString(error!!.errorText)
     }
 
@@ -336,7 +336,7 @@ class MessageListFragment :
         val itemTouchHelper = ItemTouchHelper(
             MessageListSwipeCallback(
                 requireContext(),
-                resourceProvider = SwipeResourceProvider(requireActivity().theme),
+                resourceProvider = SwipeResourceProvider(requireContext()),
                 swipeActionSupportProvider,
                 swipeRightAction = K9.swipeRightAction,
                 swipeLeftAction = K9.swipeLeftAction,
@@ -1899,7 +1899,7 @@ class MessageListFragment :
         }
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-            mode.menuInflater.inflate(R.menu.message_list_context, menu)
+            mode.menuInflater.inflate(R.menu.message_list_context_menu, menu)
 
             setContextCapabilities(account, menu)
             return true

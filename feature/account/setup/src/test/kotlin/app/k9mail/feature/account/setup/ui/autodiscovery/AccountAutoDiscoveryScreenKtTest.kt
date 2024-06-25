@@ -1,9 +1,9 @@
 package app.k9mail.feature.account.setup.ui.autodiscovery
 
 import app.k9mail.core.ui.compose.testing.ComposeTest
-import app.k9mail.core.ui.compose.testing.setContent
-import app.k9mail.core.ui.compose.theme.ThunderbirdTheme
+import app.k9mail.core.ui.compose.testing.setContentWithTheme
 import app.k9mail.feature.account.common.domain.entity.IncomingProtocolType
+import app.k9mail.feature.account.setup.ui.FakeAppNameProvider
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Effect
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.State
 import assertk.assertThat
@@ -20,14 +20,13 @@ class AccountAutoDiscoveryScreenKtTest : ComposeTest() {
         var onNextCounter = 0
         var onBackCounter = 0
 
-        setContent {
-            ThunderbirdTheme {
-                AccountAutoDiscoveryScreen(
-                    onNext = { onNextCounter++ },
-                    onBack = { onBackCounter++ },
-                    viewModel = viewModel,
-                )
-            }
+        setContentWithTheme {
+            AccountAutoDiscoveryScreen(
+                onNext = { onNextCounter++ },
+                onBack = { onBackCounter++ },
+                viewModel = viewModel,
+                appNameProvider = FakeAppNameProvider,
+            )
         }
 
         assertThat(onNextCounter).isEqualTo(0)

@@ -7,11 +7,11 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.TypedValue
 import android.widget.ImageView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons
 import com.fsck.k9.Account
 import com.fsck.k9.K9
 import com.fsck.k9.activity.MessageList
@@ -71,6 +71,7 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
     private val resources: Resources by inject()
     private val messagingController: MessagingController by inject()
     private val accountImageLoader: AccountImageLoader by inject()
+    private val folderIconProvider: FolderIconProvider by inject()
 
     private val drawer: DrawerLayout = parent.findViewById(R.id.drawerLayout)
     private val sliderView: MaterialDrawerSliderView = parent.findViewById(R.id.material_drawer_slider)
@@ -79,7 +80,6 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
         dividerBelowHeader = false
         displayBadgesOnCurrentProfileImage = false
     }
-    private val folderIconProvider: FolderIconProvider = FolderIconProvider(parent.theme)
     private val swipeRefreshLayout: SwipeRefreshLayout
 
     private val userFolderDrawerIds = ArrayList<Long>()
@@ -279,7 +279,7 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
         sliderView.addStickyFooterItem(
             PrimaryDrawerItem().apply {
                 nameRes = R.string.folders_action
-                iconRes = folderIconProvider.iconFolderResId
+                iconRes = Icons.Outlined.Folder
                 identifier = DRAWER_ID_FOLDERS
                 isSelectable = false
             },
@@ -288,20 +288,11 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
         sliderView.addStickyFooterItem(
             PrimaryDrawerItem().apply {
                 nameRes = R.string.preferences_action
-                iconRes = getResId(R.attr.iconActionSettings)
+                iconRes = Icons.Outlined.Settings
                 identifier = DRAWER_ID_PREFERENCES
                 isSelectable = false
             },
         )
-    }
-
-    private fun getResId(resAttribute: Int): Int {
-        val typedValue = TypedValue()
-        val found = parent.theme.resolveAttribute(resAttribute, typedValue, true)
-        if (!found) {
-            throw AssertionError("Couldn't find resource with attribute $resAttribute")
-        }
-        return typedValue.resourceId
     }
 
     private fun getFolderDisplayName(folder: Folder): String {
@@ -370,7 +361,7 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
 
         folderList.unifiedInbox?.let { unifiedInbox ->
             val unifiedInboxItem = PrimaryDrawerItem().apply {
-                iconRes = R.drawable.ic_inbox_multiple
+                iconRes = Icons.Outlined.AllInbox
                 identifier = DRAWER_ID_UNIFIED_INBOX
                 nameRes = R.string.integrated_inbox_title
                 selectedColorInt = selectedBackgroundColor

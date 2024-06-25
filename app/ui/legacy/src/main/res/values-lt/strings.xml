@@ -3,8 +3,6 @@
     <!--=== App-specific strings =============================================================-->
     <!--This should make it easier for forks to change the branding-->
     <!--Used in AndroidManifest.xml-->
-    <string name="app_name">K-9 paštas</string>
-    <string name="shortcuts_title">K-9 paskyros</string>
     <string name="unread_widget_label">K-9 neskaityta</string>
     <!--Used in the about dialog-->
     <string name="app_authors">K-9 šunų vedžiotojai</string>
@@ -15,7 +13,6 @@
     <string name="user_manual_title">Naudotojo vadovas</string>
     <string name="get_help_title">Gauti pagalbos</string>
     <string name="user_forum_title">Naudotojų forumas</string>
-    <string name="about_fediverse_title">Fediverse</string>
     <string name="about_libraries">Bibliotekos</string>
     <string name="license">Licencija</string>
     <string name="changelog_title">Pakeitimų sąrašas</string>
@@ -27,20 +24,15 @@
     <string name="changelog_snackbar_text">Sužinokite, kas naujo šioje versijoje</string>
     <!--Button text of the "snack bar" that is displayed when the app was updated.-->
     <!--Default signature-->
-    <string name="default_signature">- \nIšsiųsta iš mano Android įrenginio naudojant K-9 Mail. Atleiskite už trumpumą.</string>
     <!--General strings that include the app name-->
-    <string name="account_delete_dlg_instructions_fmt">Paskyra \"<xliff:g id="account">%s</xliff:g>\" bus pašalinta iš „K-9 Mail“.</string>
     <!--=== General strings ==================================================================-->
     <string name="authors">Autoriai</string>
-    <string name="about_title">Apie K-9 Mail</string>
     <string name="accounts_title">Paskyros</string>
-    <string name="advanced">Išplėstinis</string>
     <string name="compose_title_compose">Sukurti</string>
     <string name="compose_title_reply">Atsakyti</string>
     <string name="compose_title_reply_all">Atsakyti visiems</string>
     <string name="compose_title_forward">Persiųsti</string>
     <string name="compose_title_forward_as_attachment">Persiųsti kaip priedą</string>
-    <string name="choose_account_title">Pasirinkti Paskyrą</string>
     <string name="choose_folder_title">Pasirinkti aplanką</string>
     <string name="choose_folder_move_title">Perkelti į…</string>
     <string name="choose_folder_copy_title">Kopijuoti į…</string>
@@ -282,7 +274,6 @@
     <string name="spam_folder_label">Brukalo aplankas</string>
     <string name="account_setup_incoming_subscribed_folders_only_label">Rodyti tik prenumeruotus aplankus</string>
     <string name="account_setup_auto_expand_folder">Automatiškai išskleisti aplanką</string>
-    <string name="account_setup_options_mail_check_frequency_label">Aplanko tikrinimo dažnis</string>
     <string name="account_setup_options_mail_check_frequency_never">Niekada</string>
     <string name="account_setup_options_mail_check_frequency_15min">Kas 15 minučių</string>
     <string name="account_setup_options_mail_check_frequency_30min">Kas 30 minučių</string>
@@ -301,7 +292,6 @@
     <string name="idle_refresh_period_36min">Kas 36 minutes</string>
     <string name="idle_refresh_period_48min">Kas 48 minutes</string>
     <string name="idle_refresh_period_60min">Kas 60 minučių</string>
-    <string name="account_setup_options_mail_display_count_label">Rodyti laiškų</string>
     <string name="account_setup_options_mail_display_count_10">10 laiškų</string>
     <string name="account_setup_options_mail_display_count_25">25 laiškai</string>
     <string name="account_setup_options_mail_display_count_50">50 laiškų</string>
@@ -671,18 +661,6 @@
     <string name="settings_export_progress_text">Eksportuojami nustatymai…</string>
     <string name="settings_export_success_generic">Nustatymai sėkmingai eksportuoti</string>
     <string name="settings_export_failure">Eksportuoti nustatymų nepavyko</string>
-    <string name="unread_widget_select_account">Rodyti neskaitytų skaičių…</string>
-    <string name="unread_widget_account_title">Paskyra</string>
-    <string name="unread_widget_account_summary">Paskyra, kurios neperskaitytų laiškų skaičius turėtų būti rodomas</string>
-    <string name="unread_widget_unified_inbox_account_summary">Suvestiniai gautieji</string>
-    <string name="unread_widget_folder_enabled_title">Aplankų skaičius</string>
-    <string name="unread_widget_folder_enabled_summary">Rodyti tik vieno aplanko neperskaitytų laiškų skaičių</string>
-    <string name="unread_widget_folder_title">Aplankas</string>
-    <string name="unread_widget_folder_summary">Aplankas, kuriame turėtų būti rodomas neperskaitytų laiškų skaičius</string>
-    <string name="unread_widget_action_done">Baigta</string>
-    <string name="unread_widget_title"><xliff:g id="account_name">%1$s</xliff:g> - <xliff:g id="folder_name">%2$s</xliff:g></string>
-    <string name="unread_widget_account_not_selected">Nepasirinkta jokia paskyra</string>
-    <string name="unread_widget_folder_not_selected">Nepasirinktas joks aplankas</string>
     <string name="webview_empty_message">Jokio teksto</string>
     <string name="webview_contextmenu_link_view_action">Atverti nuorodą</string>
     <string name="webview_contextmenu_link_share_action">Bendrinti nuorodą</string>
@@ -824,11 +802,6 @@
     <string name="crypto_msg_encrypted_sign_insecure">bet visapusiškas raktas nelaikomas saugiu</string>
     <string name="crypto_msg_encrypted_sign_error">bet visapusiški duomenys turi klaidų</string>
     <string name="crypto_msg_encrypted_insecure">bet šifravimas nelaikomas saugiu</string>
-    <string name="crypto_info_ok">Gerai</string>
-    <string name="crypto_info_search_key">Ieškoti rakto</string>
-    <string name="crypto_info_view_signer">Peržiūrėti pasirašytoją</string>
-    <string name="crypto_info_view_sender">Peržiūrėti siuntėją</string>
-    <string name="crypto_info_view_security_warning">Išsamiau</string>
     <string name="locked_attach_unlock">Atrakinti</string>
     <string name="locked_attach_unencrypted">Ši dalis nebuvo užšifruota ir gali būti nesaugi.</string>
     <string name="locked_attach_title">Neapsaugotas priedas</string>
@@ -849,9 +822,7 @@
     <string name="crypto_no_provider_button">Eiti į Nustatymus</string>
     <string name="mail_list_widget_text">K-9 laiškų sąrašas</string>
     <!--Displayed in the the message list widget when the app hasn't had a chance to send content to it yet-->
-    <string name="message_list_widget_initializing">Įkeliama…</string>
     <!--Might be displayed in the message list widget when the list is scrolled and new data can't be fetched fast enough-->
-    <string name="message_list_widget_list_item_loading">Įkeliama…</string>
     <string name="openpgp_enabled_error_title">Šifravimas neįmanomas</string>
     <string name="openpgp_enabled_error_msg">Kai kurie iš pasirinktų gavėjų nepalaiko šios funkcijos!</string>
     <string name="enable_encryption">Įjungti šifravimą</string>
@@ -871,7 +842,6 @@
     <string name="general_settings_title">Bendri nustatymai</string>
     <string name="dialog_openkeychain_info_title">Neįdiegta OpenPGP programa</string>
     <string name="dialog_openkeychain_info_install">Įdiegti</string>
-    <string name="dialog_openkeychain_info_text">K-9 Mail reikia OpenKeychain, visapusiškam šifravimui.</string>
     <string name="encrypted_subject">Šifruotas laiškas</string>
     <string name="account_settings_crypto_encrypt_subject">Užšifruoti laiškų temas</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">Gali būti nepalaikoma kai kurių gavėjų</string>
@@ -904,7 +874,6 @@ Norėdami nustatyti automatinį šifravimą naujajame prietaise, vadovaukitės i
     <string name="push_notification_state_wait_network">Miegama, kol bus prieinamas tinklas</string>
     <string name="push_notification_info">Bakstelėkite, jei norite sužinoti daugiau.</string>
     <string name="push_info_title">Push Info</string>
-    <string name="push_info_notification_explanation_text">Naudojant Push, K-9 Mail palaiko ryšį su pašto serveriu. Android reikalauja rodyti nuolatinį pranešimą, kol programa veikia fone. %s</string>
     <string name="push_info_configure_notification_text">Tačiau Android taip pat leidžia paslėpti pranešimą.</string>
     <string name="push_info_learn_more_text">Sužinoti daugiau</string>
     <string name="push_info_configure_notification_action">Konfiguruoti pranešimą</string>

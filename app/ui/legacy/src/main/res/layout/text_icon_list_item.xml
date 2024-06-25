@@ -24,9 +24,9 @@
             android:layout_height="40dp"
             android:contentDescription="@string/account_settings_action"
             android:padding="8dp"
-            app:srcCompat="?attr/iconActionSettings" />
+            app:srcCompat="@drawable/ic_settings" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
             android:paddingEnd="16dp"
             android:paddingBottom="8dp"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             tools:text="List item with simple text" />
     </LinearLayout>
 

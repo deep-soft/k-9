@@ -3,8 +3,6 @@
     <!--=== App-specific strings =============================================================-->
     <!--This should make it easier for forks to change the branding-->
     <!--Used in AndroidManifest.xml-->
-    <string name="app_name">Пошта K-9</string>
-    <string name="shortcuts_title">Акаўнты</string>
     <string name="unread_widget_label">Не прачытана</string>
     <!--Used in the about dialog-->
     <string name="app_authors">The K-9 Dog Walkers</string>
@@ -15,7 +13,6 @@
     <string name="user_manual_title">Дапаможнік карыстальніка</string>
     <string name="get_help_title">Атрымаць дапамогу</string>
     <string name="user_forum_title">Форум</string>
-    <string name="about_fediverse_title">Fediverse</string>
     <string name="about_libraries">Бібліятэкі</string>
     <string name="license">Ліцэнзія</string>
     <string name="changelog_title">Спіс зменаў</string>
@@ -28,20 +25,15 @@
     <!--Button text of the "snack bar" that is displayed when the app was updated.-->
     <string name="changelog_snackbar_button_text">Праглядзець</string>
     <!--Default signature-->
-    <string name="default_signature">-- \nАдпраўлена з маёй прылады праз K-9 Mail. Выбачайце за сцісласць.</string>
     <!--General strings that include the app name-->
-    <string name="account_delete_dlg_instructions_fmt">Акаўнт \"<xliff:g id="account">%s</xliff:g>\" будзе выдалены з K-9 Mail.</string>
     <!--=== General strings ==================================================================-->
     <string name="authors">Аўтары</string>
-    <string name="about_title">Пра K-9 Mail</string>
     <string name="accounts_title">Акаўнты</string>
-    <string name="advanced">Дадаткова</string>
     <string name="compose_title_compose">Напісаць</string>
     <string name="compose_title_reply">Адказаць</string>
     <string name="compose_title_reply_all">Адказаць усім</string>
     <string name="compose_title_forward">Пераслаць</string>
     <string name="compose_title_forward_as_attachment">Пераслаць як далучаны файл</string>
-    <string name="choose_account_title">Абраць акаўнт</string>
     <string name="choose_folder_title">Абраць каталог</string>
     <string name="choose_folder_move_title">Перамясціць у…</string>
     <string name="choose_folder_copy_title">Скапіяваць у…</string>
@@ -139,7 +131,7 @@
     <string name="notification_notify_error_title">Памылка апавяшчэння</string>
     <!--Body of an error notification that is displayed when creating a notification for a new message has failed-->
     <string name="notification_notify_error_text">Падчас стварэння сістэмнага апавяшчэння пра новы ліст адбылася памылка. Хутчэй за ўсё, прычына ў адсутнасці гуку апавяшчэння.\n\nНацісніце, каб адкрыць налады апавяшчэнняў.</string>
-    <string name="notification_bg_sync_ticker">Правяранне пошты: <xliff:g id="account">%s</xliff:g>:<xliff:g id="folder">%s</xliff:g></string>
+    <string name="notification_bg_sync_ticker">Правяранне пошты: <xliff:g id="account">%1$s</xliff:g>:<xliff:g id="folder">%2$s</xliff:g></string>
     <string name="notification_bg_sync_title">Правяранне пошты</string>
     <string name="notification_bg_send_ticker">Адпраўленне пошты: <xliff:g id="account">%s</xliff:g></string>
     <string name="notification_bg_send_title">Адпраўленне пошты</string>
@@ -291,7 +283,6 @@
     <string name="spam_folder_label">Каталог спаму</string>
     <string name="account_setup_incoming_subscribed_folders_only_label">Паказваць толькі падпісаныя каталогі</string>
     <string name="account_setup_auto_expand_folder">Аўтапераход у каталог</string>
-    <string name="account_setup_options_mail_check_frequency_label">Частата апытання</string>
     <string name="account_setup_options_mail_check_frequency_never">Ніколі</string>
     <string name="account_setup_options_mail_check_frequency_15min">Кожныя 15 хвілін</string>
     <string name="account_setup_options_mail_check_frequency_30min">Кожныя 30 хвілін</string>
@@ -310,7 +301,6 @@
     <string name="idle_refresh_period_36min">Кожныя 36 хвілін</string>
     <string name="idle_refresh_period_48min">Кожныя 48 хвілін</string>
     <string name="idle_refresh_period_60min">Кожныя 60 хвілін</string>
-    <string name="account_setup_options_mail_display_count_label">Колькасць лістоў для паказу</string>
     <string name="account_setup_options_mail_display_count_10">10 лістоў</string>
     <string name="account_setup_options_mail_display_count_25">25 лістоў</string>
     <string name="account_setup_options_mail_display_count_50">50 лістоў</string>
@@ -681,18 +671,6 @@
     <string name="settings_export_progress_text">Экспарт налад…</string>
     <string name="settings_export_success_generic">Налады паспяхова экспартаваныя</string>
     <string name="settings_export_failure">Не ўдалося экспартаваць налады</string>
-    <string name="unread_widget_select_account">Лічыльнік непрачытаных…</string>
-    <string name="unread_widget_account_title">Акаўнт</string>
-    <string name="unread_widget_account_summary">Акаўнт для адлюстравання лічыльніка непрачытаных</string>
-    <string name="unread_widget_unified_inbox_account_summary">Усе атрыманыя</string>
-    <string name="unread_widget_folder_enabled_title">Лічыльнік каталогаў</string>
-    <string name="unread_widget_folder_enabled_summary">Паказваць лічыльнік непрачытаных лістоў толькі для асобнага каталога</string>
-    <string name="unread_widget_folder_title">Каталог</string>
-    <string name="unread_widget_folder_summary">Каталог для адлюстравання лічыльніка непрачытаных</string>
-    <string name="unread_widget_action_done">Завершана</string>
-    <string name="unread_widget_title"><xliff:g id="account_name">%1$s</xliff:g> - <xliff:g id="folder_name">%2$s</xliff:g></string>
-    <string name="unread_widget_account_not_selected">Акаўнт не абраны</string>
-    <string name="unread_widget_folder_not_selected">Каталог не абраны</string>
     <string name="webview_empty_message">Тэкст адсутнічае</string>
     <string name="webview_contextmenu_link_view_action">Адкрыць спасылку</string>
     <string name="webview_contextmenu_link_share_action">Падзяліцца спасылкай</string>
@@ -834,11 +812,6 @@
     <string name="crypto_msg_encrypted_sign_insecure">але ключ скразнога шыфравання небяспечны</string>
     <string name="crypto_msg_encrypted_sign_error">але ў даных скразнога шыфравання адбылася памылка</string>
     <string name="crypto_msg_encrypted_insecure">але шыфраванне лічыцца небяспечным</string>
-    <string name="crypto_info_ok">Добра</string>
-    <string name="crypto_info_search_key">Пошук ключа</string>
-    <string name="crypto_info_view_signer">Хто падпісаў</string>
-    <string name="crypto_info_view_sender">Хто адправіў</string>
-    <string name="crypto_info_view_security_warning">Падрабязнасці</string>
     <string name="locked_attach_unlock">Разблакаваць</string>
     <string name="locked_attach_unencrypted">Гэтая частка незашыфраваная, таму небяспечная.</string>
     <string name="locked_attach_title">Неабароненыя ўкладзеныя файлы</string>
@@ -859,9 +832,7 @@
     <string name="crypto_no_provider_button">Перайсці ў налады</string>
     <string name="mail_list_widget_text">Лісты K-9</string>
     <!--Displayed in the the message list widget when the app hasn't had a chance to send content to it yet-->
-    <string name="message_list_widget_initializing">Загрузка…</string>
     <!--Might be displayed in the message list widget when the list is scrolled and new data can't be fetched fast enough-->
-    <string name="message_list_widget_list_item_loading">Загрузка…</string>
     <string name="openpgp_enabled_error_title">Зашыфраваць немагчыма</string>
     <string name="openpgp_enabled_error_msg">Некаторыя з гэтых адрасатаў не падтрымліваюць такую функцыю!</string>
     <string name="enable_encryption">Уключыць шыфраванне</string>
@@ -881,7 +852,6 @@
     <string name="general_settings_title">Асноўныя налады</string>
     <string name="dialog_openkeychain_info_title">Няма ўсталяванай праграмы OpenPGP</string>
     <string name="dialog_openkeychain_info_install">Усталяваць</string>
-    <string name="dialog_openkeychain_info_text">Для скразнога шыфравання ў K-9 Mail патрабуецца OpenKeychain.</string>
     <string name="encrypted_subject">Зашыфраваны ліст</string>
     <string name="account_settings_crypto_encrypt_subject">Шыфраваць тэмы лістоў</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">Можа падтрымлівацца не ўсімі адрасатамі</string>
@@ -915,7 +885,6 @@
     <string name="push_notification_state_wait_network">Знаходзіцца ў рэжыме сну, пакуль не стане даступная сетка</string>
     <string name="push_notification_info">Націсніце, каб даведацца больш.</string>
     <string name="push_info_title">Звесткі пра прымусовае правяранне</string>
-    <string name="push_info_notification_explanation_text">Пры выкарыстанні прымусовага правярання K-9 Mail падтрымлівае злучэнне з паштовым серверам. Android патрабуе паказу бягучага апавяшчэння, пакуль праграма актыўная ў фонавым рэжыме. %s</string>
     <string name="push_info_configure_notification_text">Аднак Android таксама дазваляе схаваць апавяшчэнне.</string>
     <string name="push_info_learn_more_text">Даведацца больш</string>
     <string name="push_info_configure_notification_action">Наладжванне апавяшчэння</string>

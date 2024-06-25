@@ -117,12 +117,33 @@ class RealImapStoreTest {
     }
 
     @Test
-    fun `getFolders() with subscribedFoldersOnly = false`() {
+    fun `getFolders() should ignore NoSelect entries`() {
         val imapStore = createTestImapStore(isSubscribedFoldersOnly = false)
         val imapConnection = createMockConnection().stub {
             on { executeSimpleCommand("""LIST "" "*"""") } doReturn listOf(
+                createImapResponse("""* LIST () "." "INBOX""""),
+                createImapResponse("""* LIST (\Noselect) "." "Folder""""),
+                createImapResponse("""* LIST () "." "Folder.SubFolder""""),
+                createImapResponse("6 OK Success"),
+            )
+        }
+        imapStore.enqueueImapConnection(imapConnection)
+
+        val folders = imapStore.getFolders()
+
+        assertThat(folders).isNotNull()
+        assertThat(folders.map { it.serverId }).containsExactly("INBOX", "Folder.SubFolder")
+    }
+
+    @Test
+    fun `getFolders() should ignore NonExistent entries`() {
+        val imapStore = createTestImapStore(isSubscribedFoldersOnly = false)
+        val imapConnection = createMockConnection().stub {
+            on { hasCapability(Capabilities.LIST_EXTENDED) } doReturn true
+            on { hasCapability(Capabilities.SPECIAL_USE) } doReturn true
+            on { executeSimpleCommand("""LIST "" "*" RETURN (SPECIAL-USE)""") } doReturn listOf(
                 createImapResponse("""* LIST (\HasNoChildren) "." "INBOX""""),
-                createImapResponse("""* LIST (\Noselect \HasChildren) "." "Folder""""),
+                createImapResponse("""* LIST (\NonExistent \HasChildren) "." "Folder""""),
                 createImapResponse("""* LIST (\HasNoChildren) "." "Folder.SubFolder""""),
                 createImapResponse("6 OK Success"),
             )
@@ -133,6 +154,24 @@ class RealImapStoreTest {
 
         assertThat(folders).isNotNull()
         assertThat(folders.map { it.serverId }).containsExactly("INBOX", "Folder.SubFolder")
+    }
+
+    @Test
+    fun `getFolders() with subscribedFoldersOnly = false`() {
+        val imapStore = createTestImapStore(isSubscribedFoldersOnly = false)
+        val imapConnection = createMockConnection().stub {
+            on { executeSimpleCommand("""LIST "" "*"""") } doReturn listOf(
+                createImapResponse("""* LIST (\HasNoChildren) "." "INBOX""""),
+                createImapResponse("""* LIST (\HasNoChildren) "." "Folder""""),
+                createImapResponse("6 OK Success"),
+            )
+        }
+        imapStore.enqueueImapConnection(imapConnection)
+
+        val folders = imapStore.getFolders()
+
+        assertThat(folders).isNotNull()
+        assertThat(folders.map { it.serverId }).containsExactly("INBOX", "Folder")
     }
 
     @Test
@@ -386,7 +425,7 @@ class RealImapStoreTest {
                 autoDetectNamespace = true,
                 pathPrefix = null,
                 useCompression = false,
-                sendClientId = false,
+                sendClientInfo = false,
             ),
         )
     }
@@ -408,7 +447,8 @@ class RealImapStoreTest {
         return object : ImapStoreConfig {
             override val logLabel: String = "irrelevant"
             override fun isSubscribedFoldersOnly(): Boolean = isSubscribedFoldersOnly
-            override fun clientId(): ImapClientId = ImapClientId(appName = "irrelevant", appVersion = "irrelevant")
+            override fun isExpungeImmediately(): Boolean = true
+            override fun clientInfo() = ImapClientInfo(appName = "irrelevant", appVersion = "irrelevant")
         }
     }
 

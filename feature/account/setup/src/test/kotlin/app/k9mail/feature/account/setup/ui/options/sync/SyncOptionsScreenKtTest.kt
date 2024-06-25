@@ -1,8 +1,8 @@
 package app.k9mail.feature.account.setup.ui.options.sync
 
 import app.k9mail.core.ui.compose.testing.ComposeTest
-import app.k9mail.core.ui.compose.testing.setContent
-import app.k9mail.core.ui.compose.theme.ThunderbirdTheme
+import app.k9mail.core.ui.compose.testing.setContentWithTheme
+import app.k9mail.feature.account.setup.ui.FakeAppNameProvider
 import app.k9mail.feature.account.setup.ui.options.sync.SyncOptionsContract.Effect
 import app.k9mail.feature.account.setup.ui.options.sync.SyncOptionsContract.State
 import assertk.assertThat
@@ -19,14 +19,13 @@ class SyncOptionsScreenKtTest : ComposeTest() {
         var onNextCounter = 0
         var onBackCounter = 0
 
-        setContent {
-            ThunderbirdTheme {
-                SyncOptionsScreen(
-                    onNext = { onNextCounter++ },
-                    onBack = { onBackCounter++ },
-                    viewModel = viewModel,
-                )
-            }
+        setContentWithTheme {
+            SyncOptionsScreen(
+                onNext = { onNextCounter++ },
+                onBack = { onBackCounter++ },
+                viewModel = viewModel,
+                appNameProvider = FakeAppNameProvider,
+            )
         }
 
         assertThat(onNextCounter).isEqualTo(0)

@@ -21,12 +21,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                     android:text="@string/account_settings_name_label"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorPrimary"/>
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    />
 
             <EditText
                     android:id="@+id/account_name"
@@ -37,12 +37,11 @@
                     android:contentDescription="@string/account_settings_name_label"
                     />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                     android:text="@string/account_settings_email_label"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
                     />
 
             <EditText
@@ -54,12 +53,12 @@
                     android:contentDescription="@string/account_settings_email_label"
                     />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                     android:text="@string/account_settings_always_bcc_label"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorPrimary"/>
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    />
 
             <EditText
                     android:id="@+id/account_always_bcc"
@@ -69,7 +68,7 @@
                     android:layout_width="fill_parent"
                     android:contentDescription="@string/account_settings_always_bcc_label"/>
 
-            <CheckBox
+            <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/account_signature_use"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -81,12 +80,12 @@
                     android:layout_height="fill_parent"
                     android:orientation="vertical">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                         android:text="@string/account_settings_signature_label"
                         android:layout_height="wrap_content"
                         android:layout_width="fill_parent"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="?android:attr/textColorPrimary"/>
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        />
 
                 <EditText
                         android:id="@+id/account_signature"
@@ -95,12 +94,12 @@
                         android:layout_width="fill_parent"
                         android:contentDescription="@string/account_settings_signature_label"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                         android:text="@string/account_settings_signature__location_label"
                         android:layout_height="wrap_content"
                         android:layout_width="fill_parent"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="?android:attr/textColorPrimary"/>
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        />
 
                 <RadioGroup
                         android:id="@+id/account_signature_location"
@@ -108,14 +107,14 @@
                         android:layout_width="wrap_content"
                         android:orientation="vertical">
 
-                    <RadioButton
+                    <com.google.android.material.radiobutton.MaterialRadioButton
                             android:id="@+id/account_signature_location_before_quoted_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/account_settings_signature__location_before_quoted_text"
                             android:contentDescription="@string/account_settings_signature__location_label"/>
 
-                    <RadioButton
+                    <com.google.android.material.radiobutton.MaterialRadioButton
                             android:id="@+id/account_signature_location_after_quoted_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

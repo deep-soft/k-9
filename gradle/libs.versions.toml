@@ -12,23 +12,22 @@
 
 [versions]
 androidDesugar = "2.0.4"
-androidMaterial = "1.11.0"
+androidMaterial = "1.12.0"
 # AGP and tools should be updated together
 androidGradlePlugin = "8.2.2"
 androidTools = "31.2.2"
 androidxActivity = "1.8.2"
-androidxAnnotation = "1.7.1"
+androidxAnnotation = "1.8.0"
 androidxAppCompat = "1.6.1"
 androidxBiometric = "1.1.0"
 # https://developer.android.com/jetpack/compose/bom/bom-mapping
-androidxComposeBom = "2024.02.01"
-androidxComposeCompiler = "1.5.10"
+androidxComposeBom = "2024.06.00"
 androidxConstraintLayout = "2.1.4"
 androidxCoordinatorLayout = "1.2.0"
-androidxCore = "1.12.0"
+androidxCore = "1.13.1"
 androidxCoreSplashscreen = "1.0.1"
 androidxDrawerLayout = "1.1.1"
-androidxFragment = "1.6.2"
+androidxFragment = "1.8.0"
 androidxLifecycle = "2.7.0"
 androidxLocalBroadcastManager = "1.1.0"
 androidxNavigation = "2.7.7"
@@ -40,24 +39,23 @@ androidxTestEspresso = "3.5.1"
 androidxTestExt = "1.1.5"
 androidxTestRules = "1.5.0"
 androidxTestRunner = "1.5.2"
-androidxTransition = "1.4.1"
 androidxWork = "2.9.0"
 apacheHttpclient5 = "5.3.1"
 appAuth = "0.11.1"
-assertk = "0.28.0"
+assertk = "0.28.1"
 circleImageView = "3.1.0"
 ckchangelog = "2.0.0-beta02"
-clikt = "4.2.2"
-commonsIo = "2.15.1"
+clikt = "4.4.0"
+commonsIo = "2.16.1"
 dependencyCheckPlugin = "0.51.0"
 dependencyGuardPlugin = "0.5.0"
 detektPlugin = "1.23.5"
-detektPluginCompose = "0.3.11"
+detektPluginCompose = "0.3.21"
 fastAdapter = "5.7.0"
-forkhandlesBom = "2.13.1.0"
+forkhandlesBom = "2.18.0.1"
 glide = "4.16.0"
-gradle = "8.6"
-http4kBom = "5.13.7.0"
+gradle = "8.8"
+http4kBom = "5.20.0.0"
 icu4j = "72.1"
 javaDiffUtils = "4.12"
 jcipAnnotations = "1.0"
@@ -68,34 +66,31 @@ jsoup = "1.17.2"
 junit = "4.13.2"
 jutf7 = "1.0.0"
 jzlib = "1.0.7"
-koinCore = "3.5.3"
-koinAndroid = "3.5.3"
-koinAndroidCompose = "3.5.3"
-koinTest = "3.5.3"
-kotlinBom = "1.9.22"
+koinBom = "3.5.6"
+kotlinBom = "2.0.0"
 # Needs to match the version used by Gradle, just check with `./gradlew --version`
-kotlinGradleBom = "1.9.20"
-kotlinKsp = "1.9.22-1.0.17"
-kotlinxCoroutines = "1.8.0"
-kotlinxDateTime = "0.5.0"
+kotlinGradleBom = "1.9.22"
+kotlinxCoroutines = "1.8.1"
+kotlinKsp = "2.0.0-1.0.22"
+kotlinxDateTime = "0.6.0"
 ktlint = "1.1.1"
 kxml2 = "1.0"
 leakcanary = "2.13"
 materialDrawer = "9.0.2"
 mime4j = "0.8.9"
-minidns = "1.0.4"
-mockito = "5.8.0"
-mockitoKotlin = "5.2.1"
+minidns = "1.0.5"
+mockito = "5.12.0"
+mockitoKotlin = "5.3.1"
 moshi = "1.15.1"
 okhttp = "4.12.0"
-okio = "3.8.0"
+okio = "3.9.0"
 preferencesFix = "1.1.0"
-robolectric = "4.11.1"
+robolectric = "4.12.1"
 safeContentResolver = "1.0.0"
 searchPreference = "v2.3.0"
 spotlessPlugin = "6.25.0"
 timber = "5.0.1"
-tokenautocomplete = "4.0.0-beta01"
+tokenautocomplete = "4.0.0-beta01-k9mail02"
 turbine = "0.13.0"
 xmlpull = "1.0"
 
@@ -104,6 +99,7 @@ android-application = { id = "com.android.application", version.ref = "androidGr
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 android-lint = { id = "com.android.lint", version.ref = "androidGradlePlugin" }
 android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinBom" }
 dependency-check = { id = "com.github.ben-manes.versions", version.ref = "dependencyCheckPlugin" }
 dependency-guard = { id = "com.dropbox.dependency-guard", version.ref = "dependencyGuardPlugin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detektPlugin" }
@@ -124,7 +120,6 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "androidxBiometric" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidxComposeBom" }
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
-androidx-compose-material = { module = "androidx.compose.material:material" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-material3-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class" }
@@ -140,8 +135,10 @@ androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidxCoreSplashscreen" }
 androidx-fragment = { module = "androidx.fragment:fragment", version.ref = "androidxFragment" }
+androidx-fragment-compose = { module = "androidx.fragment:fragment-compose", version.ref = "androidxFragment" }
 androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
+androidx-lifecycle-runtime-testing = { module = "androidx.lifecycle:lifecycle-runtime-testing", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
@@ -191,11 +188,12 @@ jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 junit = { module = "junit:junit", version.ref = "junit" }
 jutf7 = { module = "com.beetstra.jutf7:jutf7", version.ref = "jutf7" }
 jzlib = { module = "com.jcraft:jzlib", version.ref = "jzlib" }
-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidCompose" }
-koin-test = { module = "io.insert-koin:koin-test", version.ref = "koinTest" }
-koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koinTest" }
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinBom" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-android = { module = "io.insert-koin:koin-android" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
+koin-test = { module = "io.insert-koin:koin-test" }
+koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlinBom" }
 kotlin-gradle-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlinGradleBom" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
@@ -226,7 +224,7 @@ robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectr
 safeContentResolver = { module = "de.cketti.safecontentresolver:safe-content-resolver-v21", version.ref = "safeContentResolver" }
 searchPreference = { module = "com.github.ByteHamster:SearchPreference", version.ref = "searchPreference" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
-tokenautocomplete = { module = "com.splitwise:tokenautocomplete", version.ref = "tokenautocomplete" }
+tokenautocomplete = { module = "de.cketti.temp:tokenautocomplete", version.ref = "tokenautocomplete" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 xmlpull = { module = "com.github.cketti:xmlpull-extracted-from-android", version.ref = "xmlpull" }
 
@@ -261,6 +259,7 @@ shared-jvm-android-compose-debug = [
 ]
 shared-jvm-androidtest-compose = [
   "androidx-compose-ui-test-junit4",
+  "androidx-lifecycle-runtime-testing",
 ]
 shared-jvm-test = [
   "assertk",

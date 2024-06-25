@@ -5,7 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
+    android:background="?attr/colorSurfaceContainerLow"
     android:orientation="vertical">
 
     <LinearLayout
@@ -16,11 +16,10 @@
         android:minHeight="50dp"
         android:animateLayoutChanges="true">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:id="@+id/from_label"
             android:paddingTop="8dp"
             android:paddingStart="0dp"
             android:paddingEnd="8dp"
@@ -30,7 +29,7 @@
             style="@style/ComposeTextLabel"
             />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -61,7 +60,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="8dp"
                 android:id="@+id/crypto_special_inline"
-                app:srcCompat="@drawable/compatibility"
+                app:srcCompat="@drawable/ic_healing"
                 app:tint="@color/light_black" />
 
             <ImageView
@@ -70,7 +69,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
                 android:id="@+id/crypto_special_sign_only"
-                app:srcCompat="@drawable/status_signature"
+                app:srcCompat="@drawable/ic_check_circle"
                 app:tint="?attr/openpgp_blue" />
 
             <FrameLayout
@@ -84,14 +83,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="8dp"
-                    app:srcCompat="@drawable/status_signature"
+                    app:srcCompat="@drawable/ic_check_circle"
                     app:tint="?attr/openpgp_blue" />
 
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_gravity="end|bottom"
-                    app:srcCompat="@drawable/compatibility"
+                    app:srcCompat="@drawable/ic_healing"
                     app:tint="@color/light_black" />
             </FrameLayout>
 
@@ -121,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:id="@+id/crypto_status_disabled"
-                    app:srcCompat="@drawable/status_lock_disabled"
+                    app:srcCompat="@drawable/ic_no_encryption"
                     app:tint="?attr/openpgp_dark_grey" />
 
                 <ImageView
@@ -129,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:id="@+id/crypto_status_enabled"
-                    app:srcCompat="@drawable/status_lock"
+                    app:srcCompat="@drawable/ic_lock"
                     app:tint="?attr/openpgp_green" />
 
                 <FrameLayout
@@ -181,7 +180,7 @@
                 android:layout_height="match_parent"
                 android:padding="6dp"
                 android:scaleType="centerCrop"
-                app:srcCompat="?attr/iconActionExpand" />
+                app:srcCompat="@drawable/ic_expand_more" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -211,7 +210,7 @@
         android:minHeight="50dp">
 
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="8dp"
@@ -252,7 +251,7 @@
         android:layout_marginRight="12dp"
         android:minHeight="50dp">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -299,7 +298,7 @@
                 android:layout_height="match_parent"
                 android:padding="6dp"
                 android:scaleType="centerCrop"
-                app:srcCompat="?attr/iconActionExpand"
+                app:srcCompat="@drawable/ic_expand_more"
                 android:id="@+id/recipient_expander"
                 />
 
@@ -327,7 +326,7 @@
         android:orientation="horizontal"
         android:minHeight="50dp">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="8dp"
@@ -374,7 +373,7 @@
         android:orientation="horizontal"
         android:minHeight="50dp">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="8dp"

@@ -18,10 +18,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.withStyledAttributes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons
 import com.fsck.k9.Account
 import com.fsck.k9.K9
 import com.fsck.k9.activity.MessageCompose
@@ -45,15 +46,16 @@ import com.fsck.k9.preferences.GeneralSettingsManager
 import com.fsck.k9.ui.R
 import com.fsck.k9.ui.base.Theme
 import com.fsck.k9.ui.base.ThemeManager
+import com.fsck.k9.ui.base.extensions.withArguments
 import com.fsck.k9.ui.choosefolder.ChooseFolderActivity
 import com.fsck.k9.ui.messagedetails.MessageDetailsFragment
 import com.fsck.k9.ui.messagesource.MessageSourceActivity
 import com.fsck.k9.ui.messageview.MessageCryptoPresenter.MessageCryptoMvpView
 import com.fsck.k9.ui.settings.account.AccountSettingsActivity
 import com.fsck.k9.ui.share.ShareIntentBuilder
-import com.fsck.k9.ui.withArguments
 import java.util.Locale
 import org.koin.android.ext.android.inject
+import org.openintents.openpgp.util.OpenPgpIntentStarter
 import timber.log.Timber
 
 class MessageViewFragment :
@@ -239,16 +241,14 @@ class MessageViewFragment :
                 menu.findItem(R.id.toggle_unread).setTitle(R.string.mark_as_read_action)
             }
 
-            val drawableAttr = if (isMessageRead) {
-                intArrayOf(R.attr.iconActionMarkAsUnread)
+            val drawableId = if (isMessageRead) {
+                Icons.Outlined.MarkEmailUnread
             } else {
-                intArrayOf(R.attr.iconActionMarkAsRead)
+                Icons.Outlined.MarkEmailRead
             }
 
-            val toolbarContext = requireActivity().findViewById<View>(R.id.toolbar).context
-            toolbarContext.withStyledAttributes(attrs = drawableAttr) {
-                menu.findItem(R.id.toggle_unread).icon = getDrawable(0)
-            }
+            val drawable = ContextCompat.getDrawable(requireContext(), drawableId)
+            menu.findItem(R.id.toggle_unread).icon = drawable
         }
 
         if (isMoveCapable) {
@@ -563,7 +563,8 @@ class MessageViewFragment :
         startActivityForResult(intent, requestCode)
     }
 
-    fun onPendingIntentResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    @Deprecated("Switch to Activity Result API")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode and REQUEST_MASK_LOADER_HELPER == REQUEST_MASK_LOADER_HELPER) {
             val maskedRequestCode = requestCode xor REQUEST_MASK_LOADER_HELPER
             messageLoaderHelper.onActivityResult(maskedRequestCode, resultCode, data)
@@ -571,9 +572,7 @@ class MessageViewFragment :
             val maskedRequestCode = requestCode xor REQUEST_MASK_CRYPTO_PRESENTER
             messageCryptoPresenter.onActivityResult(maskedRequestCode, resultCode, data)
         }
-    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode != Activity.RESULT_OK) return
 
         when (requestCode) {
@@ -588,9 +587,11 @@ class MessageViewFragment :
             MessageDetailsFragment.ACTION_SEARCH_KEYS -> {
                 messageCryptoPresenter.onClickSearchKey()
             }
+
             MessageDetailsFragment.ACTION_SHOW_WARNING -> {
                 messageCryptoPresenter.onClickShowCryptoWarningDetails()
             }
+
             else -> {
                 error("Unsupported action: $action")
             }
@@ -691,6 +692,7 @@ class MessageViewFragment :
                     cancelText,
                 )
             }
+
             R.id.dialog_confirm_spam -> {
                 val title = getString(R.string.dialog_confirm_spam_title)
                 val message = resources.getQuantityString(R.plurals.dialog_confirm_spam_message, 1)
@@ -704,6 +706,7 @@ class MessageViewFragment :
                     cancelText,
                 )
             }
+
             R.id.dialog_attachment_progress -> {
                 val currentAttachmentViewInfo = checkNotNull(this.currentAttachmentViewInfo)
 
@@ -711,6 +714,7 @@ class MessageViewFragment :
                 val size = currentAttachmentViewInfo.size
                 AttachmentDownloadDialogFragment.newInstance(size, message)
             }
+
             else -> {
                 throw RuntimeException("Called showDialog(int) with unknown dialog id.")
             }
@@ -787,9 +791,11 @@ class MessageViewFragment :
                     putExtra(MessageCompose.EXTRA_ACCOUNT, messageReference.accountUuid)
                 }
             }
+
             is HttpsUnsubscribeUri -> {
                 Intent(Intent.ACTION_VIEW, unsubscribeUri.uri)
             }
+
             else -> error("Unknown UnsubscribeUri - $unsubscribeUri")
         }
 
@@ -829,28 +835,9 @@ class MessageViewFragment :
         }
 
         @Throws(SendIntentException::class)
-        override fun startPendingIntentForCryptoPresenter(
-            intentSender: IntentSender,
-            requestCode: Int?,
-            fillIntent: Intent?,
-            flagsMask: Int,
-            flagValues: Int,
-            extraFlags: Int,
-        ) {
-            if (requestCode == null) {
-                requireActivity().startIntentSender(intentSender, fillIntent, flagsMask, flagValues, extraFlags)
-                return
-            }
-
+        override fun startPendingIntentForCryptoPresenter(intentSender: IntentSender, requestCode: Int) {
             val maskedRequestCode = requestCode or REQUEST_MASK_CRYPTO_PRESENTER
-            requireActivity().startIntentSenderForResult(
-                intentSender,
-                maskedRequestCode,
-                fillIntent,
-                flagsMask,
-                flagValues,
-                extraFlags,
-            )
+            OpenPgpIntentStarter.startIntentSenderForResult(this@MessageViewFragment, intentSender, maskedRequestCode)
         }
 
         override fun restartMessageCryptoProcessing() {
@@ -926,26 +913,16 @@ class MessageViewFragment :
             Toast.makeText(requireContext(), R.string.status_network_error, Toast.LENGTH_LONG).show()
         }
 
-        override fun startIntentSenderForMessageLoaderHelper(
-            intentSender: IntentSender,
-            requestCode: Int,
-            fillIntent: Intent?,
-            flagsMask: Int,
-            flagValues: Int,
-            extraFlags: Int,
-        ): Boolean {
+        override fun startIntentSenderForMessageLoaderHelper(intentSender: IntentSender, requestCode: Int): Boolean {
             if (!isActive) return false
 
             showProgressThreshold = null
             try {
                 val maskedRequestCode = requestCode or REQUEST_MASK_LOADER_HELPER
-                requireActivity().startIntentSenderForResult(
+                OpenPgpIntentStarter.startIntentSenderForResult(
+                    this@MessageViewFragment,
                     intentSender,
                     maskedRequestCode,
-                    fillIntent,
-                    flagsMask,
-                    flagValues,
-                    extraFlags,
                 )
             } catch (e: SendIntentException) {
                 Timber.e(e, "Irrecoverable error calling PendingIntent!")

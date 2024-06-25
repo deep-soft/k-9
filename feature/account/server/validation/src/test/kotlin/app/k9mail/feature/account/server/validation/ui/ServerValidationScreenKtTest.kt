@@ -1,11 +1,10 @@
 package app.k9mail.feature.account.server.validation.ui
 
+import app.k9mail.core.common.provider.AppNameProvider
 import app.k9mail.core.ui.compose.testing.ComposeTest
-import app.k9mail.core.ui.compose.testing.setContent
-import app.k9mail.core.ui.compose.theme.ThunderbirdTheme
+import app.k9mail.core.ui.compose.testing.setContentWithTheme
 import app.k9mail.feature.account.server.validation.ui.ServerValidationContract.Effect
 import app.k9mail.feature.account.server.validation.ui.ServerValidationContract.State
-import app.k9mail.feature.account.server.validation.ui.fake.FakeServerValidationViewModel
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import kotlinx.coroutines.test.runTest
@@ -20,14 +19,13 @@ class ServerValidationScreenKtTest : ComposeTest() {
         var onNextCounter = 0
         var onBackCounter = 0
 
-        setContent {
-            ThunderbirdTheme {
-                ServerValidationScreen(
-                    onNext = { onNextCounter++ },
-                    onBack = { onBackCounter++ },
-                    viewModel = viewModel,
-                )
-            }
+        setContentWithTheme {
+            ServerValidationScreen(
+                onNext = { onNextCounter++ },
+                onBack = { onBackCounter++ },
+                viewModel = viewModel,
+                appNameProvider = FakeAppNameProvider,
+            )
         }
 
         assertThat(onNextCounter).isEqualTo(0)
@@ -42,5 +40,9 @@ class ServerValidationScreenKtTest : ComposeTest() {
 
         assertThat(onNextCounter).isEqualTo(1)
         assertThat(onBackCounter).isEqualTo(1)
+    }
+
+    private object FakeAppNameProvider : AppNameProvider {
+        override val appName: String = "K-9 Mail"
     }
 }

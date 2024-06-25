@@ -23,7 +23,7 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:id="@+id/alternate_contact_photo"
-            tools:src="@drawable/ic_contact_picture"
+            tools:src="@drawable/ic_account_circle"
             />
 
         <LinearLayout
@@ -32,10 +32,10 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/alternate_header_name"
                 android:textColor="?attr/textColorPrimaryRecipientDropdown"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
@@ -44,10 +44,10 @@
                 tools:text="Mr. Firstname Lastname"
                 />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/alternate_header_label"
                 android:textColor="?attr/textColorPrimaryRecipientDropdown"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
@@ -65,7 +65,7 @@
             android:padding="8dp"
             android:id="@+id/alternate_remove"
             android:background="?android:selectableItemBackground"
-            app:srcCompat="?attr/iconActionCancel"
+            app:srcCompat="@drawable/ic_close"
             />
 
     </LinearLayout>
@@ -80,10 +80,10 @@
         android:id="@+id/alternate_container_item"
         >
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/alternate_address_label"
             android:textColor="?attr/textColorSecondaryRecipientDropdown"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:singleLine="true"
@@ -92,10 +92,10 @@
             tools:text="Home"
             />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/alternate_address"
             android:textColor="?attr/textColorSecondaryRecipientDropdown"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -137,7 +137,7 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="13dp"
             android:id="@+id/alternate_crypto_status_simple"
-            app:srcCompat="@drawable/status_lock"
+            app:srcCompat="@drawable/ic_lock"
             app:tint="?attr/openpgp_black"
             android:visibility="gone"
             tools:visibility="visible"

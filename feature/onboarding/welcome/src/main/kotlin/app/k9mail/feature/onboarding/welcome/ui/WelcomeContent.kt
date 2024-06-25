@@ -19,17 +19,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import app.k9mail.core.ui.compose.common.annotation.PreviewDevices
-import app.k9mail.core.ui.compose.designsystem.atom.Background
-import app.k9mail.core.ui.compose.designsystem.atom.button.Button
+import app.k9mail.core.ui.compose.designsystem.atom.Surface
+import app.k9mail.core.ui.compose.designsystem.atom.button.ButtonFilled
 import app.k9mail.core.ui.compose.designsystem.atom.button.ButtonText
-import app.k9mail.core.ui.compose.designsystem.atom.text.TextBody1
-import app.k9mail.core.ui.compose.designsystem.atom.text.TextHeadline2
+import app.k9mail.core.ui.compose.designsystem.atom.text.TextBodyLarge
+import app.k9mail.core.ui.compose.designsystem.atom.text.TextDisplayMedium
 import app.k9mail.core.ui.compose.designsystem.template.LazyColumnWithHeaderFooter
 import app.k9mail.core.ui.compose.designsystem.template.ResponsiveContent
-import app.k9mail.core.ui.compose.theme.K9Theme
-import app.k9mail.core.ui.compose.theme.MainTheme
-import app.k9mail.core.ui.compose.theme.ThunderbirdTheme
+import app.k9mail.core.ui.compose.theme2.MainTheme
 import app.k9mail.feature.onboarding.welcome.R
 
 private const val CIRCLE_COLOR = 0xFFEEEEEE
@@ -40,9 +37,10 @@ private const val LOGO_SIZE_DP = 200
 internal fun WelcomeContent(
     onStartClick: () -> Unit,
     onImportClick: () -> Unit,
+    appName: String,
     modifier: Modifier = Modifier,
 ) {
-    Background(
+    Surface(
         modifier = modifier,
     ) {
         ResponsiveContent {
@@ -68,12 +66,14 @@ internal fun WelcomeContent(
                 }
                 item {
                     WelcomeTitle(
+                        title = appName,
                         modifier = Modifier.defaultItemModifier(),
                     )
                 }
                 item {
                     WelcomeMessage(
                         modifier = Modifier.defaultItemModifier(),
+                        appName = appName,
                     )
                 }
             }
@@ -108,20 +108,22 @@ private fun WelcomeLogo(
 
 @Composable
 private fun WelcomeTitle(
+    title: String,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        TextHeadline2(
-            text = stringResource(id = R.string.onboarding_welcome_title),
+        TextDisplayMedium(
+            text = title,
         )
     }
 }
 
 @Composable
 private fun WelcomeMessage(
+    appName: String,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -130,8 +132,8 @@ private fun WelcomeMessage(
             .then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        TextBody1(
-            text = stringResource(id = R.string.onboarding_welcome_message),
+        TextBodyLarge(
+            text = stringResource(id = R.string.onboarding_welcome_message, appName),
         )
     }
 }
@@ -147,7 +149,7 @@ private fun WelcomeFooter(
         verticalArrangement = Arrangement.spacedBy(MainTheme.spacings.quarter),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Button(
+        ButtonFilled(
             text = stringResource(id = R.string.onboarding_welcome_start_button),
             onClick = onStartClick,
         )
@@ -161,26 +163,4 @@ private fun WelcomeFooter(
 private fun Modifier.defaultItemModifier() = composed {
     fillMaxWidth()
         .padding(MainTheme.spacings.default)
-}
-
-@Composable
-@PreviewDevices
-internal fun WelcomeContentK9Preview() {
-    K9Theme {
-        WelcomeContent(
-            onStartClick = {},
-            onImportClick = {},
-        )
-    }
-}
-
-@Composable
-@PreviewDevices
-internal fun WelcomeContentThunderbirdPreview() {
-    ThunderbirdTheme {
-        WelcomeContent(
-            onStartClick = {},
-            onImportClick = {},
-        )
-    }
 }

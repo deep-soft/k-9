@@ -34,13 +34,13 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:contentDescription="@null"
-            app:srcCompat="@drawable/ic_attachment_generic"
+            app:srcCompat="@drawable/ic_draft"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/attachment_preview"
-            app:tint="?attr/colorAccent" />
+            app:tint="?attr/colorSecondary" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/attachment_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -48,8 +48,7 @@
             android:layout_marginTop="8dp"
             android:ellipsize="start"
             android:singleLine="true"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="14sp"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             app:layout_constraintBottom_toTopOf="@+id/attachment_size"
             app:layout_constraintEnd_toStartOf="@id/barrier_button"
             app:layout_constraintHorizontal_bias="0.0"
@@ -58,14 +57,14 @@
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="filename.ext" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/attachment_size"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:singleLine="true"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="12sp"
+            android:textColor="?attr/colorSecondary"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/barrier_button"
             app:layout_constraintHorizontal_bias="0.0"
@@ -99,7 +98,7 @@
             android:layout_marginBottom="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/remove_attachment_action"
-            app:srcCompat="?attr/iconActionCancel"
+            app:srcCompat="@drawable/ic_close"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/progressBar"

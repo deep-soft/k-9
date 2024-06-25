@@ -3,8 +3,6 @@
     <!--=== App-specific strings =============================================================-->
     <!--This should make it easier for forks to change the branding-->
     <!--Used in AndroidManifest.xml-->
-    <string name="app_name">K-9 Mail</string>
-    <string name="shortcuts_title">K-9 Профили</string>
     <string name="unread_widget_label">K-9 Непрочетени</string>
     <!--Used in the about dialog-->
     <string name="app_authors">The K-9 Dog Walkers</string>
@@ -24,20 +22,15 @@
     <string name="changelog_snackbar_text">Разбери какво ново в тази варсия</string>
     <!--Button text of the "snack bar" that is displayed when the app was updated.-->
     <!--Default signature-->
-    <string name="default_signature">-- \nИзпратено от моето Андроид у-во чрез K-9 Mail. Моля да ме извините за краткия ми изказ.</string>
     <!--General strings that include the app name-->
-    <string name="account_delete_dlg_instructions_fmt">Акаунтът \"<xliff:g id="account">%s</xliff:g>\" ще бъде премахнат от K-9 Mail.</string>
     <!--=== General strings ==================================================================-->
     <string name="authors">Автори</string>
-    <string name="about_title">Относно K-9 Mail</string>
     <string name="accounts_title">Профили</string>
-    <string name="advanced">Разширени</string>
     <string name="compose_title_compose">Създай</string>
     <string name="compose_title_reply">Отговори</string>
     <string name="compose_title_reply_all">Отговори до всички</string>
     <string name="compose_title_forward">Препрати</string>
     <string name="compose_title_forward_as_attachment">Препрати като прикачен файл</string>
-    <string name="choose_account_title">Изберете Профил</string>
     <string name="choose_folder_title">Избери Папка</string>
     <string name="choose_folder_move_title">Премести в…</string>
     <string name="choose_folder_copy_title">Копирай в…</string>
@@ -261,7 +254,6 @@
     <string name="spam_folder_label">Папка Спам</string>
     <string name="account_setup_incoming_subscribed_folders_only_label">Показвай само абонираните папките</string>
     <string name="account_setup_auto_expand_folder">Автоматично разгъване на папка</string>
-    <string name="account_setup_options_mail_check_frequency_label">Честота на проверка на папката</string>
     <string name="account_setup_options_mail_check_frequency_never">Никога</string>
     <string name="account_setup_options_mail_check_frequency_15min">На всеки 15 минути</string>
     <string name="account_setup_options_mail_check_frequency_30min">На всеки 30 минути</string>
@@ -280,7 +272,6 @@
     <string name="idle_refresh_period_36min">На всеки 36 минути</string>
     <string name="idle_refresh_period_48min">На всеки 48 минути</string>
     <string name="idle_refresh_period_60min">На всеки 60 минути</string>
-    <string name="account_setup_options_mail_display_count_label">Брой съобщения за показване</string>
     <string name="account_setup_options_mail_display_count_10">10 съобщения</string>
     <string name="account_setup_options_mail_display_count_25">25 съобщения</string>
     <string name="account_setup_options_mail_display_count_50">50 съобщения</string>
@@ -611,18 +602,6 @@
     <string name="settings_export_progress_text">Настройки на изнсянето…</string>
     <string name="settings_export_success_generic">Настройките са успешно изнесени</string>
     <string name="settings_export_failure">Неуспешно изнасяне на настройки</string>
-    <string name="unread_widget_select_account">Показване на непрочетената бройка за…</string>
-    <string name="unread_widget_account_title">Профил</string>
-    <string name="unread_widget_account_summary">Профилът, за който да се показва броят непрочетени съобщения</string>
-    <string name="unread_widget_unified_inbox_account_summary">Обща входяща кутия</string>
-    <string name="unread_widget_folder_enabled_title">Брой папки</string>
-    <string name="unread_widget_folder_enabled_summary">Показване на броя непрочетени съобщения само за една папка</string>
-    <string name="unread_widget_folder_title">Папка</string>
-    <string name="unread_widget_folder_summary">Папката, за която да се показва броят непрочетени съобщения</string>
-    <string name="unread_widget_action_done">Готово</string>
-    <string name="unread_widget_title"><xliff:g id="account_name">%1$s</xliff:g> - <xliff:g id="folder_name">%2$s</xliff:g></string>
-    <string name="unread_widget_account_not_selected">Няма избран профил</string>
-    <string name="unread_widget_folder_not_selected">Няма избрана папка</string>
     <string name="webview_empty_message">Няма текст</string>
     <string name="webview_contextmenu_link_view_action">Отваряне на връзка</string>
     <string name="webview_contextmenu_link_share_action">Споделяне на връзка</string>
@@ -759,11 +738,6 @@
     <string name="crypto_msg_encrypted_sign_insecure">но ключът от край-до-край не се счита за сигурен</string>
     <string name="crypto_msg_encrypted_sign_error">но информацията от край-до-край има грешки</string>
     <string name="crypto_msg_encrypted_insecure">но криптирането не се счита за сигурно</string>
-    <string name="crypto_info_ok">ОК</string>
-    <string name="crypto_info_search_key">Ключ за търсене</string>
-    <string name="crypto_info_view_signer">Преглед на подписалия се</string>
-    <string name="crypto_info_view_sender">Преглед на изпращача</string>
-    <string name="crypto_info_view_security_warning">Информация</string>
     <string name="locked_attach_unlock">Отключване</string>
     <string name="locked_attach_unencrypted">Тази част не криптирана и може да е несигурна.</string>
     <string name="locked_attach_title">Незащитен прикачен файл.</string>
@@ -784,9 +758,7 @@
     <string name="crypto_no_provider_button">Към настройки</string>
     <string name="mail_list_widget_text">K-9 списък със собщения</string>
     <!--Displayed in the the message list widget when the app hasn't had a chance to send content to it yet-->
-    <string name="message_list_widget_initializing">Зареждане…</string>
     <!--Might be displayed in the message list widget when the list is scrolled and new data can't be fetched fast enough-->
-    <string name="message_list_widget_list_item_loading">Зареждане…</string>
     <string name="openpgp_enabled_error_title">Криптирането е невъзможно</string>
     <string name="openpgp_enabled_error_msg">Някои от избраните получатели не поддържат тази функция!</string>
     <string name="enable_encryption">Включване на криптирането</string>
@@ -806,7 +778,6 @@
     <string name="general_settings_title">Общи настройки</string>
     <string name="dialog_openkeychain_info_title">Няма инсталирано OpenPGP приложение</string>
     <string name="dialog_openkeychain_info_install">Инсталирване</string>
-    <string name="dialog_openkeychain_info_text">K-9 Mail изисква OpenKeychain за криптирване от край-до-край.</string>
     <string name="encrypted_subject">Криптирано съобщение</string>
     <string name="account_settings_crypto_encrypt_subject">Шифровай заглавията</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">Може да не се поддържа при всички получатели</string>
@@ -839,7 +810,6 @@
     <string name="push_notification_state_wait_network">Спи докато чака за мрежа</string>
     <string name="push_notification_info">Натиснете за да научите повече.</string>
     <string name="push_info_title">Push информация</string>
-    <string name="push_info_notification_explanation_text">Когато използвате Push, K-9 Поща създава връзка до пощенския сървър. Андроид изисква показване на известие докато програмата е активна на заден фон. %s</string>
     <string name="push_info_configure_notification_text">Както и да е, Андроид също позволява да скривате известия.</string>
     <string name="push_info_learn_more_text">Научете повече</string>
     <string name="push_info_configure_notification_action">Конфигурирайте известия</string>
@@ -892,7 +862,6 @@
     <string name="user_manual_title">Ръководство</string>
     <string name="notification_notify_error_title">Грешка при известие</string>
     <string name="unsubscribe_action">Отписване</string>
-    <string name="about_fediverse_title">Федивселена</string>
     <string name="changelog_snackbar_button_text">Покажи</string>
     <string name="get_help_title">Помощ</string>
     <string name="general_settings_post_mark_as_unread_action_stay">Остани на сегашното съобщение</string>

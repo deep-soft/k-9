@@ -8,13 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.AttrRes
+import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons
 import app.k9mail.feature.launcher.FeatureLauncherActivity
 import com.fsck.k9.Account
 import com.fsck.k9.ui.R
@@ -87,7 +88,7 @@ class SettingsListFragment : Fragment(), ItemTouchCallback {
             addAction(
                 text = getString(R.string.general_settings_title),
                 navigationAction = R.id.action_settingsListScreen_to_generalSettingsScreen,
-                icon = R.attr.iconSettingsGeneral,
+                icon = Icons.Outlined.Settings,
             )
 
             addSection(title = getString(R.string.accounts_title)) {
@@ -99,7 +100,7 @@ class SettingsListFragment : Fragment(), ItemTouchCallback {
                 addAction(
                     text = getString(R.string.add_account_action),
                     navigationAction = R.id.action_settingsListScreen_to_addAccountScreen,
-                    icon = R.attr.iconSettingsAccountAdd,
+                    icon = Icons.Outlined.Add,
                 )
             }
 
@@ -107,13 +108,13 @@ class SettingsListFragment : Fragment(), ItemTouchCallback {
                 addAction(
                     text = getString(R.string.settings_export_title),
                     navigationAction = R.id.action_settingsListScreen_to_settingsExportScreen,
-                    icon = R.attr.iconSettingsExport,
+                    icon = Icons.Outlined.Upload,
                 )
 
                 addAction(
                     text = getString(SettingsImportR.string.settings_import_title),
                     navigationAction = R.id.action_settingsListScreen_to_settingsImportScreen,
-                    icon = R.attr.iconSettingsImport,
+                    icon = Icons.Outlined.Download,
                 )
             }
 
@@ -121,19 +122,19 @@ class SettingsListFragment : Fragment(), ItemTouchCallback {
                 addAction(
                     text = getString(R.string.about_action),
                     navigationAction = R.id.action_settingsListScreen_to_aboutScreen,
-                    icon = R.attr.iconSettingsAbout,
+                    icon = Icons.Outlined.Info,
                 )
 
                 addUrlAction(
                     text = getString(R.string.user_manual_title),
                     url = getString(R.string.user_manual_url),
-                    icon = R.attr.iconUserManual,
+                    icon = Icons.Outlined.MenuBook,
                 )
 
                 addUrlAction(
                     text = getString(R.string.get_help_title),
                     url = getString(R.string.user_forum_url),
-                    icon = R.attr.iconHelp,
+                    icon = Icons.Outlined.Help,
                 )
             }
         }
@@ -176,12 +177,12 @@ class SettingsListFragment : Fragment(), ItemTouchCallback {
         private val settingsList = mutableListOf<GenericItem>()
         private var itemId = 0L
 
-        fun addAction(text: String, @IdRes navigationAction: Int, @AttrRes icon: Int) {
+        fun addAction(text: String, @IdRes navigationAction: Int, @DrawableRes icon: Int) {
             itemId++
             settingsList.add(SettingsActionItem(itemId, text, navigationAction, icon))
         }
 
-        fun addUrlAction(text: String, url: String, @AttrRes icon: Int) {
+        fun addUrlAction(text: String, url: String, @DrawableRes icon: Int) {
             itemId++
             settingsList.add(UrlActionItem(itemId, text, url, icon))
         }

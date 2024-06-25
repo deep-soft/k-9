@@ -13,7 +13,7 @@
         android:layout_height="36dp"
         android:layout_marginStart="12dp"
         android:id="@+id/contact_photo"
-        tools:src="@drawable/ic_contact_picture"
+        tools:src="@drawable/ic_account_circle"
         />
 
     <LinearLayout
@@ -22,9 +22,10 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView android:id="@+id/text1"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text1"
             android:textColor="?attr/textColorPrimaryRecipientDropdown"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="6dp"
@@ -34,9 +35,10 @@
             tools:text="Mr. Firstname Lastname"
             />
 
-        <TextView android:id="@+id/text2"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text2"
             android:textColor="?attr/textColorSecondaryRecipientDropdown"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="12dp"
@@ -80,7 +82,7 @@
         android:layout_gravity="center_vertical"
         android:layout_margin="13dp"
         android:id="@+id/contact_crypto_status_icon_simple"
-        app:srcCompat="@drawable/status_lock"
+        app:srcCompat="@drawable/ic_lock"
         app:tint="?attr/openpgp_black"
         android:visibility="gone"
         tools:visibility="visible"

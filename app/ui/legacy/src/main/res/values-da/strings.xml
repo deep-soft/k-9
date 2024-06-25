@@ -3,8 +3,6 @@
     <!--=== App-specific strings =============================================================-->
     <!--This should make it easier for forks to change the branding-->
     <!--Used in AndroidManifest.xml-->
-    <string name="app_name">K-9 Mail</string>
-    <string name="shortcuts_title">K-9 konti</string>
     <string name="unread_widget_label">K-9 ulæst</string>
     <!--Used in the about dialog-->
     <string name="app_authors">The K-9 Dog Walkers</string>
@@ -15,7 +13,6 @@
     <string name="user_manual_title">Bruger manual</string>
     <string name="get_help_title">Få hjælp</string>
     <string name="user_forum_title">Bruger forum</string>
-    <string name="about_fediverse_title">Fediverse</string>
     <string name="about_libraries">Biblioteker</string>
     <string name="license">Licens</string>
     <string name="changelog_title">Ændringslog</string>
@@ -28,20 +25,15 @@
     <!--Button text of the "snack bar" that is displayed when the app was updated.-->
     <string name="changelog_snackbar_button_text">Vis</string>
     <!--Default signature-->
-    <string name="default_signature">-- \nDette er sendt fra min mobiltelefon. Undskyld at jeg fatter mig i korthed.</string>
     <!--General strings that include the app name-->
-    <string name="account_delete_dlg_instructions_fmt">Kontoen  \"<xliff:g id="account">%s</xliff:g>\" vil blive fjernet fra K-9 Mail.</string>
     <!--=== General strings ==================================================================-->
     <string name="authors">Forfattere</string>
-    <string name="about_title">Om K-9 Mail</string>
     <string name="accounts_title">Konti</string>
-    <string name="advanced">Avanceret</string>
     <string name="compose_title_compose">Skriv</string>
     <string name="compose_title_reply">Svar</string>
     <string name="compose_title_reply_all">Svar alle</string>
     <string name="compose_title_forward">Videresend</string>
     <string name="compose_title_forward_as_attachment">Videresend som vedhæftet</string>
-    <string name="choose_account_title">Vælg konto</string>
     <string name="choose_folder_title">Vælg mappe</string>
     <string name="choose_folder_move_title">Flyt til…</string>
     <string name="choose_folder_copy_title">Kopier til…</string>
@@ -285,7 +277,6 @@
     <string name="spam_folder_label">Spam mappe</string>
     <string name="account_setup_incoming_subscribed_folders_only_label">Vis kun mapper du abonerer på</string>
     <string name="account_setup_auto_expand_folder">Udvid mapper automatisk</string>
-    <string name="account_setup_options_mail_check_frequency_label">Frekvens for hentning af mail</string>
     <string name="account_setup_options_mail_check_frequency_never">Aldrig</string>
     <string name="account_setup_options_mail_check_frequency_15min">Hver 15 minut</string>
     <string name="account_setup_options_mail_check_frequency_30min">Hver 30 minut</string>
@@ -304,7 +295,6 @@
     <string name="idle_refresh_period_36min">Hver 36 minut</string>
     <string name="idle_refresh_period_48min">Hver 48 minut</string>
     <string name="idle_refresh_period_60min">Hver 60 minut</string>
-    <string name="account_setup_options_mail_display_count_label">Antal viste mails</string>
     <string name="account_setup_options_mail_display_count_10">10 mails</string>
     <string name="account_setup_options_mail_display_count_25">25 mails</string>
     <string name="account_setup_options_mail_display_count_50">50 mails</string>
@@ -668,18 +658,6 @@
     <string name="settings_export_progress_text">Eksporterer opsætning…</string>
     <string name="settings_export_success_generic">Indstillinger succesfuldt eksporteret</string>
     <string name="settings_export_failure">Eksport af indstillinger fejlede</string>
-    <string name="unread_widget_select_account">Vis antal ulæste for…</string>
-    <string name="unread_widget_account_title">Konto</string>
-    <string name="unread_widget_account_summary">Kontoen for hvilken tælleren for ulæste mails skal vises</string>
-    <string name="unread_widget_unified_inbox_account_summary">Fælles indbakke</string>
-    <string name="unread_widget_folder_enabled_title">Mappetæller</string>
-    <string name="unread_widget_folder_enabled_summary">Vis tæller for ulæste mails, kun for en enkelt mappe</string>
-    <string name="unread_widget_folder_title">Mappe</string>
-    <string name="unread_widget_folder_summary">Mappen for hvilken tælleren for ulæste mails skal vises</string>
-    <string name="unread_widget_action_done">Afslut</string>
-    <string name="unread_widget_title"><xliff:g id="account_name">%1$s</xliff:g> - <xliff:g id="folder_name">%2$s</xliff:g></string>
-    <string name="unread_widget_account_not_selected">Ingen konto valgt</string>
-    <string name="unread_widget_folder_not_selected">Ingen mappe valgt</string>
     <string name="webview_empty_message">Ingen tekst</string>
     <string name="webview_contextmenu_link_view_action">Åbn link</string>
     <string name="webview_contextmenu_link_share_action">Del link</string>
@@ -817,11 +795,6 @@
     <string name="crypto_msg_encrypted_sign_insecure">men end-to-end nøglen betragtes ikke som sikker</string>
     <string name="crypto_msg_encrypted_sign_error">men end-to-end data indeholder fejl</string>
     <string name="crypto_msg_encrypted_insecure">men krypteringen betragtes ikke som sikker</string>
-    <string name="crypto_info_ok">OK</string>
-    <string name="crypto_info_search_key">Søgenøgle</string>
-    <string name="crypto_info_view_signer">Vis underskriver</string>
-    <string name="crypto_info_view_sender">Vis afsender</string>
-    <string name="crypto_info_view_security_warning">Detaljer</string>
     <string name="locked_attach_unlock">Lås op</string>
     <string name="locked_attach_unencrypted">Denne del var ikke krypteret og kan være usikker.</string>
     <string name="locked_attach_title">Ubeskyttet vedhæftning</string>
@@ -842,9 +815,7 @@
     <string name="crypto_no_provider_button">Gå til opsætning</string>
     <string name="mail_list_widget_text">K-9 Meddelelsesliste</string>
     <!--Displayed in the the message list widget when the app hasn't had a chance to send content to it yet-->
-    <string name="message_list_widget_initializing">Indlæser…</string>
     <!--Might be displayed in the message list widget when the list is scrolled and new data can't be fetched fast enough-->
-    <string name="message_list_widget_list_item_loading">Indlæser…</string>
     <string name="openpgp_enabled_error_title">Kryptering var ikke mulig</string>
     <string name="openpgp_enabled_error_msg">Nogle af de valgte modtagere understøtter ikke denne funktion!</string>
     <string name="enable_encryption">Aktivér kryptering</string>
@@ -864,7 +835,6 @@
     <string name="general_settings_title">Generelt</string>
     <string name="dialog_openkeychain_info_title">Intet OpenPGP program installeret</string>
     <string name="dialog_openkeychain_info_install">Installere</string>
-    <string name="dialog_openkeychain_info_text">K-9 Mail kræver OpenKeychain for ende-til-ende kryptering.</string>
     <string name="encrypted_subject">Krypteret besked</string>
     <string name="account_settings_crypto_encrypt_subject">Kryptér besked emner</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">Understøttes ikke af alle modtagere</string>
@@ -897,7 +867,6 @@ Beskeden kan beholdes og bruges som sikkerhedskopi til den hemmelige nøgle. Hvi
     <string name="push_notification_state_wait_network">I dvale indtil netværk er tilgængelig</string>
     <string name="push_notification_info">Tryk for at lære mere.</string>
     <string name="push_info_title">Skub handling</string>
-    <string name="push_info_notification_explanation_text">Når skub handling bruges, opretholder K-9 Mail en forbindelse til post server. Android kræver, at der vises en løbende påmindelse, når app er aktiv i baggrunden. %s</string>
     <string name="push_info_configure_notification_text">Android giver dog også mulighed for at skjule påmindelsen.</string>
     <string name="push_info_learn_more_text">Lær mere</string>
     <string name="push_info_configure_notification_action">Indstille påmindelse</string>

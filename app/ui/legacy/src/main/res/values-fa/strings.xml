@@ -3,8 +3,6 @@
     <!--=== App-specific strings =============================================================-->
     <!--This should make it easier for forks to change the branding-->
     <!--Used in AndroidManifest.xml-->
-    <string name="app_name">کلاینت رایانامه K9</string>
-    <string name="shortcuts_title">حساب‌های K-9</string>
     <string name="unread_widget_label">نخوانده‌های K-9</string>
     <!--Used in the about dialog-->
     <string name="app_authors">K-9 Dog Walkers</string>
@@ -15,7 +13,6 @@
     <string name="user_manual_title">راهنمای کاربر</string>
     <string name="get_help_title">کمک گرفتن</string>
     <string name="user_forum_title">انجمن کاربری</string>
-    <string name="about_fediverse_title">فِدیوِرس</string>
     <string name="about_libraries">کتابخانه‌ها</string>
     <string name="license">مجوز</string>
     <string name="changelog_title">گزارش تغییرات</string>
@@ -28,20 +25,15 @@
     <!--Button text of the "snack bar" that is displayed when the app was updated.-->
     <string name="changelog_snackbar_button_text">مشاهده</string>
     <!--Default signature-->
-    <string name="default_signature">-- \nاز دستگاه اندرویدی‌ام و به‌وسیلهٔ K-9 Mail ارسال شد.</string>
     <!--General strings that include the app name-->
-    <string name="account_delete_dlg_instructions_fmt">حساب «<xliff:g id="account">%s</xliff:g>» از K-9 Mail حذف خواهد شد.</string>
     <!--=== General strings ==================================================================-->
     <string name="authors">سازندگان</string>
-    <string name="about_title">دربارهٔ K-9 Mail</string>
     <string name="accounts_title">حساب‌ها</string>
-    <string name="advanced">پیشرفته</string>
     <string name="compose_title_compose">نوشتن</string>
     <string name="compose_title_reply">پاسخ</string>
     <string name="compose_title_reply_all">پاسخ به همه</string>
     <string name="compose_title_forward">هدایت</string>
     <string name="compose_title_forward_as_attachment">هدایت به‌شکل پیوست</string>
-    <string name="choose_account_title">انتخاب حساب</string>
     <string name="choose_folder_title">انتخاب پوشه</string>
     <string name="choose_folder_move_title">انتقال به…</string>
     <string name="choose_folder_copy_title">کپی به…</string>
@@ -62,7 +54,7 @@
     <string name="done_action">انجام شد</string>
     <string name="discard_action">دورانداختن</string>
     <string name="save_draft_action">ذخیره در پیش‌نویس</string>
-    <string name="check_mail_action">به‌روزآوری رایانامه‌ها</string>
+    <string name="check_mail_action">بررسی نامه</string>
     <string name="send_messages_action">ارسال پیام‌ها</string>
     <string name="refresh_folders_action">بازآوری لیست پوشه‌ها</string>
     <string name="filter_folders_action">یافتن پوشه</string>
@@ -134,17 +126,17 @@
     <string name="notification_notify_error_title">خطای اعلانها</string>
     <!--Body of an error notification that is displayed when creating a notification for a new message has failed-->
     <string name="notification_notify_error_text">هنگام ساخت هشدار برای پیام جدید سامانه خطایی رخ داد. اغلب خطا به علت عدم وجود آهنگ هشدارها است.  \n\n برای بازکردن تنظیمات اعلانات، بزنید. </string>
-    <string name="notification_bg_sync_ticker">به‌روزآوری رایانامه‌ها: <xliff:g id="account">%1$s</xliff:g>:<xliff:g id="folder">%2$s</xliff:g></string>
-    <string name="notification_bg_sync_title">به‌روزآوری رایانامه‌ها</string>
-    <string name="notification_bg_send_ticker">ارسال رایانامه: <xliff:g id="account">%s</xliff:g></string>
-    <string name="notification_bg_send_title">ارسال رایانامه</string>
+    <string name="notification_bg_sync_ticker">بررسی کردن نامه: <xliff:g id="account">%1$s</xliff:g>:<xliff:g id="folder">%2$s</xliff:g></string>
+    <string name="notification_bg_sync_title">بررسی کردن نامه</string>
+    <string name="notification_bg_send_ticker">فرستادن نامه: <xliff:g id="account">%s</xliff:g></string>
+    <string name="notification_bg_send_title">فرستادن نامه</string>
     <string name="notification_bg_title_separator">:</string>
     <string name="notification_channel_push_title">همگام‌سازی (پیشرانی)</string>
     <string name="notification_channel_push_description">هنگام انتظار برای پیام‌های تازه نشان داده می‌شود</string>
     <string name="notification_channel_messages_title">پیام‌ها</string>
     <string name="notification_channel_messages_description">اعلان‌های مربوط به پیام‌ها</string>
     <string name="notification_channel_miscellaneous_title">متفرقه</string>
-    <string name="notification_channel_miscellaneous_description">سایر اعلان‌ها مانند خطاها و ...</string>
+    <string name="notification_channel_miscellaneous_description">سایر اعلان‌ها مانند خطاها و …</string>
     <string name="special_mailbox_name_inbox">صندوق ورودی</string>
     <string name="special_mailbox_name_outbox">صندوق خروجی</string>
     <string name="special_mailbox_name_drafts">پیش‌نویس‌ها</string>
@@ -174,7 +166,7 @@
     <string name="message_compose_reply_header_fmt_with_date">در <xliff:g id="sent_date">%1$s</xliff:g>، <xliff:g id="sender">%2$s</xliff:g> نوشت:</string>
     <string name="message_compose_error_no_recipients">باید حداقل یک گیرنده اضافه کنید.</string>
     <string name="compose_error_incomplete_recipient">مقدار واردشده برای نشانی گیرنده ناقص است!</string>
-    <string name="error_contact_address_not_found">برای این مخاطب هیچ نشانی رایانامه‌ای پیدا نشد.</string>
+    <string name="error_contact_address_not_found">هیچ نشانی رایانامه‌ای برای این آشنا پیدا نشد.</string>
     <string name="message_compose_attachments_skipped_toast">بعضی پیوست‌ها هدایت نمی‌شوند، زیرا دانلود نشده‌اند.</string>
     <string name="message_compose_attachments_forward_toast">پیام هدایت نمی‌شود، زیرا بعضی پیوست‌ها دانلود نشده‌اند.</string>
     <string name="message_compose_show_quoted_text_action">شامل نقل‌قول پیام باشد</string>
@@ -203,7 +195,7 @@
     <string name="global_settings_flag_summary">پیام‌های پرچم‌دار با ستاره مشخص می‌شوند</string>
     <string name="global_settings_preview_lines_label">سطرهای پیش‌نمایش</string>
     <string name="global_settings_show_correspondent_names_label">نمایش نام متناظر</string>
-    <string name="global_settings_show_correspondent_names_summary">به‌جای نشانی رایانامه، نام متناظر با آن را نشان بده</string>
+    <string name="global_settings_show_correspondent_names_summary">نمایش نام‌های متناظر به جای نشانی‌های رایانامه</string>
     <string name="global_settings_sender_above_subject_label">نام متناظر در بالای موضوع</string>
     <string name="global_settings_sender_above_subject_summary">نام‌های متناظر را در بالای موضوع نمایش بده نه زیر آن</string>
     <string name="global_settings_show_contact_name_label">نمایش نام مخاطب</string>
@@ -250,10 +242,10 @@
     <string name="general_settings_ui_density_compact">فشرده</string>
     <string name="general_settings_ui_density_default">پیش‌فرض</string>
     <string name="general_settings_ui_density_relaxed">راحت</string>
-    <string name="global_settings_privacy_hide_useragent">کارخواه رایانامه را مخفی کن</string>
-    <string name="global_settings_privacy_hide_useragent_detail">شناسهٔ K-9 User-Agent را از سرایند رایانامه‌ها بردار</string>
+    <string name="global_settings_privacy_hide_useragent">نهفتن کارخواه نامه</string>
+    <string name="global_settings_privacy_hide_useragent_detail">برداشتن شناسهٔ کارخواه کی۹ از سرایند نامه‌ها</string>
     <string name="global_settings_privacy_hide_timezone">منطقهٔ زمانی را مخفی کن</string>
-    <string name="global_settings_privacy_hide_timezone_detail">در سرایند رایانامه و سرایند پاسخ به‌جای زمان محلی از UTC استفاده کن</string>
+    <string name="global_settings_privacy_hide_timezone_detail">استفاده از UTC به جای زمان محلی در سرایند نامه‌ها و پاسخ‌ها</string>
     <string name="global_settings_notification_quick_delete_title">نمایش دکمهٔ «حذف»</string>
     <string name="global_settings_notification_quick_delete_never">هرگز</string>
     <string name="global_settings_notification_quick_delete_when_single_msg">برای اعلان پیام تکی</string>
@@ -286,7 +278,6 @@
     <string name="spam_folder_label">پوشهٔ هرزنامه</string>
     <string name="account_setup_incoming_subscribed_folders_only_label">فقط پوشه‌هایی که مشترک آن‌ها هستم را نمایش بده</string>
     <string name="account_setup_auto_expand_folder">پوشهٔ آغازین</string>
-    <string name="account_setup_options_mail_check_frequency_label">تکرار سرکشی به پوشه</string>
     <string name="account_setup_options_mail_check_frequency_never">هرگز</string>
     <string name="account_setup_options_mail_check_frequency_15min">هر ۱۵ دقیقه</string>
     <string name="account_setup_options_mail_check_frequency_30min">هر ۳۰ دقیقه</string>
@@ -305,7 +296,6 @@
     <string name="idle_refresh_period_36min">هر ۳۶ دقیقه</string>
     <string name="idle_refresh_period_48min">هر ۴۸ دقیقه</string>
     <string name="idle_refresh_period_60min">هر ۶۰ دقیقه</string>
-    <string name="account_setup_options_mail_display_count_label">تعداد پیام‌ها برای نمایش</string>
     <string name="account_setup_options_mail_display_count_10">۱۰ پیام</string>
     <string name="account_setup_options_mail_display_count_25">۲۵ پیام</string>
     <string name="account_setup_options_mail_display_count_50">۵۰ پیام</string>
@@ -320,7 +310,7 @@
     <string name="move_copy_cannot_copy_unsynced_message">پیامی که با کارساز همگام نشده را نمی‌توانید کپی یا حذف کنید</string>
     <string name="account_settings_push_advanced_title">پیشرفته</string>
     <string name="account_settings_title_fmt">تنظیمات حساب</string>
-    <string name="account_settings_notify_label">اعلان‌های رایانامهٔ جدید</string>
+    <string name="account_settings_notify_label">آگاهی‌های نامهٔ جدید</string>
     <string name="account_settings_folder_notify_new_mail_mode_label">پوشه‌های دارای اعلان</string>
     <string name="account_settings_folder_notify_new_mail_mode_all">همه</string>
     <string name="account_settings_folder_notify_new_mail_mode_first_class">فقط پوشه‌های سطح ۱</string>
@@ -328,10 +318,10 @@
     <string name="account_settings_folder_notify_new_mail_mode_not_second_class">همه به‌جز پوشه‌های سطح ۲</string>
     <string name="account_settings_folder_notify_new_mail_mode_none">هیچ‌کدام</string>
     <string name="account_settings_notify_sync_label">اعلان‌های همگام‌سازی</string>
-    <string name="account_settings_email_label">نشانی رایانامهٔ شما</string>
-    <string name="account_settings_notify_summary">زمانی که رایانامه می‌رسد در نوار وضعیت خبر بده</string>
-    <string name="account_settings_notify_sync_summary">زمانی که رایانامه‌ها در حال به‌روزآوری است در نوار وضعیت خبر بده</string>
-    <string name="account_settings_notify_self_label">شامل رایانامه‌های خروجی</string>
+    <string name="account_settings_email_label">نشانی رایانامه‌تان</string>
+    <string name="account_settings_notify_summary">آگاهی در نپار وضعیت هنگام رسیدن نامه</string>
+    <string name="account_settings_notify_sync_summary">آگاهی در نوار وضعیت هنگام بررسی نامه</string>
+    <string name="account_settings_notify_self_label">شامل نامه‌های خروجی</string>
     <string name="account_settings_notify_self_summary">برای پیام‌هایی که فرستادم یک اعلان نمایش بده</string>
     <string name="account_notify_contacts_mail_only_label">فقط مخاطبان</string>
     <string name="account_notify_contacts_mail_only_summary">فقط برای پیام مخاطبانِ شناس، اعلان بده</string>
@@ -363,7 +353,7 @@
     <string name="account_settings_message_read_receipt_label">رسید دریافت</string>
     <string name="account_settings_message_read_receipt_summary">همیشه یک رسید دریافت درخواست کن</string>
     <string name="account_settings_quote_style_label">شیوهٔ نقل‌قول در پاسخ</string>
-    <string name="account_settings_quote_style_prefix">پیشوند (مثل جیمیل)</string>
+    <string name="account_settings_quote_style_prefix">پیشوند (چون جی‌میل)</string>
     <string name="account_settings_quote_style_header">سرایند (مثل اوت‌لوک)</string>
     <string name="account_settings_upload_sent_messages_label">بارگذاری پیام‌های ارسالی</string>
     <string name="account_settings_upload_sent_messages_summary">پیام‌ها پس از ارسال در پوشه ارسال (Sent) بارگذاری شوند</string>
@@ -672,18 +662,6 @@
     <string name="settings_export_progress_text">در حال برون‌برد تنظیمات…</string>
     <string name="settings_export_success_generic">برون‌برد تنظیمات موفقیت‌آمیز بود</string>
     <string name="settings_export_failure">برون‌برد تنظیمات ناموفق بود</string>
-    <string name="unread_widget_select_account">نمایش تعداد نخوانده‌ها برای…</string>
-    <string name="unread_widget_account_title">حساب</string>
-    <string name="unread_widget_account_summary">حسابی که تعداد نخوانده‌های آن باید نشان داده شود</string>
-    <string name="unread_widget_unified_inbox_account_summary">صندوق ورودی یکپارچه</string>
-    <string name="unread_widget_folder_enabled_title">شمارش یک پوشه</string>
-    <string name="unread_widget_folder_enabled_summary">تعداد نخوانده‌های فقط یک پوشه را نشان بده</string>
-    <string name="unread_widget_folder_title">پوشه</string>
-    <string name="unread_widget_folder_summary">پوشه‌ای که تعداد نخوانده‌های آن باید نشان داده شود</string>
-    <string name="unread_widget_action_done">انجام شد</string>
-    <string name="unread_widget_title"><xliff:g id="account_name">%1$s</xliff:g> - <xliff:g id="folder_name">%2$s</xliff:g></string>
-    <string name="unread_widget_account_not_selected">حسابی انتخاب نشده</string>
-    <string name="unread_widget_folder_not_selected">پوشه‌ای انتخاب نشده</string>
     <string name="webview_empty_message">بدون متن</string>
     <string name="webview_contextmenu_link_view_action">بازکردن پیوند</string>
     <string name="webview_contextmenu_link_share_action">اشتراک‌گذاری پیوند</string>
@@ -821,11 +799,6 @@
     <string name="crypto_msg_encrypted_sign_insecure">اما کلیدِ سرتاسر، امن نیست</string>
     <string name="crypto_msg_encrypted_sign_error">اما اطلاعات سرتاسر، خطاهایی دارد</string>
     <string name="crypto_msg_encrypted_insecure">اما رمزنگاری، امن نیست</string>
-    <string name="crypto_info_ok">خب</string>
-    <string name="crypto_info_search_key">کلید جستجو</string>
-    <string name="crypto_info_view_signer">دیدن امضاکننده</string>
-    <string name="crypto_info_view_sender">دیدن فرستنده</string>
-    <string name="crypto_info_view_security_warning">جزئیات</string>
     <string name="locked_attach_unlock">قفل‌گشایی</string>
     <string name="locked_attach_unencrypted">این بخش رمزنگاری نشده و شاید ناامن باشد.</string>
     <string name="locked_attach_title">پیوستِ محافظت‌نشده</string>
@@ -846,9 +819,7 @@
     <string name="crypto_no_provider_button">برو به تنظیمات</string>
     <string name="mail_list_widget_text">لیست پیام K-9</string>
     <!--Displayed in the the message list widget when the app hasn't had a chance to send content to it yet-->
-    <string name="message_list_widget_initializing">بارگیری…</string>
     <!--Might be displayed in the message list widget when the list is scrolled and new data can't be fetched fast enough-->
-    <string name="message_list_widget_list_item_loading">بارگیری…</string>
     <string name="openpgp_enabled_error_title">رمزنگاری ممکن نیست</string>
     <string name="openpgp_enabled_error_msg">بعضی از گیرندگان انتخابی از این ویژگی پشتیبانی نمی‌کنند!</string>
     <string name="enable_encryption">فعال‌سازی رمزنگاری</string>
@@ -868,7 +839,6 @@
     <string name="general_settings_title">تنظیمات کلی</string>
     <string name="dialog_openkeychain_info_title">برنامه‌ای برای OpenPGP نصب نیست</string>
     <string name="dialog_openkeychain_info_install">نصب</string>
-    <string name="dialog_openkeychain_info_text">‏K-9 Mail برای رمزنگاری سرتاسر به OpenKeychain نیاز دارد.</string>
     <string name="encrypted_subject">پیام رمزنگاری‌شده</string>
     <string name="account_settings_crypto_encrypt_subject">موضوع پیام رمزنگاری شود</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">شاید برخی گیرندگان از آن پشتیبانی نکنند</string>
@@ -882,7 +852,7 @@
     <string name="ac_transfer_will_be_sent">پیام به نشانی شما ارسال خواهد شد:</string>
     <string name="ac_transfer_generating">در حال ساخت پیام راه‌انداز…</string>
     <string name="ac_transfer_sending_to">ارسال پیام به:</string>
-    <string name="ac_transfer_finish">برای تکمیل کار، پیام را روی دستگاه دیگرتان باز کنید و کد راه‌انداز را وارد کنید.</string>
+    <string name="ac_transfer_finish">برای پایان پیام را روی دیگر افزاره‌تان گشوده و کد برپایی را وارد کنید.</string>
     <string name="ac_transfer_show_code">نمایش کد راه‌انداز</string>
     <string name="ac_transfer_msg_subject">پیام راه‌انداز Autocrypt</string>
     <string name="ac_transfer_msg_body">این پیام حاوی تمام اطلاعات لازم برای انتقال امن تنظیمات Autocrypt و کلید سرّی‌تان از دستگاه اصلی‌تان است.
@@ -901,7 +871,6 @@
     <string name="push_notification_state_wait_network">می‌خوابد تا هنگامی که شبکه در دسترس باشد</string>
     <string name="push_notification_info">لمس کنید تا بیشتر بدانید.</string>
     <string name="push_info_title">اطلاعات پیشرانی</string>
-    <string name="push_info_notification_explanation_text">هنگام استفاده از پیشرانی، K-9 Mail اتصالی به کارساز رایانامه برقرار می‌کند. اندروید نیاز دارد هنگامی که برنامه‌ای در پس‌زمینه فعال است اعلان مداومی را نشان دهد. %s</string>
     <string name="push_info_configure_notification_text">البته اندروید این امکان را به شما می‌دهد که اعلان را پنهان کنید.</string>
     <string name="push_info_learn_more_text">بیشتر بدانید</string>
     <string name="push_info_configure_notification_action">پیکربندی اعلان</string>
@@ -956,13 +925,13 @@
     <!--Name of the action to compose a new message to a particular address. Usually displayed in a menu or in a tooltip when long-pressing the associated icon.-->
     <string name="action_compose_message_to">نوشتن پیام به</string>
     <!--Name of the action to copy an email address to the clipboard. Usually displayed in a menu or in a tooltip when long-pressing the associated icon.-->
-    <string name="action_copy_email_address">کپی آدرس ایمیل</string>
+    <string name="action_copy_email_address">رونوشت از نشانی رایانامه</string>
     <!--Name of the action to copy a name and email address to the clipboard. Usually displayed in a menu or in a tooltip when long-pressing the associated icon.-->
-    <string name="action_copy_name_and_email_address">کپی نام و آدرس ایمیل</string>
+    <string name="action_copy_name_and_email_address">رونوشت از نام و نشانی رایانامه</string>
     <!--A user visible label for the email address copied to the clipboard-->
     <string name="clipboard_label_email_address">نشانی رایانامه </string>
     <!--A user visible label for the name and email address copied to the clipboard-->
-    <string name="clipboard_label_name_and_email_address">نام و آدرس ایمیل</string>
+    <string name="clipboard_label_name_and_email_address">نام و نشانی رایانامه</string>
     <!--Might be displayed in a notification when deleting an account (in the background)-->
     <string name="background_work_notification_remove_account">در حال حذف حساب…</string>
     <!--For unread messages the first line of a message list item is modified by this to improve the experience for people with screen readers.-->
@@ -974,4 +943,12 @@
     <string name="general_settings_post_remove_action_show_previous_message">نمایش پیام قبلی</string>
     <string name="general_settings_post_remove_action_show_next_message">نمایش پیام بعدی</string>
     <string name="general_settings_post_remove_action_title">پس از حذف یا جابجایی یک پیام</string>
+    <string name="push_notification_state_alarm_permission_missing">اجازهٔ زمان‌بندی هشدارها وجود نداره</string>
+    <string name="push_notification_grant_alarm_permission">زدن برای اعطای اجازه.</string>
+    <string name="account_delete_dlg_instructions_fmt">حساب کاربری \"<xliff:g id="account">%s</xliff:g>\" از <xliff:g id="app_name">%s</xliff:g> حذف خواهد شد.</string>
+    <string name="default_signature">--
+\nاز دستگاه اندرویدی‌ام و به‌وسیلهٔ <xliff:g id="app_name">%s</xliff:g> ارسال شد. لطفا کوتاهی بنده را ببخشید.</string>
+    <string name="about_title">درباره<xliff:g id="app_name">%s</xliff:g></string>
+    <string name="dialog_openkeychain_info_text">برنامه کاربردی OpenKeychain جهت فعال‌سازی رمزگذاری سرتاسری مورد نیاز است.</string>
+    <string name="push_info_notification_explanation_text">در زمان استفاده از پیشرانی، <xliff:g id="app_name">%1$s</xliff:g> اتصال به کارساز را نگاه می‌دارد. اندروید نیازمند یک اعلان همیشگی جهت فعال ماندن برنامه در پس‌زمینه است. <xliff:g id="optional_extended_explanation">%2$s</xliff:g></string>
 </resources>

@@ -4,13 +4,10 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import app.k9mail.core.common.provider.AppNameProvider
 import app.k9mail.core.ui.compose.common.mvi.observe
 import app.k9mail.core.ui.compose.designsystem.template.Scaffold
-import app.k9mail.core.ui.compose.theme.K9Theme
-import app.k9mail.core.ui.compose.theme.ThunderbirdTheme
 import app.k9mail.feature.account.common.ui.WizardNavigationBar
-import app.k9mail.feature.account.common.ui.preview.PreviewAccountStateRepository
 import app.k9mail.feature.account.setup.ui.options.sync.SyncOptionsContract.Effect
 import app.k9mail.feature.account.setup.ui.options.sync.SyncOptionsContract.Event
 import app.k9mail.feature.account.setup.ui.options.sync.SyncOptionsContract.ViewModel
@@ -20,6 +17,7 @@ internal fun SyncOptionsScreen(
     onNext: () -> Unit,
     onBack: () -> Unit,
     viewModel: ViewModel,
+    appNameProvider: AppNameProvider,
     modifier: Modifier = Modifier,
 ) {
     val (state, dispatch) = viewModel.observe { effect ->
@@ -50,34 +48,7 @@ internal fun SyncOptionsScreen(
             state = state.value,
             onEvent = { dispatch(it) },
             contentPadding = innerPadding,
-        )
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-internal fun SyncOptionsScreenK9Preview() {
-    K9Theme {
-        SyncOptionsScreen(
-            onNext = {},
-            onBack = {},
-            viewModel = SyncOptionsViewModel(
-                accountStateRepository = PreviewAccountStateRepository(),
-            ),
-        )
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-internal fun SyncOptionsScreenThunderbirdPreview() {
-    ThunderbirdTheme {
-        SyncOptionsScreen(
-            onNext = {},
-            onBack = {},
-            viewModel = SyncOptionsViewModel(
-                accountStateRepository = PreviewAccountStateRepository(),
-            ),
+            appName = appNameProvider.appName,
         )
     }
 }

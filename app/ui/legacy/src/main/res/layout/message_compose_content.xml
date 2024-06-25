@@ -3,8 +3,8 @@
 We explicitly set the background color in case this layout is inflated using a theme different from the app theme (via
 the 'composer theme' setting).
 -->
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,10 +22,9 @@ the 'composer theme' setting).
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_marginLeft="12dip"
-            android:layout_marginRight="12dip"
             android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:background="?attr/colorSurfaceContainerLow"
             android:minHeight="50dp">
 
             <EditText
@@ -36,10 +35,12 @@ the 'composer theme' setting).
                 android:inputType="textEmailSubject|textAutoCorrect|textCapSentences"
                 android:imeOptions="actionNext|flagNoExtractUi"
                 android:singleLine="true"
+                android:layout_marginLeft="12dip"
+                android:layout_marginRight="12dip"
                 android:background="@android:color/transparent"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                style="@style/ComposeEditTextLarge"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
                 />
         </LinearLayout>
 
@@ -62,7 +63,7 @@ the 'composer theme' setting).
             android:minLines="3"
             android:paddingLeft="12dip"
             android:paddingRight="12dip"
-            style="@style/ComposeEditTextLarge"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
             tools:ignore="InefficientWeight" />
 
         <EditText
@@ -74,12 +75,11 @@ the 'composer theme' setting).
             android:hint="@string/message_compose_signature_hint"
             android:inputType="textMultiLine|textAutoCorrect|textCapSentences"
             android:imeOptions="flagNoExtractUi"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?attr/textAppearanceBodyLarge" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/quoted_text_show"
             android:text="@string/message_compose_show_quoted_text_action"
-            android:textSize="16sp"
             android:padding="0dip"
             android:layout_gravity="end"
             android:layout_height="wrap_content"
@@ -99,7 +99,7 @@ the 'composer theme' setting).
                 android:minLines="3"
                 android:inputType="textMultiLine|textAutoCorrect|textCapSentences"
                 android:imeOptions="flagNoExtractUi"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?attr/textAppearanceBodyLarge" />
 
             <com.fsck.k9.view.MessageWebView
                 android:id="@+id/quoted_html"
@@ -113,20 +113,22 @@ the 'composer theme' setting).
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true">
 
-                <ImageButton
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.Material3.Button.IconButton.Filled"
                     android:id="@+id/quoted_text_edit"
                     android:contentDescription="@string/message_compose_description_edit_quoted_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:background="@drawable/btn_edit" />
+                    app:icon="@drawable/ic_edit" />
 
-                <ImageButton
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.Material3.Button.IconButton.Filled"
                     android:id="@+id/quoted_text_delete"
                     android:contentDescription="@string/message_compose_description_delete_quoted_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/btn_dialog" />
+                    app:icon="@drawable/ic_close" />
 
             </LinearLayout>
 
@@ -141,7 +143,7 @@ the 'composer theme' setting).
             android:hint="@string/message_compose_signature_hint"
             android:inputType="textMultiLine|textAutoCorrect|textCapSentences"
             android:imeOptions="flagNoExtractUi"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?attr/textAppearanceBodyLarge" />
 
         <!--
             Empty container for storing attachments. We'll stick

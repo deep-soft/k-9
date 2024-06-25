@@ -4,24 +4,24 @@
     tools:parentTag="LinearLayout"
     tools:orientation="horizontal">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/recipient_names"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="?android:attr/textColorSecondary"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorSecondary"
         tools:text="to me" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/recipient_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:singleLine="true"
-        android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="?attr/colorAccent"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorSecondary"
         tools:text="+2" />
 
 </merge>

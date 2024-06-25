@@ -23,4 +23,34 @@ val preferencesModule = module {
             coroutineScope = get(named("AppCoroutineScope")),
         )
     } bind GeneralSettingsManager::class
+
+    factory { SettingsFileParser() }
+
+    factory { GeneralSettingsValidator() }
+    factory { GeneralSettingsUpgrader() }
+    factory { GeneralSettingsWriter(preferences = get(), generalSettingsManager = get()) }
+
+    factory { AccountSettingsValidator() }
+    factory { AccountSettingsUpgrader() }
+    factory {
+        AccountSettingsWriter(
+            preferences = get(),
+            localFoldersCreator = get(),
+            clock = get(),
+            serverSettingsSerializer = get(),
+            context = get(),
+        )
+    }
+
+    factory {
+        SettingsImporter(
+            settingsFileParser = get(),
+            generalSettingsValidator = get(),
+            accountSettingsValidator = get(),
+            generalSettingsUpgrader = get(),
+            accountSettingsUpgrader = get(),
+            generalSettingsWriter = get(),
+            accountSettingsWriter = get(),
+        )
+    }
 }

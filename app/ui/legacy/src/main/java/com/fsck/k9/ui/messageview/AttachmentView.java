@@ -8,15 +8,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.fsck.k9.K9;
+import com.fsck.k9.mailstore.AttachmentViewInfo;
 import com.fsck.k9.ui.R;
 import com.fsck.k9.ui.helper.ContextHelper;
 import com.fsck.k9.ui.helper.SizeFormatter;
-import com.fsck.k9.mailstore.AttachmentViewInfo;
+import com.google.android.material.textview.MaterialTextView;
 
 
 public class AttachmentView extends FrameLayout implements OnClickListener {
@@ -77,13 +78,13 @@ public class AttachmentView extends FrameLayout implements OnClickListener {
         cardView.setOnClickListener(this);
         saveButton.setOnClickListener(this);
 
-        TextView attachmentName = findViewById(R.id.attachment_name);
+        MaterialTextView attachmentName = findViewById(R.id.attachment_name);
         attachmentName.setText(attachment.displayName);
 
         setAttachmentSize(attachment.size);
 
         if (attachment.isSupportedImage()) {
-            attachmentType.setImageResource(R.drawable.ic_attachment_image);
+            attachmentType.setImageResource(Icons.Outlined.Image);
             if (attachment.isContentAvailable()) {
                 refreshThumbnail();
             }
@@ -93,7 +94,7 @@ public class AttachmentView extends FrameLayout implements OnClickListener {
     }
 
     private void setAttachmentSize(long size) {
-        TextView attachmentSize = findViewById(R.id.attachment_size);
+        MaterialTextView attachmentSize = findViewById(R.id.attachment_size);
         if (size == AttachmentViewInfo.UNKNOWN_SIZE) {
             attachmentSize.setText("");
         } else {

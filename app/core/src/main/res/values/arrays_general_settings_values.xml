@@ -8,6 +8,7 @@
         <item>bg</item>
         <item>br</item>
         <item>ca</item>
+        <item>co</item>
         <item>cs</item>
         <item>cy</item>
         <item>da</item>
@@ -30,7 +31,9 @@
         <item>in</item>
         <item>is</item>
         <item>it</item>
+        <item>iw</item>
         <item>ja</item>
+        <item>ko</item>
         <item>lt</item>
         <item>lv</item>
         <item>ml</item>
@@ -48,6 +51,7 @@
         <item>sv</item>
         <item>tr</item>
         <item>uk</item>
+        <item>vi</item>
         <item>zh_CN</item>
         <item>zh_TW</item>
     </string-array>
@@ -62,6 +66,7 @@
         <item>br</item>
         <item>ca</item>
         <item>cs</item>
+        <item>co</item>
         <item>cy</item>
         <item>da</item>
         <item>de</item>

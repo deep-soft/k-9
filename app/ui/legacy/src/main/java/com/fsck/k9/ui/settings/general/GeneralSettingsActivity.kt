@@ -14,8 +14,8 @@ import com.bytehamster.lib.preferencesearch.SearchPreferenceResult
 import com.bytehamster.lib.preferencesearch.SearchPreferenceResultListener
 import com.fsck.k9.ui.R
 import com.fsck.k9.ui.base.K9Activity
-import com.fsck.k9.ui.fragmentTransaction
-import com.fsck.k9.ui.fragmentTransactionWithBackStack
+import com.fsck.k9.ui.base.extensions.fragmentTransaction
+import com.fsck.k9.ui.base.extensions.fragmentTransactionWithBackStack
 
 class GeneralSettingsActivity : K9Activity(), OnPreferenceStartScreenCallback, SearchPreferenceResultListener {
     private lateinit var searchPreferenceActionView: SearchPreferenceActionView
@@ -111,17 +111,11 @@ class GeneralSettingsActivity : K9Activity(), OnPreferenceStartScreenCallback, S
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             return true
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        if (!searchPreferenceActionView.cancelSearch()) {
-            super.onBackPressed()
-        }
     }
 
     override fun onPreferenceStartScreen(

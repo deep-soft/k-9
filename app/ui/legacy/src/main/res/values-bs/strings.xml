@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="shortcuts_title">K-9 Računi</string>
     <string name="unread_widget_label">K-9 Nepročitano</string>
     <string name="source_code">Izvorni kod</string>
     <string name="app_license">Apache Licenca, Verzija 2.0</string>
     <string name="about_website_title">Veb-sajt</string>
     <string name="user_manual_title">Uputstvo za korisnika</string>
-    <string name="about_fediverse_title">Fedivers</string>
     <string name="about_libraries">Biblioteke</string>
     <string name="license">Licenca</string>
     <string name="changelog_title">Dnevnik izmjena</string>
@@ -14,7 +12,6 @@
     <string name="changelog_recent_changes_title">Šta je novo</string>
     <string name="changelog_show_recent_changes">Prikaži skorije izmjene kad se aplikacija ažurira</string>
     <string name="changelog_snackbar_button_text">Pogledaj</string>
-    <string name="account_delete_dlg_instructions_fmt">Račun \"<xliff:g id="account">%s</xliff:g>\" će biti uklonjen iz K-9 Mail-a.</string>
     <string name="compose_title_reply">Odgovori</string>
     <string name="choose_folder_move_title">Premjesti u…</string>
     <string name="choose_folder_copy_title">Kopiraj u…</string>
@@ -84,23 +81,17 @@
     <string name="global_settings_show_correspondent_names_summary">Prikaži imena korespodenata umjesto njihove mejl-adrese</string>
     <string name="about_action">O nama</string>
     <string name="prefs_title">Postavke</string>
-    <string name="app_name">K-9 Mail</string>
     <string name="app_authors">K-9 razvojni tim</string>
     <string name="get_help_title">Zatražite pomoć</string>
     <string name="about_project_title">Projekat otvorenog koda</string>
     <string name="user_forum_title">Korisnički forum</string>
     <string name="changelog_loading_error">Nije moguće učitati dnevnik izmjena.</string>
     <string name="changelog_snackbar_text">Vidite šta je novo u ovom izdanju</string>
-    <string name="default_signature">--
-\nPoslano sa mog Android uređaja preko K-9 Mail-a. Molim vas oprostite na mojoj sažetosti.</string>
     <string name="authors">Autori</string>
-    <string name="about_title">O K-9 Mail-u</string>
-    <string name="advanced">Napredno</string>
     <string name="compose_title_compose">Sastavi</string>
     <string name="accounts_title">Računi</string>
     <string name="compose_title_forward">Proslijedi</string>
     <string name="compose_title_forward_as_attachment">Proslijedi kao prilog</string>
-    <string name="choose_account_title">Odaberite račun</string>
     <string name="compose_title_reply_all">Odgovori svima</string>
     <string name="choose_folder_title">Odaberite direktorijum</string>
     <string name="actionbar_selected"><xliff:g id="selection_count">%d</xliff:g> odabrano</string>

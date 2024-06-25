@@ -3,8 +3,6 @@
     <!--=== App-specific strings =============================================================-->
     <!--This should make it easier for forks to change the branding-->
     <!--Used in AndroidManifest.xml-->
-    <string name="app_name">K-9 pasts</string>
-    <string name="shortcuts_title">K-9 konti</string>
     <string name="unread_widget_label">K-9 nelasītie</string>
     <!--Used in the about dialog-->
     <string name="app_authors">K-9 Suņu staidzinātāji</string>
@@ -15,7 +13,6 @@
     <string name="user_manual_title">Lietotāja rokasgrāmata</string>
     <string name="get_help_title">Saņemt palīdzību</string>
     <string name="user_forum_title">Lietotāju forums</string>
-    <string name="about_fediverse_title">Fediverse</string>
     <string name="about_libraries">Vārdnīcas</string>
     <string name="license">Licence</string>
     <string name="changelog_title">Izmaiņu žurnāls</string>
@@ -28,21 +25,15 @@
     <!--Button text of the "snack bar" that is displayed when the app was updated.-->
     <string name="changelog_snackbar_button_text">Skatīt</string>
     <!--Default signature-->
-    <string name="default_signature">--
-\nSūtīts ar K-9 pastu no manas Android ierīces. Atvainojiet, ka mana izpausme ir tik kodolīga.</string>
     <!--General strings that include the app name-->
-    <string name="account_delete_dlg_instructions_fmt">Konts \"<xliff:g id="account">%s</xliff:g>\" tiks dzēsts no K-9 pasta.</string>
     <!--=== General strings ==================================================================-->
     <string name="authors">Autori</string>
-    <string name="about_title">Par K-9 pastu</string>
     <string name="accounts_title">Konti</string>
-    <string name="advanced">Papildiespējas</string>
     <string name="compose_title_compose">Rakstīt ziņu</string>
     <string name="compose_title_reply">Atbildēt</string>
     <string name="compose_title_reply_all">Atbildēt visiem</string>
     <string name="compose_title_forward">Pārsūtīt</string>
     <string name="compose_title_forward_as_attachment">Pārsūtīt kā pielikumu</string>
-    <string name="choose_account_title">Izvēlēties kontu</string>
     <string name="choose_folder_title">Izvēlēties mapi</string>
     <string name="choose_folder_move_title">Pārvietot uz…</string>
     <string name="choose_folder_copy_title">Kopēt uz…</string>
@@ -292,7 +283,6 @@ pat <xliff:g id="messages_to_load">%d</xliff:g> vairāk</string>
     <string name="spam_folder_label">Mēstuļu mape</string>
     <string name="account_setup_incoming_subscribed_folders_only_label">Rādīt tikai izvēlētās mapes</string>
     <string name="account_setup_auto_expand_folder">Automātiski izvērst mapi</string>
-    <string name="account_setup_options_mail_check_frequency_label">Mapes pārbaudes biežums</string>
     <string name="account_setup_options_mail_check_frequency_never">Nekad</string>
     <string name="account_setup_options_mail_check_frequency_15min">Ik 15 minūtes</string>
     <string name="account_setup_options_mail_check_frequency_30min">Katras 30 minūtes</string>
@@ -311,7 +301,6 @@ pat <xliff:g id="messages_to_load">%d</xliff:g> vairāk</string>
     <string name="idle_refresh_period_36min">Katras 36 minūtes</string>
     <string name="idle_refresh_period_48min">Katras 48 minūtes</string>
     <string name="idle_refresh_period_60min">Katras 60 minūtes</string>
-    <string name="account_setup_options_mail_display_count_label">Parādāmo ziņu skaits</string>
     <string name="account_setup_options_mail_display_count_10">10 ziņas</string>
     <string name="account_setup_options_mail_display_count_25">25 ziņas</string>
     <string name="account_setup_options_mail_display_count_50">50 ziņas</string>
@@ -680,18 +669,6 @@ pat <xliff:g id="messages_to_load">%d</xliff:g> vairāk</string>
     <string name="settings_export_progress_text">Eksportē iestatījumus…</string>
     <string name="settings_export_success_generic">Iestatījumi veiksmīgi eksportēti</string>
     <string name="settings_export_failure">Iestatījumu eksports neizdevās</string>
-    <string name="unread_widget_select_account">Parādīt nelasīto ziņu skaitu…</string>
-    <string name="unread_widget_account_title">Konts</string>
-    <string name="unread_widget_account_summary">Konts, kuram jāparāda nelasīto skaits</string>
-    <string name="unread_widget_unified_inbox_account_summary">Apvienotā Iesūtne (pastkaste)</string>
-    <string name="unread_widget_folder_enabled_title">Mapju skaitīšana</string>
-    <string name="unread_widget_folder_enabled_summary">Parādīt nelasīto ziņu skaitu tikai vienā mapē</string>
-    <string name="unread_widget_folder_title">Mape</string>
-    <string name="unread_widget_folder_summary">Mape, kurā jāsaskaita nelasītās ziņas</string>
-    <string name="unread_widget_action_done">Darīts</string>
-    <string name="unread_widget_title"><xliff:g id="account_name">%1$s</xliff:g> - <xliff:g id="folder_name">%2$s</xliff:g></string>
-    <string name="unread_widget_account_not_selected">Nav izvēlēts konts</string>
-    <string name="unread_widget_folder_not_selected">Nav izvēlēta mape</string>
     <string name="webview_empty_message">Nav teksta</string>
     <string name="webview_contextmenu_link_view_action">Atvērt saiti</string>
     <string name="webview_contextmenu_link_share_action">Kopīgot saiti</string>
@@ -832,11 +809,6 @@ pat <xliff:g id="messages_to_load">%d</xliff:g> vairāk</string>
     <string name="crypto_msg_encrypted_sign_insecure">taču end-to-end šifrēšanas atslēga netiek uzskatīta par drošu</string>
     <string name="crypto_msg_encrypted_sign_error">taču end-to-end šifrēšanas datos ir kļūdas</string>
     <string name="crypto_msg_encrypted_insecure">taču end-to-end šifrēšana netiek uzskatīta par drošu</string>
-    <string name="crypto_info_ok">Labi</string>
-    <string name="crypto_info_search_key">Meklēt atslēgu</string>
-    <string name="crypto_info_view_signer">Apskatīties parakstītāju</string>
-    <string name="crypto_info_view_sender">Apskatīties nosūtītāju</string>
-    <string name="crypto_info_view_security_warning">Sīkāki dati</string>
     <string name="locked_attach_unlock">Atslēgt</string>
     <string name="locked_attach_unencrypted">Šī daļa nav šifrēta un var būt nedroša.</string>
     <string name="locked_attach_title">Neaizsargāts pielikums</string>
@@ -857,9 +829,7 @@ pat <xliff:g id="messages_to_load">%d</xliff:g> vairāk</string>
     <string name="crypto_no_provider_button">Doties uz Iestatījumiem</string>
     <string name="mail_list_widget_text">K-9 Ziņu saraksts</string>
     <!--Displayed in the the message list widget when the app hasn't had a chance to send content to it yet-->
-    <string name="message_list_widget_initializing">Ielādē…</string>
     <!--Might be displayed in the message list widget when the list is scrolled and new data can't be fetched fast enough-->
-    <string name="message_list_widget_list_item_loading">Ielādē…</string>
     <string name="openpgp_enabled_error_title">Šifrēšana nav iespējama</string>
     <string name="openpgp_enabled_error_msg">Daži no izvēlētajiem saņēmējiem šo iespēju neatbalsta!</string>
     <string name="enable_encryption">Iespējot šifrēšanu</string>
@@ -879,7 +849,6 @@ pat <xliff:g id="messages_to_load">%d</xliff:g> vairāk</string>
     <string name="general_settings_title">Vispārējie iestatījumi</string>
     <string name="dialog_openkeychain_info_title">OpenPGP lietotne nav instalēta</string>
     <string name="dialog_openkeychain_info_install">Instalēt</string>
-    <string name="dialog_openkeychain_info_text">Lai nodrošinātu end-to-end šifrēšanu K-9 pastam nepieciešams OpenKeychain.</string>
     <string name="encrypted_subject">Šifrēta ziņa</string>
     <string name="account_settings_crypto_encrypt_subject">Šifrēt ziņu tematus</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">Daži saņēmēji to, iespējams, neatbalsta</string>
@@ -907,7 +876,6 @@ pat <xliff:g id="messages_to_load">%d</xliff:g> vairāk</string>
     <string name="push_notification_state_wait_network">Snaust, kamēr pieejams tīkls</string>
     <string name="push_notification_info">Pieskarieties, lai uzzinātu vairāk.</string>
     <string name="push_info_title">Grūdeņa/stūmekļa (push) informācija</string>
-    <string name="push_info_notification_explanation_text">Kad tiek izmantots grūdenis/stūmeklis (push), K-9 pasts uztur savienojumu ar e-pasta serveri. Android OS liek rādīt paziņojumu, ka lietotne fonā ir aktīva. %s</string>
     <string name="push_info_configure_notification_text">Taču Android Jums ļauj arī paslēpt paziņojumu.</string>
     <string name="push_info_learn_more_text">Uzzināt vairāk</string>
     <string name="push_info_configure_notification_action">Konfigurēt paziņojumu</string>

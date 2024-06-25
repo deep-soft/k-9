@@ -21,12 +21,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                     android:text="@string/edit_identity_description_label"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorPrimary"/>
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    />
 
             <EditText
                     android:id="@+id/description"
@@ -36,12 +36,12 @@
                     android:hint="@string/edit_identity_description_hint"
                     />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                     android:text="@string/edit_identity_name_label"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorPrimary"/>
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    />
 
             <EditText
                     android:id="@+id/name"
@@ -51,12 +51,11 @@
                     android:hint="@string/edit_identity_name_hint"
                     />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                     android:text="@string/edit_identity_email_label"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
                     />
 
             <EditText
@@ -67,12 +66,11 @@
                     android:hint="@string/edit_identity_email_hint"
                     android:inputType="textEmailAddress"/>
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                     android:text="@string/edit_identity_reply_to_label"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
                     />
 
             <EditText
@@ -83,20 +81,20 @@
                     android:hint="@string/edit_identity_reply_to_hint"
                     android:inputType="textEmailAddress"
                     />
-            <!-- 
-        <TextView
+            <!--
+        <com.google.android.material.textview.MaterialTextView
             android:text="@string/edit_identity_always_bcc_label"
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            />
         <EditText
             android:id="@+id/account_always_bcc"
             android:singleLine="true"
             android:layout_height="wrap_content"
             android:layout_width="fill_parent" />
             -->
-            <CheckBox
+            <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/signature_use"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -108,12 +106,12 @@
                     android:layout_height="fill_parent"
                     android:orientation="vertical">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                         android:text="@string/edit_identity_signature_label"
                         android:layout_height="wrap_content"
                         android:layout_width="fill_parent"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="?android:attr/textColorPrimary"/>
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        />
 
                 <EditText
                         android:id="@+id/signature"

@@ -22,6 +22,7 @@ rootProject.name = "k-9"
 
 include(
     ":app-k9mail",
+    ":app-thunderbird",
     ":app-ui-catalog",
 )
 
@@ -29,7 +30,6 @@ include(
     ":app:common",
     ":app:ui:base",
     ":app:ui:legacy",
-    ":app:ui:message-list-widget",
     ":app:core",
     ":app:storage",
     ":app:crypto-openpgp",
@@ -64,6 +64,13 @@ include(
     ":feature:autodiscovery:api",
     ":feature:autodiscovery:autoconfig",
     ":feature:autodiscovery:service",
+    ":feature:autodiscovery:demo",
+)
+
+include(
+    ":feature:widget:message-list",
+    ":feature:widget:shortcut",
+    ":feature:widget:unread",
 )
 
 include(
@@ -75,10 +82,14 @@ include(
     ":core:android:testing",
     ":core:ui:compose:common",
     ":core:ui:compose:designsystem",
-    ":core:ui:compose:theme",
     ":core:ui:compose:theme2:common",
     ":core:ui:compose:theme2:k9mail",
+    ":core:ui:compose:theme2:thunderbird",
     ":core:ui:compose:testing",
+    ":core:ui:legacy:designsystem",
+    ":core:ui:legacy:theme2:common",
+    ":core:ui:legacy:theme2:k9mail",
+    ":core:ui:legacy:theme2:thunderbird",
 )
 
 include(
@@ -109,6 +120,7 @@ include(":plugins:openpgp-api-lib:openpgp-api")
 include(
     ":cli:autodiscovery-cli",
     ":cli:html-cleaner-cli",
+    ":cli:resource-mover-cli",
     ":cli:translation-cli",
 )
 

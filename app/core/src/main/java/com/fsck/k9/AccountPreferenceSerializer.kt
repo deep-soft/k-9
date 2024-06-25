@@ -124,7 +124,10 @@ class AccountPreferenceSerializer(
             maxPushFolders = storage.getInt("$accountUuid.maxPushFolders", 10)
             isSubscribedFoldersOnly = storage.getBoolean("$accountUuid.subscribedFoldersOnly", false)
             maximumPolledMessageAge = storage.getInt("$accountUuid.maximumPolledMessageAge", -1)
-            maximumAutoDownloadMessageSize = storage.getInt("$accountUuid.maximumAutoDownloadMessageSize", 32768)
+            maximumAutoDownloadMessageSize = storage.getInt(
+                "$accountUuid.maximumAutoDownloadMessageSize",
+                DEFAULT_MAXIMUM_AUTO_DOWNLOAD_MESSAGE_SIZE,
+            )
             messageFormat = getEnumStringPref(storage, "$accountUuid.messageFormat", DEFAULT_MESSAGE_FORMAT)
             val messageFormatAuto = storage.getBoolean("$accountUuid.messageFormatAuto", DEFAULT_MESSAGE_FORMAT_AUTO)
             if (messageFormatAuto && messageFormat == MessageFormat.TEXT) {
@@ -140,7 +143,7 @@ class AccountPreferenceSerializer(
             isReplyAfterQuote = storage.getBoolean("$accountUuid.replyAfterQuote", DEFAULT_REPLY_AFTER_QUOTE)
             isStripSignature = storage.getBoolean("$accountUuid.stripSignature", DEFAULT_STRIP_SIGNATURE)
             useCompression = storage.getBoolean("$accountUuid.useCompression", true)
-            isSendClientIdEnabled = storage.getBoolean("$accountUuid.sendClientId", true)
+            isSendClientInfoEnabled = storage.getBoolean("$accountUuid.sendClientInfo", true)
 
             importedAutoExpandFolder = storage.getString("$accountUuid.autoExpandFolderName", null)
 
@@ -365,7 +368,7 @@ class AccountPreferenceSerializer(
             editor.putLong("$accountUuid.lastFolderListRefreshTime", lastFolderListRefreshTime)
             editor.putBoolean("$accountUuid.isFinishedSetup", isFinishedSetup)
             editor.putBoolean("$accountUuid.useCompression", useCompression)
-            editor.putBoolean("$accountUuid.sendClientId", isSendClientIdEnabled)
+            editor.putBoolean("$accountUuid.sendClientInfo", isSendClientInfoEnabled)
             editor.putBoolean("$accountUuid.migrateToOAuth", shouldMigrateToOAuth)
         }
 
@@ -485,7 +488,7 @@ class AccountPreferenceSerializer(
         editor.remove("$accountUuid.lastFolderListRefreshTime")
         editor.remove("$accountUuid.isFinishedSetup")
         editor.remove("$accountUuid.useCompression")
-        editor.remove("$accountUuid.sendClientId")
+        editor.remove("$accountUuid.sendClientInfo")
         editor.remove("$accountUuid.migrateToOAuth")
 
         deleteIdentities(account, storage, editor)
@@ -597,7 +600,7 @@ class AccountPreferenceSerializer(
             maxPushFolders = 10
             isSubscribedFoldersOnly = false
             maximumPolledMessageAge = -1
-            maximumAutoDownloadMessageSize = 32768
+            maximumAutoDownloadMessageSize = DEFAULT_MAXIMUM_AUTO_DOWNLOAD_MESSAGE_SIZE
             messageFormat = DEFAULT_MESSAGE_FORMAT
             isMessageFormatAuto = DEFAULT_MESSAGE_FORMAT_AUTO
             isMessageReadReceipt = DEFAULT_MESSAGE_READ_RECEIPT
@@ -672,5 +675,6 @@ class AccountPreferenceSerializer(
         const val DEFAULT_STRIP_SIGNATURE = true
         const val DEFAULT_REMOTE_SEARCH_NUM_RESULTS = 25
         const val DEFAULT_RINGTONE_URI = "content://settings/system/notification_sound"
+        const val DEFAULT_MAXIMUM_AUTO_DOWNLOAD_MESSAGE_SIZE = 131072
     }
 }

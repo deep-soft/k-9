@@ -3,7 +3,7 @@ package com.fsck.k9
 import android.app.Application
 import android.content.res.Configuration
 import android.content.res.Resources
-import app.k9mail.ui.widget.list.MessageListWidgetManager
+import app.k9mail.feature.widget.message.list.MessageListWidgetManager
 import com.fsck.k9.controller.MessagingController
 import com.fsck.k9.job.WorkManagerConfigurationProvider
 import com.fsck.k9.notification.NotificationChannelManager
@@ -12,13 +12,11 @@ import com.fsck.k9.ui.base.ThemeManager
 import com.fsck.k9.ui.base.extensions.currentLocale
 import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.plus
 import org.koin.android.ext.android.inject
 import org.koin.core.module.Module
 import timber.log.Timber
@@ -33,7 +31,7 @@ abstract class CommonApp : Application(), WorkManagerConfiguration.Provider {
     private val messageListWidgetManager: MessageListWidgetManager by inject()
     private val workManagerConfigurationProvider: WorkManagerConfigurationProvider by inject()
 
-    private val appCoroutineScope: CoroutineScope = GlobalScope + Dispatchers.Main
+    private val appCoroutineScope: CoroutineScope = MainScope()
     private var appLanguageManagerInitialized = false
 
     override fun onCreate() {

@@ -1,7 +1,6 @@
 package com.fsck.k9.ui.messageview
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +12,9 @@ import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.fsck.k9.controller.MessageReference
 import com.fsck.k9.ui.R
+import com.fsck.k9.ui.base.extensions.withArguments
 import com.fsck.k9.ui.messagelist.MessageListItem
 import com.fsck.k9.ui.messagelist.MessageListViewModel
-import com.fsck.k9.ui.withArguments
 
 /**
  * A fragment that uses [ViewPager2] to allow the user to swipe between messages.
@@ -218,10 +217,6 @@ class MessageViewContainerFragment : Fragment() {
 
     fun onDelete() {
         messageViewFragment.onDelete()
-    }
-
-    fun onPendingIntentResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        findMessageViewFragment().onPendingIntentResult(requestCode, resultCode, data)
     }
 
     private class MessageViewContainerAdapter(

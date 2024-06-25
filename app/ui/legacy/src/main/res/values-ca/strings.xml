@@ -3,8 +3,6 @@
     <!--=== App-specific strings =============================================================-->
     <!--This should make it easier for forks to change the branding-->
     <!--Used in AndroidManifest.xml-->
-    <string name="app_name">K-9 Mail</string>
-    <string name="shortcuts_title">Comptes del K-9</string>
     <string name="unread_widget_label">K-9 no llegits</string>
     <!--Used in the about dialog-->
     <string name="app_authors">Els passejadors de gossos K-9</string>
@@ -15,7 +13,6 @@
     <string name="user_manual_title">Manual de l\'usuari</string>
     <string name="get_help_title">Obtingueu ajuda</string>
     <string name="user_forum_title">Fòrum d\'usuaris</string>
-    <string name="about_fediverse_title">Fediverse</string>
     <string name="about_libraries">Biblioteques informàtiques</string>
     <string name="license">Llicència</string>
     <string name="changelog_title">Registre de canvis</string>
@@ -28,21 +25,15 @@
     <!--Button text of the "snack bar" that is displayed when the app was updated.-->
     <string name="changelog_snackbar_button_text">Vista</string>
     <!--Default signature-->
-    <string name="default_signature">--
-\nEnviat des del meu dispositiu Android amb el K-9 Mail. Disculpeu la brevetat.</string>
     <!--General strings that include the app name-->
-    <string name="account_delete_dlg_instructions_fmt">El compte \"<xliff:g id="account">%s</xliff:g>\" s\'eliminarà del K-9 Mail.</string>
     <!--=== General strings ==================================================================-->
     <string name="authors">Autors</string>
-    <string name="about_title">Quant al K-9 Mail</string>
     <string name="accounts_title">Comptes</string>
-    <string name="advanced">Avançat</string>
     <string name="compose_title_compose">Redacta</string>
     <string name="compose_title_reply">Respon</string>
     <string name="compose_title_reply_all">Respon a tothom</string>
     <string name="compose_title_forward">Reenvia</string>
     <string name="compose_title_forward_as_attachment">Reenvia com a adjunt</string>
-    <string name="choose_account_title">Trieu un compte</string>
     <string name="choose_folder_title">Trieu una carpeta</string>
     <string name="choose_folder_move_title">Mou a…</string>
     <string name="choose_folder_copy_title">Copia a…</string>
@@ -87,6 +78,7 @@
     <string name="show_headers_action">Mostra les capçaleres</string>
     <plurals name="copy_address_to_clipboard">
         <item quantity="one">Adreça copiada al porta-retalls</item>
+        <item quantity="many">Adreces copiades al porta-retalls</item>
         <item quantity="other">Adreces copiades al porta-retalls</item>
     </plurals>
     <string name="copy_subject_to_clipboard">Text de l\'assumpte copiat al porta-retalls</string>
@@ -115,6 +107,7 @@
     <string name="size_format_bytes">%d B</string>
     <plurals name="notification_new_messages_title">
         <item quantity="one"><xliff:g id="new_message_count">%d</xliff:g> missatge nou</item>
+        <item quantity="many"><xliff:g id="new_message_count">%d</xliff:g> missatges nous</item>
         <item quantity="other"><xliff:g id="new_message_count">%d</xliff:g> missatges nous</item>
     </plurals>
     <string name="notification_additional_messages">+ <xliff:g id="additional_messages">%1$d</xliff:g> més sobre <xliff:g id="account">%2$s</xliff:g></string>
@@ -206,7 +199,7 @@
     <string name="global_settings_flag_summary">Els estels indiquen missatges marcats</string>
     <string name="global_settings_preview_lines_label">Previsualització de línies</string>
     <string name="global_settings_show_correspondent_names_label">Mostra noms dels contactes</string>
-    <string name="global_settings_show_correspondent_names_summary">Mostra noms dels contactes enlloc dels correus</string>
+    <string name="global_settings_show_correspondent_names_summary">Mostra els noms dels contactes enlloc dels correus</string>
     <string name="global_settings_sender_above_subject_label">Remitent damunt de l\'assumpte</string>
     <string name="global_settings_sender_above_subject_summary">Mostra els noms dels remitents damunt de l\'assumpte, en comptes de sota</string>
     <string name="global_settings_show_contact_name_label">Mostra els noms dels contactes</string>
@@ -289,7 +282,6 @@
     <string name="spam_folder_label">Carpeta brossa</string>
     <string name="account_setup_incoming_subscribed_folders_only_label">Mostra només carpetes subscrites</string>
     <string name="account_setup_auto_expand_folder">Autoexpandeix la carpeta</string>
-    <string name="account_setup_options_mail_check_frequency_label">Freqüència de comprovació de la carpeta</string>
     <string name="account_setup_options_mail_check_frequency_never">Mai</string>
     <string name="account_setup_options_mail_check_frequency_15min">Cada 15 minuts</string>
     <string name="account_setup_options_mail_check_frequency_30min">Cada 30 minuts</string>
@@ -308,7 +300,6 @@
     <string name="idle_refresh_period_36min">Cada 36 minuts</string>
     <string name="idle_refresh_period_48min">Cada 48 minuts</string>
     <string name="idle_refresh_period_60min">Cada 60 minuts</string>
-    <string name="account_setup_options_mail_display_count_label">Nombre de missatges a mostrar</string>
     <string name="account_setup_options_mail_display_count_10">10 missatges</string>
     <string name="account_setup_options_mail_display_count_25">25 missatges</string>
     <string name="account_setup_options_mail_display_count_50">50 missatges</string>
@@ -565,7 +556,7 @@
     <string name="setting_theme_follow_system">Fes servir el valor per defecte del sistema</string>
     <string name="display_preferences">Visualització</string>
     <string name="global_preferences">Global</string>
-    <string name="debug_preferences">Depura</string>
+    <string name="debug_preferences">Depuració</string>
     <string name="privacy_preferences">Privadesa</string>
     <string name="network_preferences">Xarxa</string>
     <string name="interaction_preferences">Interacció</string>
@@ -648,8 +639,9 @@
     <string name="dialog_confirm_delete_title">Confirmeu l\'eliminació</string>
     <string name="dialog_confirm_delete_message">Voleu suprimir aquest missatge\?</string>
     <plurals name="dialog_confirm_delete_messages">
-        <item quantity="one">Realment voleu suprimir aquest missatge\?</item>
-        <item quantity="other">Realment voleu suprimir <xliff:g id="message_count">%1$d</xliff:g> missatges\?</item>
+        <item quantity="one">Realment voleu suprimir aquest missatge?</item>
+        <item quantity="many">Realment voleu suprimir <xliff:g id="message_count">%1$d</xliff:g> missatges?</item>
+        <item quantity="other">Realment voleu suprimir <xliff:g id="message_count">%1$d</xliff:g> missatges?</item>
     </plurals>
     <string name="dialog_confirm_delete_confirm_button">Sí</string>
     <string name="dialog_confirm_delete_cancel_button">No</string>
@@ -661,8 +653,9 @@
     <string name="dialog_confirm_mark_all_as_read_cancel_button">No</string>
     <string name="dialog_confirm_spam_title">Confirmeu moure-ho a la carpeta brossa</string>
     <plurals name="dialog_confirm_spam_message">
-        <item quantity="one">Realment voleu moure aquest missatge a la carpeta brossa\?</item>
-        <item quantity="other">Realment voleu moure <xliff:g id="message_count">%1$d</xliff:g> missatges a la carpeta brossa\?</item>
+        <item quantity="one">Realment voleu moure aquest missatge a la carpeta brossa?</item>
+        <item quantity="many">Realment voleu moure <xliff:g id="message_count">%1$d</xliff:g> missatges a la carpeta brossa?</item>
+        <item quantity="other">Realment voleu moure <xliff:g id="message_count">%1$d</xliff:g> missatges a la carpeta brossa?</item>
     </plurals>
     <string name="dialog_confirm_spam_confirm_button">Sí</string>
     <string name="dialog_confirm_spam_cancel_button">No</string>
@@ -675,18 +668,6 @@
     <string name="settings_export_progress_text">S\'està exportant la configuració…</string>
     <string name="settings_export_success_generic">La configuració s\'ha exportat correctament</string>
     <string name="settings_export_failure">Ha fallat exportar la configuració</string>
-    <string name="unread_widget_select_account">Mostra el recompte de no llegits per a…</string>
-    <string name="unread_widget_account_title">Compte</string>
-    <string name="unread_widget_account_summary">El compte per al qual s\'ha de mostrar el nombre de missatges no llegits</string>
-    <string name="unread_widget_unified_inbox_account_summary">Bústia d\'entrada unificada</string>
-    <string name="unread_widget_folder_enabled_title">Compte de carpetes</string>
-    <string name="unread_widget_folder_enabled_summary">Mostra el nombre de missatges no llegits de només una carpeta</string>
-    <string name="unread_widget_folder_title">Carpeta</string>
-    <string name="unread_widget_folder_summary">La carpeta per a la qual s\'ha de mostrar el nombre de missatges no llegits</string>
-    <string name="unread_widget_action_done">Fet</string>
-    <string name="unread_widget_title"><xliff:g id="nom_del_compte">%1$s</xliff:g> - <xliff:g id="nom_de_la_carpeta">%2$s</xliff:g></string>
-    <string name="unread_widget_account_not_selected">No hi ha cap compte seleccionat</string>
-    <string name="unread_widget_folder_not_selected">No hi ha cap carpeta seleccionada</string>
     <string name="webview_empty_message">Sense text</string>
     <string name="webview_contextmenu_link_view_action">Obre l\'enllaç</string>
     <string name="webview_contextmenu_link_share_action">Comparteix l\'enllaç</string>
@@ -720,10 +701,12 @@
     <string name="remote_search_sending_query">S\'està enviant la consulta al servidor</string>
     <plurals name="remote_search_downloading">
         <item quantity="one">S\'està recuperant %d resultat</item>
+        <item quantity="many">S\'estan recuperant %d resultats</item>
         <item quantity="other">S\'estan recuperant %d resultats</item>
     </plurals>
     <plurals name="remote_search_downloading_limited">
         <item quantity="one">S\'està recuperant %1$d de %2$d resultats</item>
+        <item quantity="many">S\'estan recuperant %1$d de %2$d resultats</item>
         <item quantity="other">S\'estan recuperant %1$d de %2$d resultats</item>
     </plurals>
     <string name="remote_search_error">No s\'ha pogut fer la cerca remota</string>
@@ -751,7 +734,7 @@
     <string name="global_settings_messageview_visible_refile_actions_summary">Mostra les accions seleccionades al menú de vista de missatge</string>
     <string name="loading_attachment">S\'està carregant l\'adjunt…</string>
     <string name="fetching_attachment_dialog_title_send">Enviament de missatges</string>
-    <string name="fetching_attachment_dialog_title_save">Desat d\'esborranys</string>
+    <string name="fetching_attachment_dialog_title_save">S\'està desant l\'esborrany</string>
     <string name="fetching_attachment_dialog_message">S\'està recuperant l\'adjunt…</string>
     <!--Note: This references message_view_download_remainder-->
     <string name="preview_encrypted">*Encriptat*</string>
@@ -825,11 +808,6 @@
     <string name="crypto_msg_encrypted_sign_insecure">però la clau d\'extrem a extrem no es considera segura</string>
     <string name="crypto_msg_encrypted_sign_error">però les dades d\'extrem a extrem tenen errors</string>
     <string name="crypto_msg_encrypted_insecure">però l\'encriptació no es considera segura</string>
-    <string name="crypto_info_ok">D\'acord</string>
-    <string name="crypto_info_search_key">Clau de cerca</string>
-    <string name="crypto_info_view_signer">Mostra qui signa</string>
-    <string name="crypto_info_view_sender">Mostra el remitent</string>
-    <string name="crypto_info_view_security_warning">Detalls</string>
     <string name="locked_attach_unlock">Desbloqueja</string>
     <string name="locked_attach_unencrypted">Aquesta part no estava encriptada i pot no ser segura.</string>
     <string name="locked_attach_title">Adjunt no protegit</string>
@@ -851,9 +829,7 @@
     <string name="crypto_no_provider_button">Ves a la configuració</string>
     <string name="mail_list_widget_text">Llista de missatges del K-9</string>
     <!--Displayed in the the message list widget when the app hasn't had a chance to send content to it yet-->
-    <string name="message_list_widget_initializing">S\'està carregant…</string>
     <!--Might be displayed in the message list widget when the list is scrolled and new data can't be fetched fast enough-->
-    <string name="message_list_widget_list_item_loading">S\'està carregant…</string>
     <string name="openpgp_enabled_error_title">Encriptació no possible</string>
     <string name="openpgp_enabled_error_msg">Alguns dels destinataris seleccionats no admeten aquesta característica!</string>
     <string name="enable_encryption">Habilita l\'encriptació</string>
@@ -873,7 +849,6 @@
     <string name="general_settings_title">Configuració general</string>
     <string name="dialog_openkeychain_info_title">No hi ha cap aplicació OpenPGP instal·lada</string>
     <string name="dialog_openkeychain_info_install">Instal·la</string>
-    <string name="dialog_openkeychain_info_text">El K-9 Mail requereix OpenKeychain per a l\'encriptació d\'extrem a extrem.</string>
     <string name="encrypted_subject">Missatge encriptat</string>
     <string name="account_settings_crypto_encrypt_subject">Encripta l\'assumpte dels missatges</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">Pot no ser admès per alguns destinataris</string>
@@ -901,7 +876,6 @@
     <string name="push_notification_state_wait_network">Inactiu fins que la xarxa estigui disponible</string>
     <string name="push_notification_info">Toca per obtenir més informació.</string>
     <string name="push_info_title">Informació de Tramesa</string>
-    <string name="push_info_notification_explanation_text">Quan es fa servir Tramesa, K-9 Mail manté una connexió amb el servidor de correu. L\'Android requereix mostrar una notificació en curs mentre l’aplicació estigui activa en segon pla. %s</string>
     <string name="push_info_configure_notification_text">Tot i això, l\'Android també us permet amagar la notificació.</string>
     <string name="push_info_learn_more_text">Apreneu-ne més</string>
     <string name="push_info_configure_notification_action">Configureu la notificació</string>
@@ -974,4 +948,6 @@
     <string name="general_settings_post_mark_as_unread_action_stay">Mantingues el missatge actual</string>
     <string name="general_settings_post_mark_as_unread_action_title">Després de marcar un missatge com a no llegit</string>
     <string name="general_settings_post_mark_as_unread_action_return_to_list">Torna a la llista de missatges</string>
+    <string name="push_notification_state_alarm_permission_missing">Falta permís per a programar alarmes</string>
+    <string name="push_notification_grant_alarm_permission">Toca per a concedir permís.</string>
 </resources>

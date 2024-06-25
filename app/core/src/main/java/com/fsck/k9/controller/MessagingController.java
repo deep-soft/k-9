@@ -29,7 +29,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import com.fsck.k9.Account;
 import com.fsck.k9.Account.DeletePolicy;
-import com.fsck.k9.Account.Expunge;
 import com.fsck.k9.DI;
 import com.fsck.k9.K9;
 import com.fsck.k9.Preferences;
@@ -117,6 +116,7 @@ public class MessagingController {
     private final MessageStoreManager messageStoreManager;
     private final SaveMessageDataCreator saveMessageDataCreator;
     private final SpecialLocalFoldersCreator specialLocalFoldersCreator;
+    private final LocalDeleteOperationDecider localDeleteOperationDecider;
 
     private final Thread controllerThread;
 
@@ -140,7 +140,7 @@ public class MessagingController {
             NotificationStrategy notificationStrategy, LocalStoreProvider localStoreProvider,
             BackendManager backendManager, Preferences preferences, MessageStoreManager messageStoreManager,
             SaveMessageDataCreator saveMessageDataCreator, SpecialLocalFoldersCreator specialLocalFoldersCreator,
-            List<ControllerExtension> controllerExtensions) {
+            LocalDeleteOperationDecider localDeleteOperationDecider, List<ControllerExtension> controllerExtensions) {
         this.context = context;
         this.notificationController = notificationController;
         this.notificationStrategy = notificationStrategy;
@@ -150,6 +150,7 @@ public class MessagingController {
         this.messageStoreManager = messageStoreManager;
         this.saveMessageDataCreator = saveMessageDataCreator;
         this.specialLocalFoldersCreator = specialLocalFoldersCreator;
+        this.localDeleteOperationDecider = localDeleteOperationDecider;
 
         controllerThread = new Thread(new Runnable() {
             @Override
@@ -989,10 +990,6 @@ public class MessagingController {
         Backend backend = getBackend(account);
         String folderServerId = getFolderServerId(account, folderId);
         backend.deleteMessages(folderServerId, uids);
-
-        if (backend.getSupportsExpunge() && account.getExpungePolicy() == Expunge.EXPUNGE_IMMEDIATELY) {
-            backend.expungeMessages(folderServerId, uids);
-        }
 
         LocalStore localStore = localStoreProvider.getInstance(account);
         LocalFolder localFolder = localStore.getFolder(folderId);
@@ -1978,10 +1975,8 @@ public class MessagingController {
 
             Map<String, String> uidMap = null;
             Long trashFolderId = account.getTrashFolderId();
-            boolean isSpamFolder = account.hasSpamFolder() && account.getSpamFolderId() == folderId;
             boolean doNotMoveToTrashFolder = skipTrashFolder ||
-                !account.hasTrashFolder() || folderId == trashFolderId ||
-                isSpamFolder;
+                localDeleteOperationDecider.isDeleteImmediately(account, folderId);
 
             LocalFolder localTrashFolder = null;
             if (doNotMoveToTrashFolder) {
@@ -2093,10 +2088,6 @@ public class MessagingController {
 
         Backend backend = getBackend(account);
         backend.deleteAllMessages(trashFolderServerId);
-
-        if (account.getExpungePolicy() == Expunge.EXPUNGE_IMMEDIATELY && backend.getSupportsExpunge()) {
-            backend.expunge(trashFolderServerId);
-        }
 
         // Remove all messages marked as deleted
         folder.destroyDeletedMessages();

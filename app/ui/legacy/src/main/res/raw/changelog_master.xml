@@ -5,6 +5,37 @@
      Locale-specific versions are kept in res/raw-<locale qualifier>/changelog.xml.
 -->
 <changelog>
+    <release version="6.903" versioncode="39003" date="2024-06-24">
+        <change>Fixed a crash when a message list swipe action was set to "None"</change>
+    </release>
+    <release version="6.902" versioncode="39002" date="2024-06-21">
+        <change>Changed a lot of internals to migrate to Material 3. Please note that the Material 3 UI is still in an early state.</change>
+        <change>Changed the order of toolbar actions in the message view to match the order in multi-select mode</change>
+        <change>Changed default value for "Fetch messages up to" to 128KiB</change>
+        <change>Fixed bug where toolbar icons were displayed in the wrong color after performing a swipe action</change>
+        <change>Fixed crash when cutting email addresses from a recipient field when composing a message</change>
+        <change>Fixed toolbar size when using a non-default system font size</change>
+        <change>Added Corsican, Korean, and Vietnamese translations</change>
+        <change>Updated translations</change>
+    </release>
+    <release version="6.901" versioncode="39001" date="2024-05-15">
+        <change>Fixed a crash when opening the screen to compose a message</change>
+    </release>
+    <release version="6.900" versioncode="39000" date="2024-05-15">
+        <change>Started converting the user interface to Material 3</change>
+        <change>Added support for mailto: URI on NFC tag</change>
+        <change>Added experimental workaround for the app crashing in the background</change>
+        <change>Optimized some of the IMAP protocol interactions</change>
+        <change>Don't delay showing the notification when Push is active</change>
+        <change>Updated translations</change>
+    </release>
+    <release version="6.802" versioncode="38002" date="2024-04-05">
+        <change>Push: Notify user if permission to schedule exact alarms is missing</change>
+        <change>Renamed "Send client ID" setting to "Send client information"</change>
+        <change>IMAP: Added support for the \NonExistent LIST response attribute</change>
+        <change>IMAP: Issue EXPUNGE command after moving without MOVE extension</change>
+        <change>Updated translations; added Hebrew translation</change>
+    </release>
     <release version="6.801" versioncode="38001" date="2024-03-11">
         <change>Added DNSSEC support when looking for server settings during setup</change>
         <change>Made a change to prevent some software keyboards from capitalizing/auto-correcting email addresses in account setup</change>

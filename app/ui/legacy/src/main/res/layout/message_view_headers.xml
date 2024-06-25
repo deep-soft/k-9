@@ -12,15 +12,15 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/message_source"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="none"
             android:padding="16dp"
             android:singleLine="false"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:attr/textColorSecondary"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorSecondary"
             android:textIsSelectable="true"
             tools:text="From: alice@domain.example\nTo: bob@domain.example\nSubject: Hi Bob" />
 
@@ -36,7 +36,7 @@
         android:visibility="gone"
         tools:visibility="gone" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/message_headers_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

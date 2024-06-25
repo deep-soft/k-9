@@ -19,15 +19,16 @@
             android:contentDescription="@null"
             app:srcCompat="@drawable/ic_app_logo" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/about_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"
             android:paddingTop="16dp"
             android:paddingBottom="8dp"
             android:text="@string/about_title"
-            android:textAppearance="?attr/textAppearanceSubtitle2"
-            android:textColor="?attr/colorAccent" />
+            android:textAppearance="?attr/textAppearanceTitleSmall"
+            android:textColor="?attr/colorSecondary" />
 
         <LinearLayout
             android:id="@+id/versionLayout"
@@ -47,7 +48,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                app:srcCompat="?attr/iconAboutVersion" />
+                app:srcCompat="@drawable/ic_info" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,16 +57,17 @@
                 android:paddingStart="30dp"
                 android:paddingEnd="0dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/version"
-                    android:textColor="?android:attr/textColorPrimary" />
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/version"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
                     tools:text="1.2.3" />
             </LinearLayout>
         </LinearLayout>
@@ -88,7 +90,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                app:srcCompat="?attr/iconAboutAuthors" />
+                app:srcCompat="@drawable/ic_group" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -97,16 +99,17 @@
                 android:paddingStart="30dp"
                 android:paddingEnd="0dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/authors"
-                    android:textColor="?android:attr/textColorPrimary" />
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_authors" />
+                    android:text="@string/app_authors"
+                    android:textAppearance="?attr/textAppearanceBodyMedium" />
             </LinearLayout>
         </LinearLayout>
 
@@ -128,7 +131,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                app:srcCompat="?attr/iconAboutSourceCode" />
+                app:srcCompat="@drawable/ic_code" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -137,16 +140,17 @@
                 android:paddingStart="30dp"
                 android:paddingEnd="0dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/source_code"
-                    android:textColor="?android:attr/textColorPrimary" />
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_source_url" />
+                    android:text="@string/app_source_url"
+                    android:textAppearance="?attr/textAppearanceBodyMedium" />
             </LinearLayout>
         </LinearLayout>
 
@@ -168,7 +172,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                app:srcCompat="?attr/iconAboutLicense" />
+                app:srcCompat="@drawable/ic_description" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -177,28 +181,29 @@
                 android:paddingStart="30dp"
                 android:paddingEnd="0dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/license"
-                    android:textColor="?android:attr/textColorPrimary" />
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_license" />
+                    android:text="@string/app_license"
+                    android:textAppearance="?attr/textAppearanceBodyMedium" />
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"
             android:paddingTop="16dp"
             android:paddingBottom="8dp"
             android:text="@string/about_project_title"
-            android:textAppearance="?attr/textAppearanceSubtitle2"
-            android:textColor="?attr/colorAccent" />
+            android:textAppearance="?attr/textAppearanceTitleSmall"
+            android:textColor="?attr/colorSecondary" />
 
         <LinearLayout
             android:id="@+id/websiteLayout"
@@ -218,7 +223,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                app:srcCompat="?attr/iconAboutWebsite" />
+                app:srcCompat="@drawable/ic_link" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -227,16 +232,17 @@
                 android:paddingStart="30dp"
                 android:paddingEnd="0dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/about_website_title"
-                    android:textColor="?android:attr/textColorPrimary" />
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_webpage_url" />
+                    android:text="@string/app_webpage_url"
+                    android:textAppearance="?attr/textAppearanceBodyMedium" />
             </LinearLayout>
         </LinearLayout>
 
@@ -258,7 +264,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                app:srcCompat="?attr/iconUserForum" />
+                app:srcCompat="@drawable/ic_forum" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -267,60 +273,21 @@
                 android:paddingStart="30dp"
                 android:paddingEnd="0dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/user_forum_title"
-                    android:textColor="?android:attr/textColorPrimary" />
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/user_forum_url" />
+                    android:text="@string/user_forum_url"
+                    android:textAppearance="?attr/textAppearanceBodyMedium" />
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/fediverseLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="16dp"
-            android:paddingTop="8dp"
-            android:paddingRight="16dp"
-            android:paddingBottom="8dp">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:contentDescription="@null"
-                app:srcCompat="?attr/iconAboutFediverse" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="30dp"
-                android:paddingEnd="0dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/about_fediverse_title"
-                    android:textColor="?android:attr/textColorPrimary" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fediverse_handle" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -328,8 +295,8 @@
             android:paddingTop="16dp"
             android:paddingBottom="8dp"
             android:text="@string/about_libraries"
-            android:textAppearance="?attr/textAppearanceSubtitle2"
-            android:textColor="?attr/colorAccent" />
+            android:textAppearance="?attr/textAppearanceTitleSmall"
+            android:textColor="?attr/colorSecondary" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/libraries"

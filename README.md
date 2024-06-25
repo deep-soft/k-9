@@ -18,7 +18,7 @@ You might also be interested in becoming a [tester](https://forum.k9mail.app/t/h
 ## Release Notes
 
 Check out the [Release Notes](https://github.com/thunderbird/thunderbird-android/wiki/ReleaseNotes) to find out what changed
-in each version of K-9 Mail.
+in each version of K-9 Mail. For a more up to date list of changes, see the XML [Changelog](app/ui/legacy/src/main/res/raw/changelog_master.xml).
 
 ## Need Help?
 
@@ -36,13 +36,7 @@ Interested in helping to translate K-9 Mail? Contribute here:
 
 ## Contributing
 
-Thank you for contributing! If you're unfamiliar with the code, start by reading the [developer documentation](docs/DESIGN.md)
-
-Please fork this repository and contribute back using [pull requests](https://github.com/thunderbird/thunderbird-android/pulls).
-
-Any contributions, large or small, major features, bug fixes, unit/integration tests are welcomed and appreciated
-but will be thoroughly reviewed and discussed.
-Please make sure you read the [Code Style Guidelines](https://github.com/thunderbird/thunderbird-android/wiki/CodeStyle).
+We welcome contributions from everyone. Please see the [CONTRIBUTING](docs/CONTRIBUTING.md) guide for more information.
 
 ### Architecture Decision Records (ADR)
 

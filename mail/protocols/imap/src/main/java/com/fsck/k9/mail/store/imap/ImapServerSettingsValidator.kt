@@ -20,8 +20,8 @@ import java.io.IOException
 class ImapServerSettingsValidator(
     private val trustedSocketFactory: TrustedSocketFactory,
     private val oAuth2TokenProviderFactory: OAuth2TokenProviderFactory?,
-    private val clientIdAppName: String,
-    private val clientIdAppVersion: String,
+    private val clientInfoAppName: String,
+    private val clientInfoAppVersion: String,
 ) : ServerSettingsValidator {
 
     @Suppress("TooGenericExceptionCaught")
@@ -32,7 +32,8 @@ class ImapServerSettingsValidator(
         val config = object : ImapStoreConfig {
             override val logLabel = "check"
             override fun isSubscribedFoldersOnly() = false
-            override fun clientId() = ImapClientId(appName = clientIdAppName, appVersion = clientIdAppVersion)
+            override fun isExpungeImmediately() = false
+            override fun clientInfo() = ImapClientInfo(appName = clientInfoAppName, appVersion = clientInfoAppVersion)
         }
         val oAuth2TokenProvider = createOAuth2TokenProviderOrNull(authStateStorage)
         val store = RealImapStore(serverSettings, config, trustedSocketFactory, oAuth2TokenProvider)
