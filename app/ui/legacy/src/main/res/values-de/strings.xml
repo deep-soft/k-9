@@ -3,9 +3,8 @@
     <!--=== App-specific strings =============================================================-->
     <!--This should make it easier for forks to change the branding-->
     <!--Used in AndroidManifest.xml-->
-    <string name="unread_widget_label">K-9 Ungelesen</string>
     <!--Used in the about dialog-->
-    <string name="app_authors">The K-9 Dog Walkers</string>
+    <string name="about_app_authors_k9">The K-9 Dog Walkers</string>
     <string name="source_code">Quellcode</string>
     <string name="app_license">Apache-Lizenz, Version 2.0</string>
     <string name="about_project_title">Open Source Projekt</string>
@@ -244,7 +243,7 @@
     <string name="general_settings_ui_density_default">Standard</string>
     <string name="general_settings_ui_density_relaxed">Großzügig</string>
     <string name="global_settings_privacy_hide_useragent">E-Mail-Client ausblenden</string>
-    <string name="global_settings_privacy_hide_useragent_detail">K-9 Benutzer-Agent aus E-Mail-Kopfzeilen entfernen</string>
+    <string name="global_settings_privacy_hide_useragent_detail">Benutzer-Agent aus E-Mail-Kopfzeilen entfernen</string>
     <string name="global_settings_privacy_hide_timezone">Zeitzone ausblenden</string>
     <string name="global_settings_privacy_hide_timezone_detail">UTC statt lokaler Zeitzone in E-Mail-Kopfzeilen und Antwort-Kopfzeilen verwenden</string>
     <string name="global_settings_notification_quick_delete_title">Löschen erlauben</string>
@@ -818,7 +817,6 @@
     <string name="crypto_no_provider_title">Diese E-Mail ist verschlüsselt</string>
     <string name="crypto_no_provider_message">Diese E-Mail ist mit OpenPGP verschlüsselt.\nUm sie zu lesen, muss eine kompatible OpenPGP-App installiert und konfiguriert werden.</string>
     <string name="crypto_no_provider_button">Zu den Einstellungen</string>
-    <string name="mail_list_widget_text">K-9 Nachrichtenliste</string>
     <!--Displayed in the the message list widget when the app hasn't had a chance to send content to it yet-->
     <!--Might be displayed in the message list widget when the list is scrolled and new data can't be fetched fast enough-->
     <string name="openpgp_enabled_error_title">Verschlüsselung nicht möglich</string>
@@ -950,4 +948,5 @@ Du kannst diese Nachricht aufheben und sie als Backup für deinen geheimen Schl�
     <string name="account_delete_dlg_instructions_fmt">Das Konto \"<xliff:g id="account">%s</xliff:g>\" wird aus <xliff:g id="app_name">%s</xliff:g> entfernt.</string>
     <string name="about_title">Über <xliff:g id="app_name">%s</xliff:g></string>
     <string name="push_info_notification_explanation_text">Wenn Push verwendet wird, hält <xliff:g id="app_name">%1$s</xliff:g> eine Verbindung zum Mailserver aufrecht. Bei Android muss eine laufende Benachrichtigung angezeigt werden, während die App im Hintergrund aktiv ist. <xliff:g id="optional_extended_explanation">%2$s</xliff:g></string>
+    <string name="about_app_authors_thunderbird">Thunderbird Mobile Team</string>
 </resources>

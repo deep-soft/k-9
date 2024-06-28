@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="unread_widget_select_account">Affissà u numeru di à leghje per…</string>
     <string name="unread_widget_account_title">Contu</string>
     <string name="unread_widget_account_summary">U contu per quellu u numeru di i messaghji à leghje deve esse affissatu</string>
-    <string name="unread_widget_unified_inbox_account_summary">Scatula di ricezzione unificata</string>
+    <string name="unread_widget_unified_inbox_account_summary">Scatula di ricezzione cuncolta</string>
     <string name="unread_widget_folder_enabled_title">Numeru di cartulari</string>
     <string name="unread_widget_folder_enabled_summary">Affissà u numeru di à leghje solu per un cartulare unicu</string>
     <string name="unread_widget_folder_title">Cartulare</string>
@@ -13,4 +13,5 @@
     <string name="unread_widget_account_not_selected">Alcunu contu ùn hè selezziunatu</string>
     <string name="unread_widget_folder_not_selected">Alcunu cartulare ùn hè selezziunatu</string>
     <string name="unread_widget_choose_account_title">Sceglie un contu</string>
+    <string name="unread_widget_label">Numeru di à leghje</string>
 </resources>

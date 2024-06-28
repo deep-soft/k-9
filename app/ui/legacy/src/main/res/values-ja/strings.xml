@@ -3,9 +3,8 @@
     <!--=== App-specific strings =============================================================-->
     <!--This should make it easier for forks to change the branding-->
     <!--Used in AndroidManifest.xml-->
-    <string name="unread_widget_label">K-9 未読</string>
     <!--Used in the about dialog-->
-    <string name="app_authors">The K-9 Dog Walkers</string>
+    <string name="about_app_authors_k9">The K-9 Dog Walkers</string>
     <string name="source_code">ソースコード</string>
     <string name="app_license">Apache License, Version 2.0</string>
     <string name="about_project_title">オープンソースプロジェクト</string>
@@ -209,7 +208,7 @@
     <string name="global_settings_messageview_fixedwidth_summary">プレーンテキストメッセージの表示に固定幅フォントを使用します</string>
     <string name="global_settings_messageview_autofit_width_label">メッセージ幅の自動調整</string>
     <string name="global_settings_messageview_autofit_width_summary">画面に合うようにメッセージ幅を縮小します</string>
-    <string name="global_settings_confirm_actions_title">操作を確認してください</string>
+    <string name="global_settings_confirm_actions_title">操作の確認</string>
     <string name="global_settings_confirm_actions_summary">選択した動作を実行するときは常にダイアログを表示します</string>
     <string name="global_settings_confirm_action_delete">削除</string>
     <string name="global_settings_confirm_action_delete_starred">スター付きメッセージの削除 (メッセージ表示画面)</string>
@@ -245,7 +244,7 @@
     <string name="general_settings_ui_density_default">既定</string>
     <string name="general_settings_ui_density_relaxed">リラックス</string>
     <string name="global_settings_privacy_hide_useragent">メールクライアントを隠す</string>
-    <string name="global_settings_privacy_hide_useragent_detail">メールヘッダーから K-9 のユーザーエージェントを削除します</string>
+    <string name="global_settings_privacy_hide_useragent_detail">メールヘッダーからユーザーエージェントを削除します</string>
     <string name="global_settings_privacy_hide_timezone">タイムゾーンを隠す</string>
     <string name="global_settings_privacy_hide_timezone_detail">メールヘッダーと返信ヘッダーにローカルタイムゾーンではなく UTC を使用します</string>
     <string name="global_settings_notification_quick_delete_title">削除ボタンを表示</string>
@@ -634,7 +633,7 @@
     <string name="dialog_confirm_clear_local_folder_title">ローカルのメッセージをクリアしますか？</string>
     <string name="dialog_confirm_clear_local_folder_message">この操作はすべてのローカルメッセージをフォルダーから削除します。 サーバー上のメッセージは削除されません。</string>
     <string name="dialog_confirm_clear_local_folder_action">メッセージをクリア</string>
-    <string name="dialog_confirm_delete_title">削除を確認してください</string>
+    <string name="dialog_confirm_delete_title">削除するか確認してください</string>
     <string name="dialog_confirm_delete_message">このメッセージを削除しますか？</string>
     <plurals name="dialog_confirm_delete_messages">
         <item quantity="other">本当に <xliff:g id="message_count">%1$d</xliff:g> 通のメッセージを削除しますか？</item>
@@ -817,7 +816,6 @@
     <string name="crypto_no_provider_message">このメールは OpenPGP で暗号化されました。
 \nメールを読むためには、OpenPGP と互換性のあるアプリをインストールして設定する必要があります。</string>
     <string name="crypto_no_provider_button">設定に移動</string>
-    <string name="mail_list_widget_text">K-9 メッセージ一覧</string>
     <!--Displayed in the the message list widget when the app hasn't had a chance to send content to it yet-->
     <!--Might be displayed in the message list widget when the list is scrolled and new data can't be fetched fast enough-->
     <string name="openpgp_enabled_error_title">暗号化できません</string>
@@ -934,13 +932,14 @@
     <!--For unread messages the first line of a message list item is modified by this to improve the experience for people with screen readers.-->
     <string name="message_list_content_description_unread_prefix">未読、%s</string>
     <string name="general_settings_post_remove_action_return_to_list">メッセージ一覧に戻る</string>
-    <string name="general_settings_post_remove_action_show_previous_message">前のメッセージを表示</string>
+    <string name="general_settings_post_remove_action_show_previous_message">前のメッセージを表示する</string>
     <string name="message_view_recipients_format">宛先 <xliff:g id="recipients">%s</xliff:g></string>
-    <string name="general_settings_post_remove_action_show_next_message">次のメッセージを表示</string>
+    <string name="general_settings_post_remove_action_show_next_message">次のメッセージを表示する</string>
     <string name="general_settings_post_remove_action_title">メッセージの移動や削除の後</string>
     <string name="general_settings_post_mark_as_unread_action_stay">現在のメッセージに留まる</string>
     <string name="general_settings_post_mark_as_unread_action_title">メッセージを既読にした後</string>
     <string name="general_settings_post_mark_as_unread_action_return_to_list">メッセージ一覧に戻る</string>
     <string name="push_notification_grant_alarm_permission">タップして権限を付与してください。</string>
     <string name="push_notification_state_alarm_permission_missing">アラームを設定する権限がありません</string>
+    <string name="about_app_authors_thunderbird">Thunderbird Mobile Team</string>
 </resources>

@@ -3,9 +3,8 @@
     <!--=== App-specific strings =============================================================-->
     <!--This should make it easier for forks to change the branding-->
     <!--Used in AndroidManifest.xml-->
-    <string name="unread_widget_label">Nieprzeczytane K-9</string>
     <!--Used in the about dialog-->
-    <string name="app_authors">Autorzy K-9 Mail</string>
+    <string name="about_app_authors_k9">Autorzy K-9 Mail</string>
     <string name="source_code">Kod źródłowy</string>
     <string name="app_license">Licencja Apache, wersja 2.0</string>
     <string name="about_project_title">Projekt otwartoźródłowy</string>
@@ -250,7 +249,7 @@
     <string name="general_settings_ui_density_default">Standardowa</string>
     <string name="general_settings_ui_density_relaxed">Rozluźniona</string>
     <string name="global_settings_privacy_hide_useragent">Ukryj klienta poczty</string>
-    <string name="global_settings_privacy_hide_useragent_detail">Usuń User-Agent K-9 z nagłówka wiadomości</string>
+    <string name="global_settings_privacy_hide_useragent_detail">Usuń identyfikator programu z nagłówka wiadomości</string>
     <string name="global_settings_privacy_hide_timezone">Ukryj strefę czasową</string>
     <string name="global_settings_privacy_hide_timezone_detail">Używaj czasu UTC zamiast czasu lokalnego w nagłówkach wiadomości i odpowiedzi</string>
     <string name="global_settings_notification_quick_delete_title">Pokaż przycisk „Usuń”</string>
@@ -606,7 +605,7 @@
     <string name="account_settings_automatic_special_folder">Automatyczny (%s)</string>
     <string name="font_size_settings_title">Rozmiar czcionki</string>
     <string name="font_size_settings_description"> Ustawienia rozmiaru czcionki</string>
-    <string name="font_size_message_list">Lista wiadomości</string>
+    <string name="font_size_message_list">Listy wiadomości</string>
     <string name="font_size_message_list_subject">Temat</string>
     <string name="font_size_message_list_sender">Nadawca</string>
     <string name="font_size_message_list_date">Data wiadomości</string>
@@ -832,7 +831,6 @@
     <string name="crypto_no_provider_title">Ta wiadomość e-mail jest zaszyfrowana</string>
     <string name="crypto_no_provider_message">Ta wiadomość e-mail została zaszyfrowana z użyciem OpenPGP.\n Aby ją odczytać, należy zainstalować i skonfigurować zgodną aplikację OpenPGP.</string>
     <string name="crypto_no_provider_button">Przejdź do ustawień</string>
-    <string name="mail_list_widget_text">Lista wiadomości K-9</string>
     <!--Displayed in the the message list widget when the app hasn't had a chance to send content to it yet-->
     <!--Might be displayed in the message list widget when the list is scrolled and new data can't be fetched fast enough-->
     <string name="openpgp_enabled_error_title">Szyfrowanie nie jest możliwe</string>
@@ -962,4 +960,5 @@ Tą wiadomość można zachować i użyć w formie kopii zapasowej twojego klucz
     <string name="general_settings_post_mark_as_unread_action_return_to_list">Wróć do listy wiadomości</string>
     <string name="push_notification_state_alarm_permission_missing">Brak uprawnień do planowania alarmów</string>
     <string name="push_notification_grant_alarm_permission">Stuknij, aby udzielić uprawnienia.</string>
+    <string name="about_app_authors_thunderbird">Zespół Thunderbird Mobile</string>
 </resources>
