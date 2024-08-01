@@ -16,7 +16,6 @@ import com.fsck.k9.Account.Expunge;
 import com.fsck.k9.Account.FolderMode;
 import com.fsck.k9.Account.MessageFormat;
 import com.fsck.k9.Account.QuoteStyle;
-import com.fsck.k9.Account.Searchable;
 import com.fsck.k9.Account.ShowPictures;
 import com.fsck.k9.Account.SortType;
 import com.fsck.k9.Account.SpecialFolderSelection;
@@ -107,9 +106,6 @@ public class AccountSettingsDescriptions {
         s.put("folderSyncMode", Settings.versions(
                 new V(1, new EnumSetting<>(FolderMode.class, FolderMode.FIRST_CLASS))
         ));
-        s.put("folderTargetMode", Settings.versions(
-                new V(1, new EnumSetting<>(FolderMode.class, FolderMode.NOT_SECOND_CLASS))
-        ));
         s.put("idleRefreshMinutes", Settings.versions(
                 new V(1, new IntegerArraySetting(24, new int[] { 1, 2, 3, 6, 12, 24, 36, 48, 60 })),
                 new V(74, new IntegerResourceSetting(24, R.array.idle_refresh_period_values))
@@ -176,9 +172,6 @@ public class AccountSettingsDescriptions {
         ));
         s.put("ringtone", Settings.versions(
                 new V(1, new RingtoneSetting("content://settings/system/notification_sound"))
-        ));
-        s.put("searchableFolders", Settings.versions(
-                new V(1, new EnumSetting<>(Searchable.class, Searchable.ALL))
         ));
         s.put("sentFolderName", Settings.versions(
                 new V(1, new StringSetting(FOLDER_NONE)),

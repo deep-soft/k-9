@@ -10,7 +10,6 @@ import com.fsck.k9.Account.Expunge
 import com.fsck.k9.Account.FolderMode
 import com.fsck.k9.Account.MessageFormat
 import com.fsck.k9.Account.QuoteStyle
-import com.fsck.k9.Account.Searchable
 import com.fsck.k9.Account.ShowPictures
 import com.fsck.k9.Account.SortType
 import com.fsck.k9.Account.SpecialFolderSelection
@@ -178,11 +177,6 @@ class AccountPreferenceSerializer(
 
             folderPushMode = getEnumStringPref<FolderMode>(storage, "$accountUuid.folderPushMode", FolderMode.NONE)
 
-            folderTargetMode =
-                getEnumStringPref<FolderMode>(storage, "$accountUuid.folderTargetMode", FolderMode.NOT_SECOND_CLASS)
-
-            searchableFolders = getEnumStringPref<Searchable>(storage, "$accountUuid.searchableFolders", Searchable.ALL)
-
             isSignatureBeforeQuotedText = storage.getBoolean("$accountUuid.signatureBeforeQuotedText", false)
             replaceIdentities(loadIdentities(accountUuid, storage))
 
@@ -319,12 +313,10 @@ class AccountPreferenceSerializer(
             editor.putString("$accountUuid.folderDisplayMode", folderDisplayMode.name)
             editor.putString("$accountUuid.folderSyncMode", folderSyncMode.name)
             editor.putString("$accountUuid.folderPushMode", folderPushMode.name)
-            editor.putString("$accountUuid.folderTargetMode", folderTargetMode.name)
             editor.putBoolean("$accountUuid.signatureBeforeQuotedText", isSignatureBeforeQuotedText)
             editor.putString("$accountUuid.expungePolicy", expungePolicy.name)
             editor.putBoolean("$accountUuid.syncRemoteDeletions", isSyncRemoteDeletions)
             editor.putInt("$accountUuid.maxPushFolders", maxPushFolders)
-            editor.putString("$accountUuid.searchableFolders", searchableFolders.name)
             editor.putInt("$accountUuid.chipColor", chipColor)
             editor.putBoolean("$accountUuid.subscribedFoldersOnly", isSubscribedFoldersOnly)
             editor.putInt("$accountUuid.maximumPolledMessageAge", maximumPolledMessageAge)
@@ -432,12 +424,10 @@ class AccountPreferenceSerializer(
         editor.remove("$accountUuid.folderDisplayMode")
         editor.remove("$accountUuid.folderSyncMode")
         editor.remove("$accountUuid.folderPushMode")
-        editor.remove("$accountUuid.folderTargetMode")
         editor.remove("$accountUuid.signatureBeforeQuotedText")
         editor.remove("$accountUuid.expungePolicy")
         editor.remove("$accountUuid.syncRemoteDeletions")
         editor.remove("$accountUuid.maxPushFolders")
-        editor.remove("$accountUuid.searchableFolders")
         editor.remove("$accountUuid.chipColor")
         editor.remove("$accountUuid.notificationLight")
         editor.remove("$accountUuid.subscribedFoldersOnly")
@@ -589,7 +579,6 @@ class AccountPreferenceSerializer(
             folderDisplayMode = FolderMode.NOT_SECOND_CLASS
             folderSyncMode = FolderMode.FIRST_CLASS
             folderPushMode = FolderMode.NONE
-            folderTargetMode = FolderMode.NOT_SECOND_CLASS
             sortType = DEFAULT_SORT_TYPE
             setSortAscending(DEFAULT_SORT_TYPE, DEFAULT_SORT_ASCENDING)
             showPictures = ShowPictures.NEVER
@@ -626,8 +615,6 @@ class AccountPreferenceSerializer(
             setSpamFolderId(null, SpecialFolderSelection.AUTOMATIC)
             setTrashFolderId(null, SpecialFolderSelection.AUTOMATIC)
             setArchiveFolderId(null, SpecialFolderSelection.AUTOMATIC)
-
-            searchableFolders = Searchable.ALL
 
             identities = ArrayList<Identity>()
 

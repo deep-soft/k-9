@@ -186,10 +186,6 @@ class Account(override val uuid: String) : BaseAccount {
 
     @get:Synchronized
     @set:Synchronized
-    var folderTargetMode = FolderMode.NOT_SECOND_CLASS
-
-    @get:Synchronized
-    @set:Synchronized
     var accountNumber = 0
 
     @get:Synchronized
@@ -230,10 +226,6 @@ class Account(override val uuid: String) : BaseAccount {
     @get:Synchronized
     @set:Synchronized
     var isSendClientInfoEnabled = true
-
-    @get:Synchronized
-    @set:Synchronized
-    var searchableFolders = Searchable.ALL
 
     @get:Synchronized
     @set:Synchronized
@@ -624,12 +616,6 @@ class Account(override val uuid: String) : BaseAccount {
         NEVER,
         ALWAYS,
         ONLY_FROM_CONTACTS,
-    }
-
-    enum class Searchable {
-        ALL,
-        DISPLAYABLE,
-        NONE,
     }
 
     enum class QuoteStyle {

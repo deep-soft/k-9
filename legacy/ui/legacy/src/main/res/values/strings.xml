@@ -520,12 +520,6 @@
     <string name="account_settings_folder_push_mode_not_second_class">All except 2nd Class folders</string>
     <string name="account_settings_folder_push_mode_none">None</string>
 
-    <string name="account_settings_folder_target_mode_label">Move/copy destination folders</string>
-    <string name="account_settings_folder_target_mode_all">All</string>
-    <string name="account_settings_folder_target_mode_first_class">Only 1st Class folders</string>
-    <string name="account_settings_folder_target_mode_first_and_second_class">1st and 2nd Class folders</string>
-    <string name="account_settings_folder_target_mode_not_second_class">All except 2nd Class folders</string>
-
     <string name="account_settings_sync_remote_deletetions_label">Sync server deletions</string>
     <string name="account_settings_sync_remote_deletetions_summary">Remove messages when deleted on server</string>
 
@@ -726,11 +720,6 @@
 
     <string name="folder_settings_include_in_integrated_inbox_label">Unify</string>
     <string name="folder_settings_include_in_integrated_inbox_summary">All messages are shown in Unified Inbox</string>
-
-    <string name="account_settings_searchable_label">Folders to search</string>
-    <string name="account_settings_searchable_all">All</string>
-    <string name="account_settings_searchable_displayable">Displayable</string>
-    <string name="account_settings_searchable_none">None</string>
 
     <string name="account_settings_no_folder_selected">None</string>
     <string name="account_settings_automatic_special_folder">Automatic (%s)</string>
@@ -1025,7 +1014,6 @@
     <string name="dialog_openkeychain_info_install">Install</string>
     <string name="dialog_openkeychain_info_text">The app OpenKeychain is required to enable support for end-to-end encryption.</string>
 
-    <string name="encrypted_subject">"Encrypted Message"</string>
     <string name="account_settings_crypto_encrypt_subject">Encrypt message subjects</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">May not be supported by some recipients</string>
 
