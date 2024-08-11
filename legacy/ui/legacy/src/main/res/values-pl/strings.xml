@@ -66,7 +66,6 @@
     <string name="search_everywhere_action">Szukaj wszędzie</string>
     <string name="search_results">Wyniki wyszukiwania</string>
     <string name="new_messages_title">Nowe wiadomości</string>
-    <string name="preferences_action">Ustawienia</string>
     <string name="folders_action">Zarządzaj folderami</string>
     <string name="account_settings_action">Ustawienia konta</string>
     <string name="remove_account_action">Usuń konto</string>
@@ -143,11 +142,6 @@
     <string name="notification_channel_messages_description">Powiadomienia związane z wiadomościami</string>
     <string name="notification_channel_miscellaneous_title">Różne</string>
     <string name="notification_channel_miscellaneous_description">Dodatkowe powiadomienia jak błędy itp.</string>
-    <string name="special_mailbox_name_inbox">Odebrane</string>
-    <string name="special_mailbox_name_outbox">Wychodzące</string>
-    <string name="special_mailbox_name_drafts">Wersje robocze</string>
-    <string name="special_mailbox_name_trash">Kosz</string>
-    <string name="special_mailbox_name_sent">Wysłane</string>
     <string name="send_failure_subject">Niektóre wiadomości nie zostały wysłane</string>
     <string name="version">Wersja</string>
     <string name="debug_enable_debug_logging_title">Włącz rejestrowanie debugowania</string>
@@ -428,11 +422,6 @@
     <string name="account_settings_folder_push_mode_first_and_second_class">Foldery klasy 1 oraz 2</string>
     <string name="account_settings_folder_push_mode_not_second_class">Wszystkie poza klasą 2</string>
     <string name="account_settings_folder_push_mode_none">Żadne</string>
-    <string name="account_settings_folder_target_mode_label">Przenieś/skopiuj do</string>
-    <string name="account_settings_folder_target_mode_all">Wszystkich</string>
-    <string name="account_settings_folder_target_mode_first_class">Tylko foldery klasy 1</string>
-    <string name="account_settings_folder_target_mode_first_and_second_class">Foldery klasy 1 oraz 2</string>
-    <string name="account_settings_folder_target_mode_not_second_class">Wszystkich poza klasą 2</string>
     <string name="account_settings_sync_remote_deletetions_label">Synchronizacja usunięć</string>
     <string name="account_settings_sync_remote_deletetions_summary">Usuwaj wiadomości również z serwera poczty</string>
     <string name="account_settings_openpgp_missing">Brakuje aplikacji OpenPGP. Czy została odinstalowana\?</string>
@@ -597,10 +586,6 @@
     <string name="integrated_inbox_detail">Nieprzeczytane wiadomości ze wszystkich kont</string>
     <string name="folder_settings_include_in_integrated_inbox_label">Integruj</string>
     <string name="folder_settings_include_in_integrated_inbox_summary">Pokazuj nieprzeczytane wiadomości w zintegrowanym widoku</string>
-    <string name="account_settings_searchable_label">Przeszukiwalne foldery</string>
-    <string name="account_settings_searchable_all">Wszystkie</string>
-    <string name="account_settings_searchable_displayable">Wyświetlane</string>
-    <string name="account_settings_searchable_none">Żadne</string>
     <string name="account_settings_no_folder_selected">Żaden</string>
     <string name="account_settings_automatic_special_folder">Automatyczny (%s)</string>
     <string name="font_size_settings_title">Rozmiar czcionki</string>
@@ -853,7 +838,6 @@
     <string name="dialog_openkeychain_info_title">Brak aplikacji dla OpenPGP</string>
     <string name="dialog_openkeychain_info_install">Instaluj</string>
     <string name="dialog_openkeychain_info_text">Aby umożliwić obsługę kompleksowego szyfrowania, wymagana jest aplikacja OpenKeychain.</string>
-    <string name="encrypted_subject">Zaszyfrowana wiadomość</string>
     <string name="account_settings_crypto_encrypt_subject">Zaszyfruj tematy wiadomości</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">Może nie być wspierana przez niektórych odbiorców</string>
     <string name="toast_account_not_found">Błąd wewnętrzny: nieprawidłowe konto!</string>

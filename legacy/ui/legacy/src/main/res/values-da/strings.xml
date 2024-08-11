@@ -63,7 +63,6 @@
     <string name="search_everywhere_action">Søg overalt</string>
     <string name="search_results">Søgeresultater</string>
     <string name="new_messages_title">Nye meddelelser</string>
-    <string name="preferences_action">Indstillinger</string>
     <string name="folders_action">Håndtér mapper</string>
     <string name="account_settings_action">Kontoindstillinger</string>
     <string name="remove_account_action">Slet konto</string>
@@ -136,11 +135,6 @@
     <string name="notification_channel_messages_description">Påmindelser med forbindelse til beskeder</string>
     <string name="notification_channel_miscellaneous_title">Diverse</string>
     <string name="notification_channel_miscellaneous_description">Diverse påmindelser såsom fejl etc.</string>
-    <string name="special_mailbox_name_inbox">Indbakke</string>
-    <string name="special_mailbox_name_outbox">Udbakke</string>
-    <string name="special_mailbox_name_drafts">Kladder</string>
-    <string name="special_mailbox_name_trash">Papirkurv</string>
-    <string name="special_mailbox_name_sent">Sendt</string>
     <string name="send_failure_subject">Mislykkedes med at sende nogle beskeder</string>
     <string name="version">Version</string>
     <string name="debug_enable_debug_logging_title">Aktivér fejllogning</string>
@@ -419,11 +413,6 @@
     <string name="account_settings_folder_push_mode_first_and_second_class">Primære og sekundære mapper</string>
     <string name="account_settings_folder_push_mode_not_second_class">Alle undtaget sekundære mapper</string>
     <string name="account_settings_folder_push_mode_none">Ingen</string>
-    <string name="account_settings_folder_target_mode_label">Flyt/kopier destinations mapper</string>
-    <string name="account_settings_folder_target_mode_all">Alle</string>
-    <string name="account_settings_folder_target_mode_first_class">Kun primære mapper</string>
-    <string name="account_settings_folder_target_mode_first_and_second_class">Primære og sekundære mapper</string>
-    <string name="account_settings_folder_target_mode_not_second_class">Alle undtaget sekundære mapper</string>
     <string name="account_settings_sync_remote_deletetions_label">Synkroniser fjern-sletning</string>
     <string name="account_settings_sync_remote_deletetions_summary">Fjern mails når de slettes på server</string>
     <string name="account_settings_openpgp_missing">Mangler OpenPGP program - er det afinstalleret?</string>
@@ -586,10 +575,6 @@
     <string name="integrated_inbox_detail">Alle mails i fælles mapper</string>
     <string name="folder_settings_include_in_integrated_inbox_label">Inkluder i fælles indbakke</string>
     <string name="folder_settings_include_in_integrated_inbox_summary">Alle mails vises i fælles indbakke</string>
-    <string name="account_settings_searchable_label">Søgbare mapper</string>
-    <string name="account_settings_searchable_all">Alle</string>
-    <string name="account_settings_searchable_displayable">Viste</string>
-    <string name="account_settings_searchable_none">Ingen</string>
     <string name="account_settings_no_folder_selected">Ingen</string>
     <string name="account_settings_automatic_special_folder">Automatisk (%s)</string>
     <string name="font_size_settings_title">Skriftstørrelse</string>
@@ -833,7 +818,6 @@
     <string name="general_settings_title">Generelt</string>
     <string name="dialog_openkeychain_info_title">Intet OpenPGP program installeret</string>
     <string name="dialog_openkeychain_info_install">Installere</string>
-    <string name="encrypted_subject">Krypteret besked</string>
     <string name="account_settings_crypto_encrypt_subject">Kryptér besked emner</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">Understøttes ikke af alle modtagere</string>
     <string name="toast_account_not_found">Intern fejl: Ugyldig konto!</string>

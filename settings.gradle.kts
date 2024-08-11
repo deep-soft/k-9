@@ -62,6 +62,10 @@ include(
 )
 
 include(
+    ":feature:navigation:drawer",
+)
+
+include(
     ":feature:widget:message-list",
     ":feature:widget:shortcut",
     ":feature:widget:unread",
@@ -93,11 +97,18 @@ include(
     ":legacy:crypto-openpgp",
     ":legacy:di",
     ":legacy:folder",
+    ":legacy:mailstore",
+    ":legacy:message",
     ":legacy:notification",
+    ":legacy:preferences",
+    ":legacy:search",
     ":legacy:storage",
     ":legacy:testing",
     ":legacy:ui:base",
+    ":legacy:ui:account",
+    ":legacy:ui:folder",
     ":legacy:ui:legacy",
+    ":legacy:ui:theme",
 )
 
 include(

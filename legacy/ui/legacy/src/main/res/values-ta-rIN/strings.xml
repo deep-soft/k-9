@@ -36,7 +36,6 @@
     <string name="compose_action">எழுது</string>
     <string name="search_action">தேடு</string>
     <string name="search_results">தேடல் முடிவுகள்</string>
-    <string name="preferences_action">அமைப்புகள்</string>
     <string name="account_settings_action">கணக்கு அமைப்புகள்</string>
     <string name="remove_account_action">கணக்கு நீக்கு</string>
     <string name="mark_as_read_action">படித்ததாக குறி</string>
@@ -78,11 +77,6 @@
     <string name="notification_bg_send_ticker">அஞ்சல் அனுப்புதல்: <xliff:g id="account">%s</xliff:g></string>
     <string name="notification_bg_send_title">அஞ்சல் அனுப்புதல்</string>
     <string name="notification_bg_title_separator">:</string>
-    <string name="special_mailbox_name_inbox">பெற்ற அஞ்சல்</string>
-    <string name="special_mailbox_name_outbox">அனுப்பப்படுகின்ற அஞ்சல்</string>
-    <string name="special_mailbox_name_drafts">வரைவுகள்</string>
-    <string name="special_mailbox_name_trash">குப்பை</string>
-    <string name="special_mailbox_name_sent">அனுப்பிய அஞ்சல்</string>
     <string name="send_failure_subject">அஞ்சல்கள் அனுப்புவதில் பிழை</string>
     <string name="debug_enable_debug_logging_title">பிழை பதிவு இயக்கு</string>
     <string name="debug_enable_debug_logging_summary">மேம்பட்ட பிழை பதிவு இயக்கு</string>
@@ -147,7 +141,6 @@
     <string name="account_settings_folder_display_mode_all">அனைத்தும்</string>
     <string name="account_settings_folder_sync_mode_all">அனைத்தும்</string>
     <string name="account_settings_folder_push_mode_all">அனைத்தும்</string>
-    <string name="account_settings_folder_target_mode_all">அனைத்தும்</string>
     <string name="folder_settings_title">கோப்புறை அமைப்பு</string>
     <string name="folder_settings_clear_local_folder_action">தற்காலிக செய்திகள் நீக்கு</string>
     <string name="edit_identity_save">சேமி</string>
@@ -156,7 +149,6 @@
     <string name="sort_by_subject">பொருள்</string>
     <string name="background_ops_never">ஒருபொழுதும்</string>
     <string name="background_ops_always">எப்பொழுதும்</string>
-    <string name="account_settings_searchable_all">அனைத்தும்</string>
     <string name="font_size_message_list_subject">பொருள்</string>
     <!--Displayed in the font size settings screen to configure the font size of the account name in the message view.-->
     <string name="font_size_message_view_subject">பொருள்</string>

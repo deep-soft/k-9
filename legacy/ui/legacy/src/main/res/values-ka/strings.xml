@@ -46,7 +46,6 @@
     <string name="compose_action">შექმნა</string>
     <string name="search_action">ძებნა</string>
     <string name="search_results">ძებნის შედეგი</string>
-    <string name="preferences_action">პარამეტრები</string>
     <string name="folders_action">საკეცების მართვა</string>
     <string name="account_settings_action">ანგარიშის პარამეტრები</string>
     <string name="remove_account_action">ანგარიშის წაშლა</string>
@@ -104,11 +103,6 @@
     <string name="notification_bg_send_title">წერილის გაგზავნა</string>
     <string name="notification_bg_title_separator">:</string>
     <string name="notification_channel_messages_title">მესიჯები</string>
-    <string name="special_mailbox_name_inbox">შემავალი</string>
-    <string name="special_mailbox_name_outbox">გამავალი</string>
-    <string name="special_mailbox_name_drafts">მონახაზები</string>
-    <string name="special_mailbox_name_trash">ნაგავი</string>
-    <string name="special_mailbox_name_sent">გაგზავნილი</string>
     <string name="version">ვერსია</string>
     <string name="debug_enable_debug_logging_summary">დამატებითი სადიაგნოსტიკო ინფორმაციის ლოგირება</string>
     <string name="debug_enable_sensitive_logging_title">მგრძნობიარე ინფორმაციის ლოგირება</string>
@@ -310,10 +304,6 @@
     <string name="account_settings_folder_push_mode_first_and_second_class">1-ლი და მე-2 კლასის საკეცები</string>
     <string name="account_settings_folder_push_mode_not_second_class">ყველა, გარდა მე-2 კლასის საკეცებისა</string>
     <string name="account_settings_folder_push_mode_none">არც ერთი</string>
-    <string name="account_settings_folder_target_mode_all">ყველა</string>
-    <string name="account_settings_folder_target_mode_first_class">მხოლოდ 1-ლი კლასის საკეცები</string>
-    <string name="account_settings_folder_target_mode_first_and_second_class">1-ლი და მე-2 კლასის საკეცები</string>
-    <string name="account_settings_folder_target_mode_not_second_class">ყველა, გარდა მე-2 კლასის საკეცებისა</string>
     <string name="account_settings_sync_remote_deletetions_label">წაშლის სინქრონიზაცია სერვერთან</string>
     <string name="account_settings_sync_remote_deletetions_summary">მესიჯების წაშლა სერვერზე წაშლის შემთხვევაში</string>
     <string name="folder_settings_folder_display_mode_normal">კლასის გარეშე</string>
@@ -378,8 +368,6 @@
     <string name="account_setup_push_limit_1000">1000 საკეცი</string>
     <string name="animations_title">ანიმაცია</string>
     <string name="integrated_inbox_title">გაერთიანებული შემავალი</string>
-    <string name="account_settings_searchable_all">ყველა</string>
-    <string name="account_settings_searchable_none">არც ერთი</string>
     <string name="account_settings_no_folder_selected">არც ერთი</string>
     <string name="font_size_settings_title">ფონტის ზომა</string>
     <string name="font_size_settings_description">ფონტის ზომის მორგება</string>
@@ -503,7 +491,6 @@
     <string name="general_settings_title">ზოგადი პარამეტრები</string>
     <string name="dialog_openkeychain_info_title">OpenPGP აპი არ არის დაყენებული</string>
     <string name="dialog_openkeychain_info_install">დაყენება</string>
-    <string name="encrypted_subject">დაშიფრული წერილი</string>
     <string name="account_settings_crypto_encrypt_subject">მესიჯის საგნის დაშიფვრა</string>
     <string name="toast_account_not_found">შიდა შეცდომა: არასწორი ანგარიში!</string>
     <string name="toast_openpgp_provider_error">შეცდომა %s-თან დაკავშირებისას!</string>

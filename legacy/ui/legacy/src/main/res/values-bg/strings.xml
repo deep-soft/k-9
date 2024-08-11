@@ -60,7 +60,6 @@
     <string name="search_everywhere_action">Търси навсякъде</string>
     <string name="search_results">Резултати от търсенето</string>
     <string name="new_messages_title">Нови съобщения</string>
-    <string name="preferences_action">Настройки</string>
     <string name="folders_action">Управление на папки</string>
     <string name="account_settings_action">Настройки на профила</string>
     <string name="remove_account_action">Премахни профил</string>
@@ -130,11 +129,6 @@
     <string name="notification_channel_messages_description">Известия свързани със съобщения</string>
     <string name="notification_channel_miscellaneous_title">Разни</string>
     <string name="notification_channel_miscellaneous_description">Разни известия като грешки и т.н.</string>
-    <string name="special_mailbox_name_inbox">Входяща поща</string>
-    <string name="special_mailbox_name_outbox">Изходяща поща</string>
-    <string name="special_mailbox_name_drafts">Чернови</string>
-    <string name="special_mailbox_name_trash">Кошче</string>
-    <string name="special_mailbox_name_sent">Изпратени</string>
     <string name="send_failure_subject">Грешка при изпращане на някой съобщения</string>
     <string name="version">Версия</string>
     <string name="debug_enable_debug_logging_title">Включете доклада за дебъгване</string>
@@ -383,11 +377,6 @@
     <string name="account_settings_folder_push_mode_first_and_second_class">1-ви и 2-ри Клас папки</string>
     <string name="account_settings_folder_push_mode_not_second_class">Всички освен 2-ри Клас папки</string>
     <string name="account_settings_folder_push_mode_none">Никой</string>
-    <string name="account_settings_folder_target_mode_label">Преместване/изтриване на папките на сървъра</string>
-    <string name="account_settings_folder_target_mode_all">Всички</string>
-    <string name="account_settings_folder_target_mode_first_class">Само 1-ви Клас папки</string>
-    <string name="account_settings_folder_target_mode_first_and_second_class">1-ви и 2-ри Клас папки</string>
-    <string name="account_settings_folder_target_mode_not_second_class">Всички освен 2-ри Клас папки</string>
     <string name="account_settings_sync_remote_deletetions_label">Синхронизирай изтриванията от сървъра</string>
     <string name="account_settings_sync_remote_deletetions_summary">Премахни съобщенията, когато се изтрият от сървъра</string>
     <string name="account_settings_openpgp_missing">Липсва OpenPGP приложение - да не сте го деинсталирали?</string>
@@ -531,10 +520,6 @@
     <string name="integrated_inbox_detail">Всички съобщения в общата входяща кутия</string>
     <string name="folder_settings_include_in_integrated_inbox_label">Обедени</string>
     <string name="folder_settings_include_in_integrated_inbox_summary">Всички съобщения ще бъдат показани в общата входяща кутия</string>
-    <string name="account_settings_searchable_label">Папки позволяващи търсене</string>
-    <string name="account_settings_searchable_all">Всички</string>
-    <string name="account_settings_searchable_displayable">Видими</string>
-    <string name="account_settings_searchable_none">Никои</string>
     <string name="account_settings_no_folder_selected">Никой</string>
     <string name="account_settings_automatic_special_folder">Автоматично (%s)</string>
     <string name="font_size_settings_title">Размер на шрифта</string>
@@ -776,7 +761,6 @@
     <string name="general_settings_title">Общи настройки</string>
     <string name="dialog_openkeychain_info_title">Няма инсталирано OpenPGP приложение</string>
     <string name="dialog_openkeychain_info_install">Инсталирване</string>
-    <string name="encrypted_subject">Криптирано съобщение</string>
     <string name="account_settings_crypto_encrypt_subject">Шифровай заглавията</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">Може да не се поддържа при всички получатели</string>
     <string name="toast_account_not_found">Вътрешна грешка: Невалиден профил!</string>

@@ -30,6 +30,11 @@ import androidx.annotation.VisibleForTesting;
 import app.k9mail.legacy.account.Account;
 import app.k9mail.legacy.account.Account.DeletePolicy;
 import app.k9mail.legacy.di.DI;
+import app.k9mail.legacy.message.controller.MessageReference;
+import app.k9mail.legacy.message.controller.MessagingControllerMailChecker;
+import app.k9mail.legacy.message.controller.MessagingControllerRegistry;
+import app.k9mail.legacy.message.controller.MessagingListener;
+import app.k9mail.legacy.message.controller.SimpleMessagingListener;
 import com.fsck.k9.K9;
 import com.fsck.k9.Preferences;
 import com.fsck.k9.backend.BackendManager;
@@ -63,23 +68,23 @@ import com.fsck.k9.mail.Part;
 import com.fsck.k9.mail.ServerSettings;
 import com.fsck.k9.mail.power.PowerManager;
 import com.fsck.k9.mail.power.WakeLock;
-import com.fsck.k9.mailstore.FolderDetailsAccessor;
+import app.k9mail.legacy.mailstore.FolderDetailsAccessor;
 import com.fsck.k9.mailstore.LocalFolder;
 import com.fsck.k9.mailstore.LocalMessage;
 import com.fsck.k9.mailstore.LocalStore;
 import com.fsck.k9.mailstore.LocalStoreProvider;
 import com.fsck.k9.mailstore.MessageListCache;
-import com.fsck.k9.mailstore.MessageStore;
-import com.fsck.k9.mailstore.MessageStoreManager;
+import app.k9mail.legacy.mailstore.MessageStore;
+import app.k9mail.legacy.mailstore.MessageStoreManager;
 import com.fsck.k9.mailstore.OutboxState;
 import com.fsck.k9.mailstore.OutboxStateRepository;
-import com.fsck.k9.mailstore.SaveMessageData;
+import app.k9mail.legacy.mailstore.SaveMessageData;
 import com.fsck.k9.mailstore.SaveMessageDataCreator;
 import com.fsck.k9.mailstore.SendState;
 import com.fsck.k9.mailstore.SpecialLocalFoldersCreator;
 import com.fsck.k9.notification.NotificationController;
 import com.fsck.k9.notification.NotificationStrategy;
-import com.fsck.k9.search.LocalSearch;
+import app.k9mail.legacy.search.LocalSearch;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import timber.log.Timber;
@@ -102,7 +107,7 @@ import static com.fsck.k9.mail.Flag.X_REMOTE_COPY_STARTED;
  * it removes itself. Thus, any commands that that activity submitted are
  * removed from the queue once the activity is no longer active.
  */
-public class MessagingController {
+public class MessagingController implements MessagingControllerRegistry, MessagingControllerMailChecker {
     public static final Set<Flag> SYNC_FLAGS = EnumSet.of(Flag.SEEN, Flag.FLAGGED, Flag.ANSWERED, Flag.FORWARDED);
 
     private static final long FOLDER_LIST_STALENESS_THRESHOLD = 30 * 60 * 1000L;
@@ -283,7 +288,7 @@ public class MessagingController {
         return folderId;
     }
 
-    public void addListener(MessagingListener listener) {
+    public void addListener(@NonNull MessagingListener listener) {
         listeners.add(listener);
         refreshListener(listener);
     }
@@ -294,7 +299,7 @@ public class MessagingController {
         }
     }
 
-    public void removeListener(MessagingListener listener) {
+    public void removeListener(@NonNull MessagingListener listener) {
         listeners.remove(listener);
     }
 

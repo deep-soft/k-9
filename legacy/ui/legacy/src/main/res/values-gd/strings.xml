@@ -55,7 +55,6 @@
     <string name="search_action">Lorg sa phost</string>
     <string name="search_everywhere_action">Lorg anns gach àite</string>
     <string name="search_results">Toraidhean an luirg</string>
-    <string name="preferences_action">Roghainnean</string>
     <string name="folders_action">Stiùirich na pasganan</string>
     <string name="account_settings_action">Roghainnean a’ chunntais</string>
     <string name="remove_account_action">Thoir an cunntas air falbh</string>
@@ -125,11 +124,6 @@
     <string name="notification_channel_push_title">Sioncronaich (Put)</string>
     <string name="notification_channel_messages_title">Teachdaireachdan</string>
     <string name="notification_channel_miscellaneous_title">An corr</string>
-    <string name="special_mailbox_name_inbox">A-steach</string>
-    <string name="special_mailbox_name_outbox">A-mach</string>
-    <string name="special_mailbox_name_drafts">Dreachdan</string>
-    <string name="special_mailbox_name_trash">Sgudal</string>
-    <string name="special_mailbox_name_sent">Air a chur</string>
     <string name="send_failure_subject">Cha deach cuid dhe na teachdaireachdan a chur</string>
     <string name="debug_enable_debug_logging_title">Cuir an comas logadh airson dì-bhugachadh</string>
     <string name="debug_enable_debug_logging_summary">Logaich fiosrachadh diagnosachd a bharrachd</string>
@@ -375,11 +369,6 @@
     <string name="account_settings_folder_push_mode_first_and_second_class">Pasganan na 1ᵈ is na 2ⁿᵃ ìre</string>
     <string name="account_settings_folder_push_mode_not_second_class">Gach aon ach pasganan na 2ⁿᵃ ìre</string>
     <string name="account_settings_folder_push_mode_none">Chan eil gin</string>
-    <string name="account_settings_folder_target_mode_label">Pasganan dhan a chuirear lethbhreacan/dhan a ghluaisear</string>
-    <string name="account_settings_folder_target_mode_all">Na h-uile</string>
-    <string name="account_settings_folder_target_mode_first_class">Pasganan na 1ᵈ ìre a-mhàin</string>
-    <string name="account_settings_folder_target_mode_first_and_second_class">Pasganan na 1ᵈ is na 2ⁿᵃ ìre</string>
-    <string name="account_settings_folder_target_mode_not_second_class">Gach aon ach pasganan na 2ⁿᵃ ìre</string>
     <string name="account_settings_sync_remote_deletetions_label">Sioncronaich sguabadh às air an fhrithealaiche</string>
     <string name="account_settings_sync_remote_deletetions_summary">Thoir air falbh teachdaireachdan a chaidh a sguabadh às an fhrithealaiche</string>
     <string name="folder_settings_title">Roghainnean a’ phasgain</string>
@@ -521,10 +510,6 @@
     <string name="integrated_inbox_detail">Na h-uile teachdaireachd ann am pasganan co-aonaichte</string>
     <string name="folder_settings_include_in_integrated_inbox_label">Co-aonaich</string>
     <string name="folder_settings_include_in_integrated_inbox_summary">Tha gach teachdaireachd ga shealltainn san oll-bhogsa</string>
-    <string name="account_settings_searchable_label">Na pasganan san dèanar lorg</string>
-    <string name="account_settings_searchable_all">Na h-uile</string>
-    <string name="account_settings_searchable_displayable">So-thaisbeanadh</string>
-    <string name="account_settings_searchable_none">Chan eil gin</string>
     <string name="account_settings_no_folder_selected">Chan eil gin</string>
     <string name="font_size_settings_title">Meud a’ chrutha-chlò</string>
     <string name="font_size_settings_description">Rèitich meud a’ chrutha-chlò</string>

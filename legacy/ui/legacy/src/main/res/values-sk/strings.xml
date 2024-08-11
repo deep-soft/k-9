@@ -53,7 +53,6 @@
     <string name="compose_action">Napísať</string>
     <string name="search_action">Vyhľadať</string>
     <string name="search_results">Výsledky vyhľadávania</string>
-    <string name="preferences_action">Nastavenia</string>
     <string name="folders_action">Spravovať priečinky</string>
     <string name="account_settings_action">Nastavenia účtu</string>
     <string name="remove_account_action">Odstrániť účet</string>
@@ -123,11 +122,6 @@
     <string name="notification_channel_messages_description">Oznámenia súvisiace so správami</string>
     <string name="notification_channel_miscellaneous_title">Rôzne</string>
     <string name="notification_channel_miscellaneous_description">Rôzne oznámenia, napr. chyby atď.</string>
-    <string name="special_mailbox_name_inbox">Doručená</string>
-    <string name="special_mailbox_name_outbox">Pošta na odoslanie</string>
-    <string name="special_mailbox_name_drafts">Koncepty</string>
-    <string name="special_mailbox_name_trash">Kôš</string>
-    <string name="special_mailbox_name_sent">Odoslaná</string>
     <string name="send_failure_subject">Nepodarilo sa odoslať niektoré správy</string>
     <string name="version">Verzia</string>
     <string name="debug_enable_debug_logging_title">Povoliť vytváranie záznamov pre ladenie</string>
@@ -385,11 +379,6 @@
     <string name="account_settings_folder_push_mode_first_and_second_class">Priečinky 1. a 2. triedy</string>
     <string name="account_settings_folder_push_mode_not_second_class">Všetky okrem priečinkov 2. triedy</string>
     <string name="account_settings_folder_push_mode_none">Žiadne</string>
-    <string name="account_settings_folder_target_mode_label">Cieľové priečinky pre presun/kopírovanie</string>
-    <string name="account_settings_folder_target_mode_all">Všetky</string>
-    <string name="account_settings_folder_target_mode_first_class">Len priečinky 1. triedy</string>
-    <string name="account_settings_folder_target_mode_first_and_second_class">Priečinky 1. a 2. triedy</string>
-    <string name="account_settings_folder_target_mode_not_second_class">Všetky okrem priečinkov 2. triedy</string>
     <string name="account_settings_sync_remote_deletetions_label">Synchronizácia mazaní na serveri</string>
     <string name="account_settings_sync_remote_deletetions_summary">Odstrániť správy, ktoré boli odstránené na serveri</string>
     <string name="account_settings_openpgp_missing">Aplikácia pre OpenPGP chýba - bola odinštalovaná?</string>
@@ -533,10 +522,6 @@
     <string name="integrated_inbox_detail">Všetky správy v zjednotených priečinkoch</string>
     <string name="folder_settings_include_in_integrated_inbox_label">Zjednotiť</string>
     <string name="folder_settings_include_in_integrated_inbox_summary">Všetky správy budú zobrazené v Jednotnej schránke</string>
-    <string name="account_settings_searchable_label">Prehľadávané priečinky</string>
-    <string name="account_settings_searchable_all">Všetky</string>
-    <string name="account_settings_searchable_displayable">Zobraziteľné</string>
-    <string name="account_settings_searchable_none">Žiadne</string>
     <string name="account_settings_no_folder_selected">Žiadna</string>
     <string name="account_settings_automatic_special_folder">Automaticky (%s)</string>
     <string name="font_size_settings_title">Veľkosť písma</string>

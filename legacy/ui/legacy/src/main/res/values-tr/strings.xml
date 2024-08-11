@@ -62,7 +62,6 @@
     <string name="search_everywhere_action">Her yerde ara</string>
     <string name="search_results">Arama Sonuçları</string>
     <string name="new_messages_title">Yeni iletiler</string>
-    <string name="preferences_action">Ayarlar</string>
     <string name="folders_action">Klasörleri yönet</string>
     <string name="account_settings_action">Hesap Ayarları</string>
     <string name="remove_account_action">Hesabı kaldır</string>
@@ -134,11 +133,6 @@
     <string name="notification_channel_messages_description">İletilerle ilgili bildirimler</string>
     <string name="notification_channel_miscellaneous_title">Çeşitli</string>
     <string name="notification_channel_miscellaneous_description">Hata vb. çeşitli bildirimler.</string>
-    <string name="special_mailbox_name_inbox">Gelen Kutusu</string>
-    <string name="special_mailbox_name_outbox">Giden Kutusu</string>
-    <string name="special_mailbox_name_drafts">Taslaklar</string>
-    <string name="special_mailbox_name_trash">Çöp</string>
-    <string name="special_mailbox_name_sent">Gönderilen</string>
     <string name="send_failure_subject">Bazı iletilerin gönderilmesi başarısız</string>
     <string name="version">Uyarlama</string>
     <string name="debug_enable_debug_logging_title">Onarma günlüğünü etkinleştir</string>
@@ -410,11 +404,6 @@
     <string name="account_settings_folder_push_mode_first_and_second_class">1. ve 2. Sınıf klasörler</string>
     <string name="account_settings_folder_push_mode_not_second_class">2. Sınıf klasörler dışında tümü</string>
     <string name="account_settings_folder_push_mode_none">Hiçbiri</string>
-    <string name="account_settings_folder_target_mode_label">Taşıma/Kopyalama hedef klasörleri</string>
-    <string name="account_settings_folder_target_mode_all">Tümü</string>
-    <string name="account_settings_folder_target_mode_first_class">Yalnızca 1. Sınıf klasörler</string>
-    <string name="account_settings_folder_target_mode_first_and_second_class">1. ve 2. Sınıfı klasörler</string>
-    <string name="account_settings_folder_target_mode_not_second_class">2. Sınıf klasörler dışında tümü</string>
     <string name="account_settings_sync_remote_deletetions_label">Eşzamanlama sunucusu silme işlemleri</string>
     <string name="account_settings_sync_remote_deletetions_summary">Sunucudan silinen iletileri kaldır</string>
     <string name="account_settings_openpgp_missing">OpenPGP uygulaması eksik - kaldırıldı mı?</string>
@@ -576,10 +565,6 @@
     <string name="integrated_inbox_detail">Bütün iletiler birleşik gelen kutusunda</string>
     <string name="folder_settings_include_in_integrated_inbox_label">Birleştir</string>
     <string name="folder_settings_include_in_integrated_inbox_summary">Tüm iletiler Birleşik Gelen Kutusunda gösterilir</string>
-    <string name="account_settings_searchable_label">Arama için Klasörler</string>
-    <string name="account_settings_searchable_all">Tümü</string>
-    <string name="account_settings_searchable_displayable">Görüntülenebilir</string>
-    <string name="account_settings_searchable_none">Hiçbiri</string>
     <string name="account_settings_no_folder_selected">Hiçbiri</string>
     <string name="account_settings_automatic_special_folder">Otomatik (%s)</string>
     <string name="font_size_settings_title">Yazı tipi Boyutu</string>
@@ -824,7 +809,6 @@
     <string name="general_settings_title">Genel Ayarlar</string>
     <string name="dialog_openkeychain_info_title">Kurulu OpenPGP uygulaması yok</string>
     <string name="dialog_openkeychain_info_install">Kur</string>
-    <string name="encrypted_subject">Şifreli İleti</string>
     <string name="account_settings_crypto_encrypt_subject">İleti konularını şifrele</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">Bazı alıcılar tarafından desteklenmeyebilir</string>
     <string name="toast_account_not_found">İç hata: Geçersiz hesap!</string>

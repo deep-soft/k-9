@@ -59,7 +59,6 @@
     <string name="search_action">Buscar</string>
     <string name="search_everywhere_action">Buscar en todo</string>
     <string name="search_results">Resultados Búsqueda</string>
-    <string name="preferences_action">Configuración</string>
     <string name="folders_action">Xestionar cartafoles</string>
     <string name="account_settings_action">Configurar conta</string>
     <string name="remove_account_action">Eliminar conta</string>
@@ -129,11 +128,6 @@
     <string name="notification_channel_messages_description">Notificacións relacionadas coas mensaxes</string>
     <string name="notification_channel_miscellaneous_title">Varios</string>
     <string name="notification_channel_miscellaneous_description">Notificacións varias como erros, etc.</string>
-    <string name="special_mailbox_name_inbox">Entrada</string>
-    <string name="special_mailbox_name_outbox">Saída</string>
-    <string name="special_mailbox_name_drafts">Borradores</string>
-    <string name="special_mailbox_name_trash">Lixo</string>
-    <string name="special_mailbox_name_sent">Enviados</string>
     <string name="send_failure_subject">Erro ao enviar algunhas mensaxes</string>
     <string name="version">Versión</string>
     <string name="debug_enable_debug_logging_title">Activar acceso a debug</string>
@@ -400,11 +394,6 @@
     <string name="account_settings_folder_push_mode_first_and_second_class">1a e 2a Clase</string>
     <string name="account_settings_folder_push_mode_not_second_class">Todas agás 1a e 2a clase</string>
     <string name="account_settings_folder_push_mode_none">ningunha</string>
-    <string name="account_settings_folder_target_mode_label">Destino Mover/Copiar</string>
-    <string name="account_settings_folder_target_mode_all">Todas</string>
-    <string name="account_settings_folder_target_mode_first_class">Só 1a clase</string>
-    <string name="account_settings_folder_target_mode_first_and_second_class">1a e 2a Clase</string>
-    <string name="account_settings_folder_target_mode_not_second_class">Todas agás 1a e 2a clase</string>
     <string name="account_settings_sync_remote_deletetions_label">Sincronizar eliminacións</string>
     <string name="account_settings_sync_remote_deletetions_summary">Eliminar as mensaxes cando se borren d servidor</string>
     <string name="account_settings_openpgp_missing">Falta o aplicativo OpenPGP - foi desinstalado?</string>
@@ -550,10 +539,6 @@
     <string name="integrated_inbox_detail">Mensajes na Entrada unificada</string>
     <string name="folder_settings_include_in_integrated_inbox_label">Unificar</string>
     <string name="folder_settings_include_in_integrated_inbox_summary">Todas as mensaxes amosaranse nunha bandexa unificada</string>
-    <string name="account_settings_searchable_label">Carpetas para buscar</string>
-    <string name="account_settings_searchable_all">Todas</string>
-    <string name="account_settings_searchable_displayable">Amosadas</string>
-    <string name="account_settings_searchable_none">ningunha</string>
     <string name="account_settings_no_folder_selected">ningunha</string>
     <string name="account_settings_automatic_special_folder">Automático (%s)</string>
     <string name="font_size_settings_title">Tamaño letra</string>
@@ -797,7 +782,6 @@
     <string name="general_settings_title">Configuración Xeral</string>
     <string name="dialog_openkeychain_info_title">Non se instalou o aplicativo OpenPGP</string>
     <string name="dialog_openkeychain_info_install">Instalar</string>
-    <string name="encrypted_subject">Mensaxe cifrada</string>
     <string name="account_settings_crypto_encrypt_subject">Texto da mensaxe cifrado</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">Pode non ser compatible por algúns recipientes</string>
     <string name="toast_account_not_found">Erro interno: conta inválida!</string>

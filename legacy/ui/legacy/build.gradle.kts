@@ -5,6 +5,8 @@ plugins {
 
 dependencies {
     api(projects.legacy.ui.base)
+    api(projects.legacy.ui.account)
+    api(projects.legacy.ui.folder)
     api(projects.core.ui.legacy.designsystem)
     // TODO: Remove once Theme2 is fully migrated
     api(projects.core.ui.legacy.theme2.k9mail)
@@ -15,6 +17,7 @@ dependencies {
 
     implementation(projects.core.featureflags)
     implementation(projects.feature.launcher)
+    implementation(projects.feature.navigation.drawer)
     // TODO: Remove AccountOauth dependency
     implementation(projects.feature.account.oauth)
     implementation(projects.feature.settings.import)

@@ -1,11 +1,17 @@
 package com.fsck.k9.mailstore
 
+import app.k9mail.legacy.mailstore.ListenableMessageStore
+import app.k9mail.legacy.mailstore.MessageDetailsAccessor
+import app.k9mail.legacy.mailstore.MessageListChangedListener
+import app.k9mail.legacy.mailstore.MessageListRepository
+import app.k9mail.legacy.mailstore.MessageMapper
+import app.k9mail.legacy.mailstore.MessageStoreManager
+import app.k9mail.legacy.message.extractors.PreviewResult
 import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import com.fsck.k9.mail.Address
 import com.fsck.k9.mail.Flag
-import com.fsck.k9.message.extractors.PreviewResult
 import java.util.UUID
 import org.junit.After
 import org.junit.Before
@@ -40,7 +46,7 @@ class MessageListRepositoryTest {
         on { getMessageStore(accountUuid) } doReturn messageStore
     }
 
-    private val messageListRepository = MessageListRepository(messageStoreManager)
+    private val messageListRepository: MessageListRepository = DefaultMessageListRepository(messageStoreManager)
 
     @Before
     fun setUp() {

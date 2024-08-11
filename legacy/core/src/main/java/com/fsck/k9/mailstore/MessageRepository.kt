@@ -1,6 +1,7 @@
 package com.fsck.k9.mailstore
 
-import com.fsck.k9.controller.MessageReference
+import app.k9mail.legacy.mailstore.MessageStoreManager
+import app.k9mail.legacy.message.controller.MessageReference
 import com.fsck.k9.mail.Address
 import com.fsck.k9.mail.Header
 import com.fsck.k9.mail.internet.MimeUtility

@@ -1,9 +1,9 @@
 package com.fsck.k9.ui.messagelist
 
 import androidx.lifecycle.LiveData
-import com.fsck.k9.mailstore.MessageListChangedListener
-import com.fsck.k9.mailstore.MessageListRepository
-import com.fsck.k9.preferences.AccountManager
+import app.k9mail.legacy.account.AccountManager
+import app.k9mail.legacy.mailstore.MessageListChangedListener
+import app.k9mail.legacy.mailstore.MessageListRepository
 import com.fsck.k9.search.getAccountUuids
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

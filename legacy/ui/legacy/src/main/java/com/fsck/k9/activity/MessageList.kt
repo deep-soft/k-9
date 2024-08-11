@@ -27,7 +27,19 @@ import app.k9mail.core.android.common.contact.CachingRepository
 import app.k9mail.core.android.common.contact.ContactRepository
 import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons
 import app.k9mail.feature.launcher.FeatureLauncherActivity
+import app.k9mail.feature.navigation.drawer.LegacyDrawer
+import app.k9mail.feature.navigation.drawer.NavigationDrawer
 import app.k9mail.legacy.account.Account
+import app.k9mail.legacy.account.AccountManager
+import app.k9mail.legacy.message.controller.MessageReference
+import app.k9mail.legacy.preferences.GeneralSettingsManager
+import app.k9mail.legacy.search.LocalSearch
+import app.k9mail.legacy.search.SearchAccount
+import app.k9mail.legacy.search.api.SearchAttribute
+import app.k9mail.legacy.search.api.SearchCondition
+import app.k9mail.legacy.search.api.SearchField
+import app.k9mail.legacy.search.api.SearchSpecification
+import com.fsck.k9.CoreResourceProvider
 import com.fsck.k9.K9
 import com.fsck.k9.K9.PostMarkAsUnreadNavigation
 import com.fsck.k9.K9.PostRemoveNavigation
@@ -35,19 +47,10 @@ import com.fsck.k9.K9.SplitViewMode
 import com.fsck.k9.Preferences
 import com.fsck.k9.account.BackgroundAccountRemover
 import com.fsck.k9.activity.compose.MessageActions
-import com.fsck.k9.controller.MessageReference
 import com.fsck.k9.controller.MessagingController
 import com.fsck.k9.helper.ParcelableUtil
-import com.fsck.k9.preferences.AccountManager
-import com.fsck.k9.preferences.GeneralSettingsManager
-import com.fsck.k9.search.LocalSearch
-import com.fsck.k9.search.SearchAccount
-import com.fsck.k9.search.SearchSpecification
-import com.fsck.k9.search.SearchSpecification.SearchCondition
-import com.fsck.k9.search.SearchSpecification.SearchField
 import com.fsck.k9.search.isUnifiedInbox
 import com.fsck.k9.ui.BuildConfig
-import com.fsck.k9.ui.K9Drawer
 import com.fsck.k9.ui.R
 import com.fsck.k9.ui.base.K9Activity
 import com.fsck.k9.ui.managefolders.ManageFoldersActivity
@@ -58,6 +61,7 @@ import com.fsck.k9.ui.messageview.MessageViewContainerFragment
 import com.fsck.k9.ui.messageview.MessageViewContainerFragment.MessageViewContainerListener
 import com.fsck.k9.ui.messageview.MessageViewFragment.MessageViewFragmentListener
 import com.fsck.k9.ui.messageview.PlaceholderFragment
+import com.fsck.k9.ui.settings.SettingsActivity
 import com.fsck.k9.view.ViewSwitcher
 import com.fsck.k9.view.ViewSwitcher.OnSwitchCompleteListener
 import com.google.android.material.textview.MaterialTextView
@@ -66,6 +70,7 @@ import org.koin.android.ext.android.inject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
+import app.k9mail.feature.navigation.drawer.R as DrawerR
 
 /**
  * MessageList is the primary user interface for the program. This Activity shows a list of messages.
@@ -87,13 +92,14 @@ open class MessageList :
     private val generalSettingsManager: GeneralSettingsManager by inject()
     private val messagingController: MessagingController by inject()
     private val contactRepository: ContactRepository by inject()
+    private val coreResourceProvider: CoreResourceProvider by inject()
 
     private lateinit var actionBar: ActionBar
     private var searchView: SearchView? = null
     private var initialSearchViewQuery: String? = null
     private var initialSearchViewIconified: Boolean = true
 
-    private var drawer: K9Drawer? = null
+    private var navigationDrawer: NavigationDrawer? = null
     private var openFolderTransaction: FragmentTransaction? = null
     private var progressBar: ProgressBar? = null
     private var messageViewPlaceHolder: PlaceholderFragment? = null
@@ -164,7 +170,7 @@ open class MessageList :
             }
         }
 
-        val swipeRefreshLayout = findViewById<View>(R.id.material_drawer_swipe_refresh)
+        val swipeRefreshLayout = findViewById<View>(DrawerR.id.material_drawer_swipe_refresh)
         swipeRefreshLayout.layoutParams.width = getOptimalDrawerWidth(this)
 
         initializeActionBar()
@@ -176,7 +182,7 @@ open class MessageList :
 
         if (isDrawerEnabled) {
             configureDrawer()
-            drawer!!.updateUserAccountsAndFolders(account)
+            navigationDrawer!!.updateUserAccountsAndFolders(account)
         }
 
         findFragments()
@@ -219,7 +225,7 @@ open class MessageList :
 
         if (isDrawerEnabled) {
             configureDrawer()
-            drawer!!.updateUserAccountsAndFolders(account)
+            navigationDrawer!!.updateUserAccountsAndFolders(account)
         }
 
         initializeDisplayMode(null)
@@ -383,7 +389,7 @@ open class MessageList :
             // Handle shortcut intents
             val specialFolder = intent.getStringExtra(EXTRA_SPECIAL_FOLDER)
             if (specialFolder == SearchAccount.UNIFIED_INBOX) {
-                return LaunchData(search = SearchAccount.createUnifiedInboxAccount().relatedSearch)
+                return LaunchData(search = createSearchAccount().relatedSearch)
             }
 
             val accountUuid = intent.getStringExtra(EXTRA_ACCOUNT)
@@ -408,12 +414,48 @@ open class MessageList :
 
             val search = LocalSearch().apply {
                 isManualSearch = true
-                or(SearchCondition(SearchField.SENDER, SearchSpecification.Attribute.CONTAINS, query))
-                or(SearchCondition(SearchField.TO, SearchSpecification.Attribute.CONTAINS, query))
-                or(SearchCondition(SearchField.CC, SearchSpecification.Attribute.CONTAINS, query))
-                or(SearchCondition(SearchField.BCC, SearchSpecification.Attribute.CONTAINS, query))
-                or(SearchCondition(SearchField.SUBJECT, SearchSpecification.Attribute.CONTAINS, query))
-                or(SearchCondition(SearchField.MESSAGE_CONTENTS, SearchSpecification.Attribute.CONTAINS, query))
+                or(
+                    SearchCondition(
+                        SearchField.SENDER,
+                        SearchAttribute.CONTAINS,
+                        query,
+                    ),
+                )
+                or(
+                    SearchCondition(
+                        SearchField.TO,
+                        SearchAttribute.CONTAINS,
+                        query,
+                    ),
+                )
+                or(
+                    SearchCondition(
+                        SearchField.CC,
+                        SearchAttribute.CONTAINS,
+                        query,
+                    ),
+                )
+                or(
+                    SearchCondition(
+                        SearchField.BCC,
+                        SearchAttribute.CONTAINS,
+                        query,
+                    ),
+                )
+                or(
+                    SearchCondition(
+                        SearchField.SUBJECT,
+                        SearchAttribute.CONTAINS,
+                        query,
+                    ),
+                )
+                or(
+                    SearchCondition(
+                        SearchField.MESSAGE_CONTENTS,
+                        SearchAttribute.CONTAINS,
+                        query,
+                    ),
+                )
             }
 
             val appData = intent.getBundleExtra(SearchManager.APP_DATA)
@@ -465,7 +507,7 @@ open class MessageList :
 
         // Default action
         val search = if (K9.isShowUnifiedInbox) {
-            SearchAccount.createUnifiedInboxAccount().relatedSearch
+            createSearchAccount().relatedSearch
         } else {
             createDefaultLocalSearch()
         }
@@ -532,15 +574,24 @@ open class MessageList :
 
     private fun initializeDrawer(savedInstanceState: Bundle?) {
         if (!isDrawerEnabled) {
-            val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+            val drawerLayout = findViewById<DrawerLayout>(R.id.navigation_drawer_layout)
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             return
         }
 
-        drawer = K9Drawer(this, savedInstanceState)
+        navigationDrawer = LegacyDrawer(
+            parent = this,
+            savedInstanceState = savedInstanceState,
+            openFolders = { launchManageFoldersScreen() },
+            openUnifiedInbox = { openUnifiedInbox() },
+            openFolder = { folderId -> openFolder(folderId) },
+            openAccount = { account -> openRealAccount(account) },
+            openSettings = { SettingsActivity.launch(this) },
+            createDrawerListener = { createDrawerListener() },
+        )
     }
 
-    fun createDrawerListener(): DrawerListener {
+    private fun createDrawerListener(): DrawerListener {
         return object : DrawerListener {
             override fun onDrawerClosed(drawerView: View) {
                 if (openFolderTransaction != null) {
@@ -586,11 +637,16 @@ open class MessageList :
         onMessageListDisplayed()
     }
 
-    fun openUnifiedInbox() {
-        actionDisplaySearch(this, SearchAccount.createUnifiedInboxAccount().relatedSearch, false, false)
+    private fun openUnifiedInbox() {
+        actionDisplaySearch(
+            this,
+            createSearchAccount().relatedSearch,
+            false,
+            false,
+        )
     }
 
-    fun launchManageFoldersScreen() {
+    private fun launchManageFoldersScreen() {
         if (account == null) {
             Timber.e("Tried to open \"Manage folders\", but no account selected!")
             return
@@ -645,8 +701,8 @@ open class MessageList :
     }
 
     override fun onBackPressed() {
-        if (isDrawerEnabled && drawer!!.isOpen) {
-            drawer!!.close()
+        if (isDrawerEnabled && navigationDrawer!!.isOpen) {
+            navigationDrawer!!.close()
         } else if (displayMode == DisplayMode.MESSAGE_VIEW) {
             if (messageViewOnly) {
                 finish()
@@ -864,10 +920,10 @@ open class MessageList :
         if (id == android.R.id.home) {
             if (displayMode != DisplayMode.MESSAGE_VIEW && !isAdditionalMessageListDisplayed) {
                 if (isDrawerEnabled) {
-                    if (drawer!!.isOpen) {
-                        drawer!!.close()
+                    if (navigationDrawer!!.isOpen) {
+                        navigationDrawer!!.close()
                     } else {
-                        drawer!!.open()
+                        navigationDrawer!!.open()
                     }
                 } else {
                     finish()
@@ -1092,7 +1148,7 @@ open class MessageList :
         val tmpSearch = LocalSearch().apply {
             setId(search?.id)
             addAccountUuid(account.uuid)
-            and(SearchField.THREAD_ID, threadRootId.toString(), SearchSpecification.Attribute.EQUALS)
+            and(SearchField.THREAD_ID, threadRootId.toString(), SearchAttribute.EQUALS)
         }
 
         initializeFromLocalSearch(tmpSearch)
@@ -1279,12 +1335,12 @@ open class MessageList :
         get() = supportFragmentManager.backStackEntryCount > 0
 
     private fun lockDrawer() {
-        drawer!!.lock()
+        navigationDrawer!!.lock()
         actionBar.setHomeAsUpIndicator(Icons.Outlined.ArrowBack)
     }
 
     private fun unlockDrawer() {
-        drawer!!.unlock()
+        navigationDrawer!!.unlock()
         actionBar.setHomeAsUpIndicator(Icons.Outlined.Menu)
     }
 
@@ -1328,7 +1384,7 @@ open class MessageList :
     }
 
     private fun configureDrawer() {
-        val drawer = drawer ?: return
+        val drawer = navigationDrawer ?: return
         drawer.selectAccount(account!!.uuid)
         when {
             singleFolderMode -> drawer.selectFolder(search!!.folderIds[0])
@@ -1337,6 +1393,13 @@ open class MessageList :
             search!!.id == SearchAccount.UNIFIED_INBOX -> drawer.selectUnifiedInbox()
             else -> drawer.deselect()
         }
+    }
+
+    private fun createSearchAccount(): SearchAccount {
+        return SearchAccount.createUnifiedInboxAccount(
+            unifiedInboxTitle = coreResourceProvider.searchUnifiedInboxTitle(),
+            unifiedInboxDetail = coreResourceProvider.searchUnifiedInboxDetail(),
+        )
     }
 
     private enum class DisplayMode {
@@ -1379,6 +1442,7 @@ open class MessageList :
         private const val FRAGMENT_TAG_PLACEHOLDER = "MessageViewPlaceholder"
 
         private val defaultFolderProvider: DefaultFolderProvider by inject()
+        private val coreResourceProvider: CoreResourceProvider by inject()
 
         @JvmStatic
         @JvmOverloads
@@ -1411,9 +1475,15 @@ open class MessageList :
             }
         }
 
-        fun createUnifiedInboxIntent(context: Context, account: Account): Intent {
+        fun createUnifiedInboxIntent(
+            context: Context,
+            account: Account,
+        ): Intent {
             return Intent(context, MessageList::class.java).apply {
-                val search = SearchAccount.createUnifiedInboxAccount().relatedSearch
+                val search = SearchAccount.createUnifiedInboxAccount(
+                    unifiedInboxTitle = coreResourceProvider.searchUnifiedInboxTitle(),
+                    unifiedInboxDetail = coreResourceProvider.searchUnifiedInboxDetail(),
+                ).relatedSearch
 
                 putExtra(EXTRA_ACCOUNT, account.uuid)
                 putExtra(EXTRA_SEARCH, ParcelableUtil.marshall(search))
@@ -1429,7 +1499,7 @@ open class MessageList :
             val search = LocalSearch().apply {
                 id = SearchAccount.NEW_MESSAGES
                 addAccountUuid(account.uuid)
-                and(SearchField.NEW_MESSAGE, "1", SearchSpecification.Attribute.EQUALS)
+                and(SearchField.NEW_MESSAGE, "1", SearchAttribute.EQUALS)
             }
 
             return intentDisplaySearch(context, search, noThreading = false, newTask = true, clearTop = true)
@@ -1477,7 +1547,10 @@ open class MessageList :
         ): Intent {
             return Intent(context, MessageList::class.java).apply {
                 if (openInUnifiedInbox) {
-                    val search = SearchAccount.createUnifiedInboxAccount().relatedSearch
+                    val search = SearchAccount.createUnifiedInboxAccount(
+                        unifiedInboxTitle = coreResourceProvider.searchUnifiedInboxTitle(),
+                        unifiedInboxDetail = coreResourceProvider.searchUnifiedInboxDetail(),
+                    ).relatedSearch
                     putExtra(EXTRA_SEARCH, ParcelableUtil.marshall(search))
                 }
 

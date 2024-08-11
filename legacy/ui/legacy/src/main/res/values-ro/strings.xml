@@ -63,7 +63,6 @@
     <string name="search_everywhere_action">Caută peste tot</string>
     <string name="search_results">Rezultate căutare</string>
     <string name="new_messages_title">Mesaje noi</string>
-    <string name="preferences_action">Opțiuni</string>
     <string name="folders_action">Gestionează dosarele</string>
     <string name="account_settings_action">Opțiuni cont</string>
     <string name="remove_account_action">Șterge contul</string>
@@ -139,11 +138,6 @@ cel mult încă <xliff:g id="messages_to_load">%d</xliff:g></string>
     <string name="notification_channel_messages_description">Notificări asociate cu mesaje</string>
     <string name="notification_channel_miscellaneous_title">Diverse</string>
     <string name="notification_channel_miscellaneous_description">Notificări diverse ca erori etc.</string>
-    <string name="special_mailbox_name_inbox">Mesaje primite</string>
-    <string name="special_mailbox_name_outbox">De trimis</string>
-    <string name="special_mailbox_name_drafts">Ciorne</string>
-    <string name="special_mailbox_name_trash">Coș de gunoi</string>
-    <string name="special_mailbox_name_sent">Trimise</string>
     <string name="send_failure_subject">Eșuare la trimiterea unor mesaje</string>
     <string name="version">Versiune</string>
     <string name="debug_enable_debug_logging_title">Activează jurnalizarea depanării</string>
@@ -424,11 +418,6 @@ cel mult încă <xliff:g id="messages_to_load">%d</xliff:g></string>
     <string name="account_settings_folder_push_mode_first_and_second_class">Dosare de Nivel 1 și 2</string>
     <string name="account_settings_folder_push_mode_not_second_class">Toate mai puțin dosarele de Nivel 2</string>
     <string name="account_settings_folder_push_mode_none">Nimic</string>
-    <string name="account_settings_folder_target_mode_label">Mută/Copiază dosare destinație</string>
-    <string name="account_settings_folder_target_mode_all">Toate</string>
-    <string name="account_settings_folder_target_mode_first_class">Doar dosare de Nivel 1</string>
-    <string name="account_settings_folder_target_mode_first_and_second_class">Dosare de Nivel 1 și 2</string>
-    <string name="account_settings_folder_target_mode_not_second_class">Toate mai puțin dosarele de Nivel 2</string>
     <string name="account_settings_sync_remote_deletetions_label">Sincronizare mesaje șterse pe server</string>
     <string name="account_settings_sync_remote_deletetions_summary">Elimină mesajele șterse pe server</string>
     <string name="account_settings_openpgp_missing">Aplicație OpenPGP lipsă - a fost dezinstalată?</string>
@@ -593,10 +582,6 @@ cel mult încă <xliff:g id="messages_to_load">%d</xliff:g></string>
     <string name="integrated_inbox_detail">Toate mesajele în dosare unificate</string>
     <string name="folder_settings_include_in_integrated_inbox_label">Unifică</string>
     <string name="folder_settings_include_in_integrated_inbox_summary">Toate mesajele sunt în Căsuța poștală unificată</string>
-    <string name="account_settings_searchable_label">Dosare căutabile</string>
-    <string name="account_settings_searchable_all">Toate</string>
-    <string name="account_settings_searchable_displayable">Afișabil</string>
-    <string name="account_settings_searchable_none">Nimic</string>
     <string name="account_settings_no_folder_selected">Nimic</string>
     <string name="account_settings_automatic_special_folder">Automat (%s)</string>
     <string name="font_size_settings_title">Mărime font</string>
@@ -844,7 +829,6 @@ cel mult încă <xliff:g id="messages_to_load">%d</xliff:g></string>
     <string name="general_settings_title">Preferințe generale</string>
     <string name="dialog_openkeychain_info_title">Nicio aplicație OpenPGP instalată</string>
     <string name="dialog_openkeychain_info_install">Instalare</string>
-    <string name="encrypted_subject">Mesaj Criptat</string>
     <string name="account_settings_crypto_encrypt_subject">Criptează subiectele mesajelor</string>
     <string name="account_settings_crypto_encrypt_subject_subtitle">Posibil să nu fie suportat la anumiți destinatari</string>
     <string name="toast_account_not_found">Eroare internă: Cont invalid!</string>
@@ -956,4 +940,5 @@ Poți păstra acest mesaj și să îl folosești drept copie de siguranță a ch
 \nTrimis de pe dispozitivul meu Android cu <xliff:g id="app_name">%s</xliff:g>. Vă rog să-mi scuzați concizia.</string>
     <string name="account_delete_dlg_instructions_fmt">Contul „<xliff:g id="account">%s</xliff:g>” va fi eliminat din <xliff:g id="app_name">%s</xliff:g>.</string>
     <string name="about_title">Despre <xliff:g id="app_name">%s</xliff:g></string>
+    <string name="about_app_authors_thunderbird">Echipa Thunderbird Mobile</string>
 </resources>
