@@ -116,7 +116,7 @@ jobs:
           mkdir -p signed-apk
           echo "LIST: " ./app-${{ env.PRG_NAME }}/build/outputs/apk/release/
           ls -l ./app-${{ env.PRG_NAME }}/build/outputs/apk/release/
-          cp ./app-${{ env.PRG_NAME }}/build/outputs/apk/release/* ./signed-apk/
+          cp ./app-${{ env.PRG_NAME }}/build/outputs/apk/release/*.apk ./signed-apk/
           echo "LIST: " ./signed-apk/
           ls -l ./signed-apk/
           mv ./signed-apk/app-${{ env.PRG_NAME }}-release-unsigned.apk ./signed-apk/${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-release.apk
