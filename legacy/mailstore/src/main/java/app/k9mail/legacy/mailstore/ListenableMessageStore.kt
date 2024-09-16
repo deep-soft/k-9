@@ -1,6 +1,6 @@
 package app.k9mail.legacy.mailstore
 
-import app.k9mail.legacy.folder.FolderDetails
+import app.k9mail.core.mail.folder.api.FolderDetails
 import com.fsck.k9.mail.FolderClass
 import java.util.concurrent.CopyOnWriteArraySet
 
@@ -43,8 +43,8 @@ class ListenableMessageStore(private val messageStore: MessageStore) : MessageSt
         notifyFolderSettingsChanged()
     }
 
-    override fun setNotificationClass(folderId: Long, folderClass: FolderClass) {
-        messageStore.setNotificationClass(folderId, folderClass)
+    override fun setNotificationsEnabled(folderId: Long, enable: Boolean) {
+        messageStore.setNotificationsEnabled(folderId, enable)
         notifyFolderSettingsChanged()
     }
 

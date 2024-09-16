@@ -1,6 +1,7 @@
 package com.fsck.k9.storage
 
 import android.app.Application
+import app.k9mail.feature.telemetry.telemetryModule
 import app.k9mail.legacy.di.DI
 import com.fsck.k9.AppConfig
 import com.fsck.k9.Core
@@ -19,7 +20,7 @@ class TestApp : Application() {
         Core.earlyInit()
 
         super.onCreate()
-        DI.start(this, coreModules + storageModule + testModule)
+        DI.start(this, coreModules + storageModule + telemetryModule + testModule)
 
         K9.init(this)
         Core.init(this)

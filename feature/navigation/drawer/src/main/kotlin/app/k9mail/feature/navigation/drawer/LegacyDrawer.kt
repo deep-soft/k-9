@@ -7,26 +7,27 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import app.k9mail.core.mail.folder.api.Folder
 import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons
+import app.k9mail.core.ui.theme.api.Theme
+import app.k9mail.feature.navigation.drawer.domain.entity.DisplayAccount
+import app.k9mail.feature.navigation.drawer.legacy.AccountsViewModel
+import app.k9mail.feature.navigation.drawer.legacy.DisplayUnifiedInbox
+import app.k9mail.feature.navigation.drawer.legacy.FolderList
+import app.k9mail.feature.navigation.drawer.legacy.FoldersViewModel
 import app.k9mail.legacy.account.Account
-import app.k9mail.legacy.folder.DisplayFolder
-import app.k9mail.legacy.folder.Folder
 import app.k9mail.legacy.message.controller.MessagingControllerMailChecker
 import app.k9mail.legacy.message.controller.SimpleMessagingListener
 import app.k9mail.legacy.ui.account.AccountImageLoader
-import app.k9mail.legacy.ui.account.AccountsViewModel
-import app.k9mail.legacy.ui.account.DisplayAccount
-import app.k9mail.legacy.ui.folder.DisplayUnifiedInbox
+import app.k9mail.legacy.ui.folder.DisplayFolder
 import app.k9mail.legacy.ui.folder.FolderIconProvider
-import app.k9mail.legacy.ui.folder.FolderList
 import app.k9mail.legacy.ui.folder.FolderNameFormatter
-import app.k9mail.legacy.ui.folder.FoldersViewModel
-import app.k9mail.legacy.ui.theme.Theme
 import app.k9mail.legacy.ui.theme.ThemeManager
 import com.fsck.k9.K9
 import com.fsck.k9.ui.base.livedata.observeNotNull
@@ -84,6 +85,7 @@ class LegacyDrawer(
 
     private val drawer: DrawerLayout = parent.findViewById(R.id.navigation_drawer_layout)
     private val sliderView: MaterialDrawerSliderView = parent.findViewById(R.id.material_drawer_slider)
+    private val composeView: View = parent.findViewById(R.id.material_drawer_compose_view)
     private val headerView: AccountHeaderView = AccountHeaderView(parent).apply {
         attachToSliderView(this@LegacyDrawer.sliderView)
         dividerBelowHeader = false
@@ -101,13 +103,13 @@ class LegacyDrawer(
     private var openedFolderId: Long? = null
     private var latestFolderList: FolderList? = null
 
-    val layout: DrawerLayout
-        get() = drawer
-
     override val isOpen: Boolean
         get() = drawer.isOpen
 
     init {
+        composeView.visibility = View.GONE
+        sliderView.visibility = View.VISIBLE
+
         textColor = parent.obtainDrawerTextColor()
 
         initializeImageLoader()
@@ -553,8 +555,10 @@ private fun Context.obtainDrawerTextColor(): Int {
         MaterialDrawerR.attr.materialDrawerStyle,
         MaterialDrawerR.style.Widget_MaterialDrawerStyle,
     )
-    val textColor =
-        styledAttributes.getColor(MaterialDrawerR.styleable.MaterialDrawerSliderView_materialDrawerPrimaryText, 0)
+    val textColor = styledAttributes.getColor(
+        MaterialDrawerR.styleable.MaterialDrawerSliderView_materialDrawerPrimaryText,
+        0,
+    )
     styledAttributes.recycle()
 
     return textColor

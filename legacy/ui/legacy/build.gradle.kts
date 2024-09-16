@@ -1,5 +1,5 @@
 plugins {
-    id(ThunderbirdPlugins.Library.android)
+    id(ThunderbirdPlugins.Library.androidCompose)
     alias(libs.plugins.kotlin.parcelize)
 }
 
@@ -19,6 +19,7 @@ dependencies {
     // TODO: Remove AccountOauth dependency
     implementation(projects.feature.account.oauth)
     implementation(projects.feature.settings.import)
+    implementation(projects.feature.telemetry.api)
 
     compileOnly(projects.mail.protocols.imap)
 
@@ -66,6 +67,7 @@ dependencies {
     testImplementation(projects.mail.testing)
     testImplementation(projects.legacy.storage)
     testImplementation(projects.legacy.testing)
+    testImplementation(projects.feature.telemetry.noop)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.kotlin.test)

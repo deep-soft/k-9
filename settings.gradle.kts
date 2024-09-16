@@ -12,6 +12,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven(url = "https://maven.mozilla.org/maven2")
         maven(url = "https://jitpack.io")
     }
 }
@@ -72,6 +73,16 @@ include(
 )
 
 include(
+    ":feature:migration:provider",
+)
+
+include(
+    ":feature:telemetry:api",
+    ":feature:telemetry:noop",
+    ":feature:telemetry:glean",
+)
+
+include(
     ":core:common",
     ":core:featureflags",
     ":core:testing",
@@ -88,6 +99,11 @@ include(
     ":core:ui:legacy:theme2:common",
     ":core:ui:legacy:theme2:k9mail",
     ":core:ui:legacy:theme2:thunderbird",
+    ":core:ui:theme:api",
+)
+
+include(
+    ":core:mail:folder:api",
 )
 
 include(

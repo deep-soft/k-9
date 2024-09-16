@@ -9,34 +9,6 @@ if (testCoverageEnabled) {
     apply(plugin = "jacoco")
 }
 
-dependencies {
-    implementation(projects.appCommon)
-    implementation(projects.core.ui.compose.theme2.thunderbird)
-    implementation(projects.core.ui.legacy.theme2.thunderbird)
-    implementation(projects.feature.launcher)
-
-    implementation(projects.legacy.core)
-    implementation(projects.legacy.ui.legacy)
-
-    implementation(projects.core.featureflags)
-
-    implementation(projects.feature.widget.messageList)
-    implementation(projects.feature.widget.shortcut)
-    implementation(projects.feature.widget.unread)
-
-    implementation(libs.androidx.work.runtime)
-
-    implementation(projects.feature.autodiscovery.api)
-    debugImplementation(projects.backend.demo)
-    debugImplementation(projects.feature.autodiscovery.demo)
-
-    testImplementation(libs.robolectric)
-
-    // Required for DependencyInjectionTest to be able to resolve OpenPgpApiManager
-    testImplementation(projects.plugins.openpgpApiLib.openpgpApi)
-    testImplementation(projects.feature.account.setup)
-}
-
 android {
     namespace = "net.thunderbird.android"
 
@@ -121,6 +93,8 @@ android {
             isMinifyEnabled = false
             isShrinkResources = false
             isDebuggable = true
+
+            buildConfigField("String", "RELEASE_CHANNEL", "null")
         }
 
         release {
@@ -134,6 +108,8 @@ android {
                 getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro",
             )
+
+            buildConfigField("String", "RELEASE_CHANNEL", "\"release\"")
         }
 
         create("beta") {
@@ -152,6 +128,8 @@ android {
                 getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro",
             )
+
+            buildConfigField("String", "RELEASE_CHANNEL", "\"beta\"")
         }
 
         create("daily") {
@@ -170,6 +148,8 @@ android {
                 getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro",
             )
+
+            buildConfigField("String", "RELEASE_CHANNEL", "\"daily\"")
         }
     }
 
@@ -187,6 +167,39 @@ android {
             )
         }
     }
+}
+
+dependencies {
+    implementation(projects.appCommon)
+    implementation(projects.core.ui.compose.theme2.thunderbird)
+    implementation(projects.core.ui.legacy.theme2.thunderbird)
+    implementation(projects.feature.launcher)
+
+    implementation(projects.legacy.core)
+    implementation(projects.legacy.ui.legacy)
+
+    implementation(projects.core.featureflags)
+
+    implementation(projects.feature.widget.messageList)
+    implementation(projects.feature.widget.shortcut)
+    implementation(projects.feature.widget.unread)
+
+    debugImplementation(projects.feature.telemetry.noop)
+    releaseImplementation(projects.feature.telemetry.glean)
+    "betaImplementation"(projects.feature.telemetry.glean)
+    "dailyImplementation"(projects.feature.telemetry.glean)
+
+    implementation(libs.androidx.work.runtime)
+
+    implementation(projects.feature.autodiscovery.api)
+    debugImplementation(projects.backend.demo)
+    debugImplementation(projects.feature.autodiscovery.demo)
+
+    testImplementation(libs.robolectric)
+
+    // Required for DependencyInjectionTest to be able to resolve OpenPgpApiManager
+    testImplementation(projects.plugins.openpgpApiLib.openpgpApi)
+    testImplementation(projects.feature.account.setup)
 }
 
 dependencyGuard {

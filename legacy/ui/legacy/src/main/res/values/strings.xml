@@ -23,11 +23,6 @@
     <!-- Button text of the "snack bar" that is displayed when the app was updated. -->
     <string name="changelog_snackbar_button_text">View</string>
 
-
-    <!-- Default signature -->
-    <string name="default_signature">-- \nSent from my Android device with <xliff:g id="app_name">%s</xliff:g>. Please excuse my brevity.</string>
-
-
     <!-- General strings that include the app name -->
     <string name="account_delete_dlg_instructions_fmt">The account \"<xliff:g id="account">%s</xliff:g>\" will be removed from <xliff:g id="app_name">%s</xliff:g>.</string>
 
@@ -540,11 +535,7 @@
     <string name="folder_settings_folder_push_mode_second_class">2nd Class</string>
     <string name="folder_settings_folder_push_mode_inherited">Same as poll class</string>
 
-    <string name="folder_settings_folder_notify_mode_label">Folder notification class</string>
-    <string name="folder_settings_folder_notify_mode_normal">No Class</string>
-    <string name="folder_settings_folder_notify_mode_first_class">1st Class</string>
-    <string name="folder_settings_folder_notify_mode_second_class">2nd Class</string>
-    <string name="folder_settings_folder_notify_mode_inherited">Same as push class</string>
+    <string name="folder_settings_notifications_label">Notifications</string>
     <string name="folder_settings_clear_local_folder_action">Clear local messages</string>
 
     <string name="account_settings_incoming_label">Incoming server</string>
@@ -1123,4 +1114,11 @@ You can keep this message and use it as a backup for your secret key. If you wan
 
     <!-- For unread messages the first line of a message list item is modified by this to improve the experience for people with screen readers. -->
     <string name="message_list_content_description_unread_prefix">unread, %s</string>
+
+    <!-- Name of the "data collection" section in the general settings screen -->
+    <string name="settings_ui_data_collection">Data collection</string>
+    <!-- Title of the "Usage and technical data" setting used in the "data collection" section of the general settings screen -->
+    <string name="settings_ui_telemetry_title">Usage and technical data</string>
+    <!-- Description of the "Usage and technical data" setting used in the "data collection" section of the general settings screen -->
+    <string name="settings_ui_telemetry_description">Shares performance, usage, hardware and customization data about this app with Mozilla to help us make Thunderbird better</string>
 </resources>

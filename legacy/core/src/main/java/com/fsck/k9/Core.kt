@@ -3,17 +3,17 @@ package com.fsck.k9
 import android.content.ComponentName
 import android.content.Context
 import android.content.pm.PackageManager
-import app.k9mail.legacy.di.EarlyInit
-import app.k9mail.legacy.di.inject
 import com.fsck.k9.job.K9JobManager
 import com.fsck.k9.mail.internet.BinaryTempFileBody
 import com.fsck.k9.notification.NotificationController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-object Core : EarlyInit {
+object Core : KoinComponent {
     private val context: Context by inject()
     private val appConfig: AppConfig by inject()
     private val jobManager: K9JobManager by inject()
@@ -22,8 +22,9 @@ object Core : EarlyInit {
     private val notificationController: NotificationController by inject()
 
     /**
-     * This needs to be called from [Application#onCreate][android.app.Application#onCreate] before calling through
-     * to the super class's `onCreate` implementation and before initializing the dependency injection library.
+     * This should be called from [Application.attachBaseContext()][android.app.Application.attachBaseContext] before
+     * calling through to the super class's `attachBaseContext()` implementation and before initializing the dependency
+     * injection library.
      */
     fun earlyInit() {
         if (K9.DEVELOPER_MODE) {

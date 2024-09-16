@@ -8,6 +8,7 @@ dependencies {
     api(projects.backend.api)
     api(projects.library.htmlCleaner)
     api(projects.core.android.common)
+    api(projects.core.mail.folder.api)
 
     api(projects.legacy.account)
     api(projects.legacy.di)
@@ -19,6 +20,7 @@ dependencies {
     api(projects.legacy.search)
 
     implementation(projects.plugins.openpgpApiLib.openpgpApi)
+    implementation(projects.feature.telemetry.api)
 
     api(libs.androidx.annotation)
 
@@ -36,6 +38,7 @@ dependencies {
 
     testApi(projects.core.testing)
     testApi(projects.core.android.testing)
+    testImplementation(projects.feature.telemetry.noop)
     testImplementation(projects.mail.testing)
     testImplementation(projects.backend.imap)
     testImplementation(projects.mail.protocols.smtp)
