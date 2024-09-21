@@ -596,7 +596,7 @@ open class MessageList :
         navigationDrawer = LegacyDrawer(
             parent = this,
             savedInstanceState = savedInstanceState,
-            openFolders = { launchManageFoldersScreen() },
+            openManageFolders = { launchManageFoldersScreen() },
             openUnifiedInbox = { openUnifiedInbox() },
             openFolder = { folderId -> openFolder(folderId) },
             openAccount = { account -> openRealAccount(account) },
@@ -608,6 +608,11 @@ open class MessageList :
     private fun initializeFolderDrawer() {
         navigationDrawer = FolderDrawer(
             parent = this,
+            openAccount = { account -> openRealAccount(account) },
+            openFolder = { folderId -> openFolder(folderId) },
+            openManageFolders = { launchManageFoldersScreen() },
+            openSettings = { SettingsActivity.launch(this) },
+            createDrawerListener = { createDrawerListener() },
         )
     }
 
@@ -630,7 +635,7 @@ open class MessageList :
         }
     }
 
-    fun openFolder(folderId: Long) {
+    private fun openFolder(folderId: Long) {
         if (displayMode == DisplayMode.SPLIT_VIEW) {
             removeMessageViewContainerFragment()
             showMessageViewPlaceHolder()

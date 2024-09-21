@@ -80,9 +80,11 @@ android {
     }
 
     signingConfigs {
-        createSigningConfig(project, SigningType.TB_RELEASE)
-        createSigningConfig(project, SigningType.TB_BETA)
-        createSigningConfig(project, SigningType.TB_DAILY)
+        val useUploadKey = properties.getOrDefault("tb.useUploadKey", "true") == "true"
+
+        createSigningConfig(project, SigningType.TB_RELEASE, isUpload = useUploadKey)
+        createSigningConfig(project, SigningType.TB_BETA, isUpload = useUploadKey)
+        createSigningConfig(project, SigningType.TB_DAILY, isUpload = useUploadKey)
     }
 
     buildTypes {
@@ -94,7 +96,7 @@ android {
             isShrinkResources = false
             isDebuggable = true
 
-            buildConfigField("String", "RELEASE_CHANNEL", "null")
+            buildConfigField("String", "GLEAN_RELEASE_CHANNEL", "null")
         }
 
         release {
@@ -109,7 +111,7 @@ android {
                 "proguard-rules.pro",
             )
 
-            buildConfigField("String", "RELEASE_CHANNEL", "\"release\"")
+            buildConfigField("String", "GLEAN_RELEASE_CHANNEL", "\"release\"")
         }
 
         create("beta") {
@@ -129,7 +131,7 @@ android {
                 "proguard-rules.pro",
             )
 
-            buildConfigField("String", "RELEASE_CHANNEL", "\"beta\"")
+            buildConfigField("String", "GLEAN_RELEASE_CHANNEL", "\"beta\"")
         }
 
         create("daily") {
@@ -149,7 +151,8 @@ android {
                 "proguard-rules.pro",
             )
 
-            buildConfigField("String", "RELEASE_CHANNEL", "\"daily\"")
+            // See https://bugzilla.mozilla.org/show_bug.cgi?id=1918151
+            buildConfigField("String", "GLEAN_RELEASE_CHANNEL", "\"nightly\"")
         }
     }
 
@@ -194,6 +197,11 @@ dependencies {
     implementation(projects.feature.autodiscovery.api)
     debugImplementation(projects.backend.demo)
     debugImplementation(projects.feature.autodiscovery.demo)
+
+    debugImplementation(projects.feature.funding.noop)
+    add("dailyImplementation", projects.feature.funding.googleplay)
+    add("betaImplementation", projects.feature.funding.noop)
+    releaseImplementation(projects.feature.funding.noop)
 
     testImplementation(libs.robolectric)
 

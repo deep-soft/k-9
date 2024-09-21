@@ -74,12 +74,19 @@ include(
 
 include(
     ":feature:migration:provider",
+    ":feature:migration:qrcode",
 )
 
 include(
     ":feature:telemetry:api",
     ":feature:telemetry:noop",
     ":feature:telemetry:glean",
+)
+
+include(
+    ":feature:funding:api",
+    ":feature:funding:googleplay",
+    ":feature:funding:noop",
 )
 
 include(
