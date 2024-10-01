@@ -34,11 +34,13 @@ class FolderSettingsDescriptions {
                 new V(96, null)
         ));
         s.put("syncMode", Settings.versions(
-                new V(1, new EnumSetting<>(FolderClass.class, FolderClass.INHERITED))
+                new V(1, new EnumSetting<>(FolderClass.class, FolderClass.INHERITED)),
+                new V(99, null)
         ));
         s.put("pushMode", Settings.versions(
                 new V(1, new EnumSetting<>(FolderClass.class, FolderClass.INHERITED)),
-                new V(66, new EnumSetting<>(FolderClass.class, FolderClass.SECOND_CLASS))
+                new V(66, new EnumSetting<>(FolderClass.class, FolderClass.SECOND_CLASS)),
+                new V(98, null)
         ));
         s.put("inTopGroup", Settings.versions(
                 new V(1, new BooleanSetting(false))
@@ -48,6 +50,12 @@ class FolderSettingsDescriptions {
         ));
         s.put("notificationsEnabled", Settings.versions(
             new V(96, new BooleanSetting(false))
+        ));
+        s.put("pushEnabled", Settings.versions(
+            new V(98, new BooleanSetting(false))
+        ));
+        s.put("syncEnabled", Settings.versions(
+            new V(99, new BooleanSetting(false))
         ));
 
         SETTINGS = Collections.unmodifiableMap(s);

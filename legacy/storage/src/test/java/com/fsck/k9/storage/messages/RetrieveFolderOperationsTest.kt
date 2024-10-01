@@ -36,9 +36,9 @@ class RetrieveFolderOperationsTest : RobolectricTest() {
             integrate = true,
             inTopGroup = true,
             displayClass = "FIRST_CLASS",
-            syncClass = "FIRST_CLASS",
+            syncEnabled = true,
             notificationsEnabled = true,
-            pushClass = "NO_CLASS",
+            pushEnabled = true,
         )
 
         val result = retrieveFolderOperations.getFolder(folderId) { folder ->
@@ -50,9 +50,9 @@ class RetrieveFolderOperationsTest : RobolectricTest() {
             assertThat(folder.isIntegrate).isEqualTo(true)
             assertThat(folder.isInTopGroup).isEqualTo(true)
             assertThat(folder.displayClass).isEqualTo(FolderClass.FIRST_CLASS)
-            assertThat(folder.syncClass).isEqualTo(FolderClass.FIRST_CLASS)
+            assertThat(folder.isSyncEnabled).isEqualTo(true)
             assertThat(folder.isNotificationsEnabled).isEqualTo(true)
-            assertThat(folder.pushClass).isEqualTo(FolderClass.NO_CLASS)
+            assertThat(folder.isPushEnabled).isEqualTo(true)
             true
         }
 
@@ -70,9 +70,9 @@ class RetrieveFolderOperationsTest : RobolectricTest() {
             integrate = true,
             inTopGroup = true,
             displayClass = FolderClass.FIRST_CLASS.name,
-            syncClass = null,
+            syncEnabled = false,
             notificationsEnabled = true,
-            pushClass = null,
+            pushEnabled = false,
         )
 
         val result = retrieveFolderOperations.getFolder(folderId) { folder ->
@@ -84,9 +84,9 @@ class RetrieveFolderOperationsTest : RobolectricTest() {
             assertThat(folder.isIntegrate).isEqualTo(true)
             assertThat(folder.isInTopGroup).isEqualTo(true)
             assertThat(folder.displayClass).isEqualTo(FolderClass.FIRST_CLASS)
-            assertThat(folder.syncClass).isEqualTo(FolderClass.INHERITED)
+            assertThat(folder.isSyncEnabled).isEqualTo(false)
             assertThat(folder.isNotificationsEnabled).isEqualTo(true)
-            assertThat(folder.pushClass).isEqualTo(FolderClass.SECOND_CLASS)
+            assertThat(folder.isPushEnabled).isEqualTo(false)
             true
         }
 
@@ -110,9 +110,9 @@ class RetrieveFolderOperationsTest : RobolectricTest() {
             integrate = true,
             inTopGroup = true,
             displayClass = "FIRST_CLASS",
-            syncClass = "FIRST_CLASS",
+            syncEnabled = true,
             notificationsEnabled = true,
-            pushClass = "NO_CLASS",
+            pushEnabled = false,
         )
 
         val result = retrieveFolderOperations.getFolder("folder1") { folder ->
@@ -124,9 +124,9 @@ class RetrieveFolderOperationsTest : RobolectricTest() {
             assertThat(folder.isIntegrate).isEqualTo(true)
             assertThat(folder.isInTopGroup).isEqualTo(true)
             assertThat(folder.displayClass).isEqualTo(FolderClass.FIRST_CLASS)
-            assertThat(folder.syncClass).isEqualTo(FolderClass.FIRST_CLASS)
+            assertThat(folder.isSyncEnabled).isEqualTo(true)
             assertThat(folder.isNotificationsEnabled).isEqualTo(true)
-            assertThat(folder.pushClass).isEqualTo(FolderClass.NO_CLASS)
+            assertThat(folder.isPushEnabled).isEqualTo(false)
             true
         }
 
@@ -150,9 +150,9 @@ class RetrieveFolderOperationsTest : RobolectricTest() {
             integrate = true,
             inTopGroup = true,
             displayClass = "FIRST_CLASS",
-            syncClass = "FIRST_CLASS",
+            syncEnabled = true,
             notificationsEnabled = true,
-            pushClass = "NO_CLASS",
+            pushEnabled = false,
         )
 
         val result = retrieveFolderOperations.getFolders { folder ->
@@ -164,9 +164,9 @@ class RetrieveFolderOperationsTest : RobolectricTest() {
             assertThat(folder.isIntegrate).isEqualTo(true)
             assertThat(folder.isInTopGroup).isEqualTo(true)
             assertThat(folder.displayClass).isEqualTo(FolderClass.FIRST_CLASS)
-            assertThat(folder.syncClass).isEqualTo(FolderClass.FIRST_CLASS)
+            assertThat(folder.isSyncEnabled).isEqualTo(true)
             assertThat(folder.isNotificationsEnabled).isEqualTo(true)
-            assertThat(folder.pushClass).isEqualTo(FolderClass.NO_CLASS)
+            assertThat(folder.isPushEnabled).isEqualTo(false)
             true
         }
 

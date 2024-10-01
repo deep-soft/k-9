@@ -6,6 +6,8 @@ import app.k9mail.core.mail.folder.api.FolderType
 import app.k9mail.legacy.mailstore.MoreMessages
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.none
+import assertk.assertions.prop
 import com.fsck.k9.mail.FolderClass
 import com.fsck.k9.storage.RobolectricTest
 import org.junit.Test
@@ -34,9 +36,9 @@ class UpdateFolderOperationsTest : RobolectricTest() {
             inTopGroup = false,
             integrate = false,
             displayClass = "NO_CLASS",
-            syncClass = "NO_CLASS",
+            syncEnabled = false,
             notificationsEnabled = false,
-            pushClass = "NO_CLASS",
+            pushEnabled = false,
         )
 
         updateFolderOperations.updateFolderSettings(
@@ -50,9 +52,9 @@ class UpdateFolderOperationsTest : RobolectricTest() {
                 isInTopGroup = true,
                 isIntegrate = true,
                 displayClass = FolderClass.FIRST_CLASS,
-                syncClass = FolderClass.FIRST_CLASS,
+                isSyncEnabled = true,
                 isNotificationsEnabled = true,
-                pushClass = FolderClass.FIRST_CLASS,
+                isPushEnabled = true,
             ),
         )
 
@@ -61,9 +63,9 @@ class UpdateFolderOperationsTest : RobolectricTest() {
         assertThat(folder.inTopGroup).isEqualTo(1)
         assertThat(folder.integrate).isEqualTo(1)
         assertThat(folder.displayClass).isEqualTo("FIRST_CLASS")
-        assertThat(folder.syncClass).isEqualTo("FIRST_CLASS")
+        assertThat(folder.syncEnabled).isEqualTo(1)
         assertThat(folder.notificationsEnabled).isEqualTo(1)
-        assertThat(folder.pushClass).isEqualTo("FIRST_CLASS")
+        assertThat(folder.pushEnabled).isEqualTo(1)
     }
 
     @Test
@@ -89,30 +91,30 @@ class UpdateFolderOperationsTest : RobolectricTest() {
     }
 
     @Test
-    fun `update sync class`() {
-        val folderId = sqliteDatabase.createFolder(syncClass = "FIRST_CLASS")
+    fun `update sync setting`() {
+        val folderId = sqliteDatabase.createFolder(syncEnabled = true)
 
-        updateFolderOperations.setSyncClass(folderId = folderId, folderClass = FolderClass.NO_CLASS)
+        updateFolderOperations.setSyncEnabled(folderId = folderId, enable = false)
 
         val folder = sqliteDatabase.readFolders().first()
         assertThat(folder.id).isEqualTo(folderId)
-        assertThat(folder.syncClass).isEqualTo("NO_CLASS")
+        assertThat(folder.syncEnabled).isEqualTo(0)
     }
 
     @Test
     fun `update push class`() {
-        val folderId = sqliteDatabase.createFolder(pushClass = "FIRST_CLASS")
+        val folderId = sqliteDatabase.createFolder(pushEnabled = true)
 
-        updateFolderOperations.setPushClass(folderId = folderId, folderClass = FolderClass.NO_CLASS)
+        updateFolderOperations.setPushEnabled(folderId = folderId, enable = false)
 
         val folder = sqliteDatabase.readFolders().first()
         assertThat(folder.id).isEqualTo(folderId)
-        assertThat(folder.pushClass).isEqualTo("NO_CLASS")
+        assertThat(folder.pushEnabled).isEqualTo(0)
     }
 
     @Test
     fun `update notifications setting`() {
-        val folderId = sqliteDatabase.createFolder(syncClass = "FIRST_CLASS")
+        val folderId = sqliteDatabase.createFolder(notificationsEnabled = false)
 
         updateFolderOperations.setNotificationsEnabled(folderId = folderId, enable = true)
 
@@ -163,5 +165,17 @@ class UpdateFolderOperationsTest : RobolectricTest() {
         val folder = sqliteDatabase.readFolders().first()
         assertThat(folder.id).isEqualTo(folderId)
         assertThat(folder.visibleLimit).isEqualTo(25)
+    }
+
+    @Test
+    fun `disable push for all folders`() {
+        sqliteDatabase.createFolder(pushEnabled = true)
+        sqliteDatabase.createFolder(pushEnabled = false)
+
+        updateFolderOperations.setPushDisabled()
+
+        assertThat(sqliteDatabase.readFolders()).none {
+            it.prop(FolderEntry::pushEnabled).isEqualTo(1)
+        }
     }
 }

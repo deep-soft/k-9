@@ -25,10 +25,10 @@ internal class UpdateFolderOperations(private val lockableDatabase: LockableData
             val contentValues = ContentValues().apply {
                 put("top_group", folderDetails.isInTopGroup)
                 put("integrate", folderDetails.isIntegrate)
-                put("poll_class", folderDetails.syncClass.name)
+                put("sync_enabled", folderDetails.isSyncEnabled)
                 put("display_class", folderDetails.displayClass.name)
                 put("notifications_enabled", folderDetails.isNotificationsEnabled)
-                put("push_class", folderDetails.pushClass.name)
+                put("push_enabled", folderDetails.isPushEnabled)
             }
 
             db.update("folders", contentValues, "id = ?", arrayOf(folderDetails.folder.id.toString()))
@@ -43,12 +43,12 @@ internal class UpdateFolderOperations(private val lockableDatabase: LockableData
         setString(folderId = folderId, columnName = "display_class", value = folderClass.name)
     }
 
-    fun setSyncClass(folderId: Long, folderClass: FolderClass) {
-        setString(folderId = folderId, columnName = "poll_class", value = folderClass.name)
+    fun setSyncEnabled(folderId: Long, enable: Boolean) {
+        setBoolean(folderId = folderId, columnName = "sync_enabled", value = enable)
     }
 
-    fun setPushClass(folderId: Long, folderClass: FolderClass) {
-        setString(folderId = folderId, columnName = "push_class", value = folderClass.name)
+    fun setPushEnabled(folderId: Long, enable: Boolean) {
+        setBoolean(folderId = folderId, columnName = "push_enabled", value = enable)
     }
 
     fun setNotificationsEnabled(folderId: Long, enable: Boolean) {
@@ -80,6 +80,16 @@ internal class UpdateFolderOperations(private val lockableDatabase: LockableData
             }
 
             db.update("folders", contentValues, "id = ?", arrayOf(folderId.toString()))
+        }
+    }
+
+    fun setPushDisabled() {
+        lockableDatabase.execute(false) { db ->
+            val contentValues = ContentValues().apply {
+                put("push_enabled", false)
+            }
+
+            db.update("folders", contentValues, null, null)
         }
     }
 

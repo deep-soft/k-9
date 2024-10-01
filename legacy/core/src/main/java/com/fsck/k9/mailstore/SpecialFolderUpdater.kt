@@ -51,8 +51,7 @@ class SpecialFolderUpdater(
         if (newInboxId != null) {
             folderRepository.setIncludeInUnifiedInbox(account, newInboxId, true)
             folderRepository.setDisplayClass(account, newInboxId, FolderClass.FIRST_CLASS)
-            folderRepository.setSyncClass(account, newInboxId, FolderClass.FIRST_CLASS)
-            folderRepository.setPushClass(account, newInboxId, FolderClass.FIRST_CLASS)
+            folderRepository.setSyncEnabled(account, newInboxId, true)
             folderRepository.setNotificationsEnabled(account, newInboxId, true)
         }
     }
@@ -121,7 +120,6 @@ class SpecialFolderUpdater(
 
         if (folderId != null) {
             folderRepository.setDisplayClass(account, folderId, FolderClass.FIRST_CLASS)
-            folderRepository.setSyncClass(account, folderId, FolderClass.NO_CLASS)
         }
     }
 

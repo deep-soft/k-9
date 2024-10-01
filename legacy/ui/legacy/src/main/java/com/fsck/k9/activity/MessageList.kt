@@ -29,6 +29,7 @@ import app.k9mail.core.featureflag.FeatureFlagKey
 import app.k9mail.core.featureflag.FeatureFlagProvider
 import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons
 import app.k9mail.feature.launcher.FeatureLauncherActivity
+import app.k9mail.feature.launcher.FeatureLauncherTarget
 import app.k9mail.feature.navigation.drawer.FolderDrawer
 import app.k9mail.feature.navigation.drawer.LegacyDrawer
 import app.k9mail.feature.navigation.drawer.NavigationDrawer
@@ -151,7 +152,7 @@ open class MessageList :
         deleteIncompleteAccounts(accounts)
         val hasAccountSetup = accounts.any { it.isFinishedSetup }
         if (!hasAccountSetup) {
-            FeatureLauncherActivity.launchOnboarding(this)
+            FeatureLauncherActivity.launch(this, FeatureLauncherTarget.Onboarding)
             finish()
             return
         }
@@ -610,6 +611,7 @@ open class MessageList :
             parent = this,
             openAccount = { account -> openRealAccount(account) },
             openFolder = { folderId -> openFolder(folderId) },
+            openUnifiedFolder = { openUnifiedInbox() },
             openManageFolders = { launchManageFoldersScreen() },
             openSettings = { SettingsActivity.launch(this) },
             createDrawerListener = { createDrawerListener() },
@@ -1412,7 +1414,7 @@ open class MessageList :
         val drawer = navigationDrawer ?: return
         drawer.selectAccount(account!!.uuid)
         when {
-            singleFolderMode -> drawer.selectFolder(search!!.folderIds[0])
+            singleFolderMode -> drawer.selectFolder(search!!.accountUuids[0], search!!.folderIds[0])
             // Don't select any item in the drawer because the Unified Inbox is displayed, but not listed in the drawer
             search!!.id == SearchAccount.UNIFIED_INBOX && !K9.isShowUnifiedInbox -> drawer.deselect()
             search!!.id == SearchAccount.UNIFIED_INBOX -> drawer.selectUnifiedInbox()

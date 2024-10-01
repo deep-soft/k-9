@@ -7,12 +7,16 @@ import app.k9mail.core.ui.compose.testing.mvi.assertThatAndEffectTurbineConsumed
 import app.k9mail.core.ui.compose.testing.mvi.assertThatAndStateTurbineConsumed
 import app.k9mail.core.ui.compose.testing.mvi.eventStateTest
 import app.k9mail.core.ui.compose.testing.mvi.turbinesWithInitialStateCheck
+import app.k9mail.feature.navigation.drawer.NavigationDrawerExternalContract.DrawerConfig
 import app.k9mail.feature.navigation.drawer.domain.entity.DisplayAccount
 import app.k9mail.feature.navigation.drawer.domain.entity.DisplayAccountFolder
-import app.k9mail.feature.navigation.drawer.domain.entity.DrawerConfig
+import app.k9mail.feature.navigation.drawer.domain.entity.DisplayFolder
+import app.k9mail.feature.navigation.drawer.domain.entity.DisplayUnifiedFolder
+import app.k9mail.feature.navigation.drawer.domain.entity.DisplayUnifiedFolderType
 import app.k9mail.feature.navigation.drawer.ui.DrawerContract.Effect
 import app.k9mail.feature.navigation.drawer.ui.DrawerContract.Event
 import app.k9mail.feature.navigation.drawer.ui.DrawerContract.State
+import app.k9mail.feature.navigation.drawer.ui.FakeData.DISPLAY_ACCOUNT
 import app.k9mail.legacy.account.Account
 import app.k9mail.legacy.account.Identity
 import assertk.assertThat
@@ -24,12 +28,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class DrawerViewModelTest {
+internal class DrawerViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
@@ -56,9 +61,88 @@ class DrawerViewModelTest {
     }
 
     @Test
-    fun `should change loading state when OnRefresh event is received`() = runTest {
+    fun `should change loading state when OnSyncAccount event is received`() = runTest {
+        val initialState = State(
+            accounts = listOf(DISPLAY_ACCOUNT).toImmutableList(),
+            selectedAccountUuid = DISPLAY_ACCOUNT.uuid,
+        )
         val testSubject = createTestSubject(
-            syncMailFlow = flow {
+            initialState = initialState,
+            displayAccountsFlow = flow { emit(listOf(DISPLAY_ACCOUNT)) },
+            syncAccountFlow = flow {
+                delay(25)
+                emit(Result.success(Unit))
+            },
+        )
+
+        eventStateTest(
+            viewModel = testSubject,
+            initialState = initialState,
+            event = Event.OnSyncAccount,
+            expectedState = initialState.copy(isLoading = true),
+            coroutineScope = backgroundScope,
+        )
+
+        advanceUntilIdle()
+
+        assertThat(testSubject.state.value.isLoading).isEqualTo(false)
+    }
+
+    @Test
+    fun `should skip loading when no account is selected and OnSyncAccount event is received`() = runTest {
+        val initialState = State(selectedAccountUuid = null)
+        var counter = 0
+        val testSubject = createTestSubject(
+            initialState = initialState,
+            syncAccountFlow = flow {
+                delay(25)
+                counter++
+                emit(Result.success(Unit))
+            },
+        )
+
+        val turbines = turbinesWithInitialStateCheck(testSubject, initialState)
+
+        testSubject.event(Event.OnSyncAccount)
+
+        advanceUntilIdle()
+
+        assertThat(testSubject.state.value.isLoading).isEqualTo(false)
+        assertThat(counter).isEqualTo(0)
+
+        turbines.stateTurbine.ensureAllEventsConsumed()
+        turbines.effectTurbine.ensureAllEventsConsumed()
+    }
+
+    @Test
+    fun `should skip loading when already loading and OnSyncAccount event received`() = runTest {
+        val initialState = State(isLoading = true)
+        var counter = 0
+        val testSubject = createTestSubject(
+            initialState = initialState,
+            syncAccountFlow = flow {
+                counter++
+                delay(25)
+                emit(Result.success(Unit))
+            },
+        )
+        val turbines = turbinesWithInitialStateCheck(testSubject, initialState)
+
+        testSubject.event(Event.OnSyncAccount)
+
+        advanceUntilIdle()
+
+        assertThat(testSubject.state.value.isLoading).isEqualTo(true)
+        assertThat(counter).isEqualTo(0)
+
+        turbines.stateTurbine.ensureAllEventsConsumed()
+        turbines.effectTurbine.ensureAllEventsConsumed()
+    }
+
+    @Test
+    fun `should change loading state when OnSyncAllAccounts event is received`() = runTest {
+        val testSubject = createTestSubject(
+            syncAllAccounts = flow {
                 delay(25)
                 emit(Result.success(Unit))
             },
@@ -67,7 +151,7 @@ class DrawerViewModelTest {
         eventStateTest(
             viewModel = testSubject,
             initialState = State(isLoading = false),
-            event = Event.OnRefresh,
+            event = Event.OnSyncAllAccounts,
             expectedState = State(isLoading = true),
             coroutineScope = backgroundScope,
         )
@@ -75,6 +159,31 @@ class DrawerViewModelTest {
         advanceUntilIdle()
 
         assertThat(testSubject.state.value.isLoading).isEqualTo(false)
+    }
+
+    @Test
+    fun `should skip loading when already loading and OnSyncAllAccounts event received`() = runTest {
+        val initialState = State(isLoading = true)
+        var counter = 0
+        val testSubject = createTestSubject(
+            initialState = initialState,
+            syncAccountFlow = flow {
+                counter++
+                delay(25)
+                emit(Result.success(Unit))
+            },
+        )
+        val turbines = turbinesWithInitialStateCheck(testSubject, initialState)
+
+        testSubject.event(Event.OnSyncAllAccounts)
+
+        advanceUntilIdle()
+
+        assertThat(testSubject.state.value.isLoading).isEqualTo(true)
+        assertThat(counter).isEqualTo(0)
+
+        turbines.stateTurbine.ensureAllEventsConsumed()
+        turbines.effectTurbine.ensureAllEventsConsumed()
     }
 
     @Test
@@ -89,7 +198,7 @@ class DrawerViewModelTest {
 
         assertThat(testSubject.state.value.accounts.size).isEqualTo(displayAccounts.size)
         assertThat(testSubject.state.value.accounts).isEqualTo(displayAccounts)
-        assertThat(testSubject.state.value.selectedAccount).isEqualTo(displayAccounts.first())
+        assertThat(testSubject.state.value.selectedAccountUuid).isEqualTo(displayAccounts.first().uuid)
     }
 
     @Test
@@ -109,7 +218,7 @@ class DrawerViewModelTest {
 
         assertThat(testSubject.state.value.accounts.size).isEqualTo(newDisplayAccounts.size)
         assertThat(testSubject.state.value.accounts).isEqualTo(newDisplayAccounts)
-        assertThat(testSubject.state.value.selectedAccount).isEqualTo(newDisplayAccounts.first())
+        assertThat(testSubject.state.value.selectedAccountUuid).isEqualTo(newDisplayAccounts.first().uuid)
     }
 
     @Test
@@ -122,11 +231,11 @@ class DrawerViewModelTest {
         advanceUntilIdle()
 
         assertThat(testSubject.state.value.accounts.size).isEqualTo(0)
-        assertThat(testSubject.state.value.selectedAccount).isEqualTo(null)
+        assertThat(testSubject.state.value.selectedAccountUuid).isEqualTo(null)
     }
 
     @Test
-    fun `should set selected account when OnAccountClick event is received`() = runTest {
+    fun `should send OpenAccount effect when OnAccountClick event is received`() = runTest {
         val displayAccounts = createDisplayAccountList(3)
         val getDisplayAccountsFlow = MutableStateFlow(displayAccounts)
         val testSubject = createTestSubject(
@@ -136,7 +245,7 @@ class DrawerViewModelTest {
             testSubject,
             State(
                 accounts = displayAccounts.toImmutableList(),
-                selectedAccount = displayAccounts.first(),
+                selectedAccountUuid = displayAccounts.first().uuid,
             ),
         )
 
@@ -145,8 +254,6 @@ class DrawerViewModelTest {
         testSubject.event(Event.OnAccountClick(displayAccounts[1]))
 
         advanceUntilIdle()
-
-        assertThat(turbines.awaitStateItem().selectedAccount).isEqualTo(displayAccounts[1])
 
         turbines.assertThatAndEffectTurbineConsumed {
             isEqualTo(Effect.OpenAccount(displayAccounts[1].account))
@@ -158,16 +265,17 @@ class DrawerViewModelTest {
         val displayAccounts = createDisplayAccountList(3)
         val getDisplayAccountsFlow = MutableStateFlow(displayAccounts)
         val displayFoldersMap = mapOf(
-            displayAccounts[0].account.uuid to createDisplayFolderList(3),
+            displayAccounts[0].uuid to createDisplayFolderList(3),
         )
+        val displayFoldersFlow = MutableStateFlow(displayFoldersMap)
         val testSubject = createTestSubject(
             displayAccountsFlow = getDisplayAccountsFlow,
-            displayFoldersMap = displayFoldersMap,
+            displayFoldersFlow = displayFoldersFlow,
         )
 
         advanceUntilIdle()
 
-        val displayFolders = displayFoldersMap[displayAccounts[0].account.uuid] ?: emptyList()
+        val displayFolders = displayFoldersMap[displayAccounts[0].uuid] ?: emptyList()
         assertThat(testSubject.state.value.folders.size).isEqualTo(displayFolders.size)
         assertThat(testSubject.state.value.folders).isEqualTo(displayFolders)
     }
@@ -177,18 +285,19 @@ class DrawerViewModelTest {
         val displayAccounts = createDisplayAccountList(3)
         val getDisplayAccountsFlow = MutableStateFlow(displayAccounts)
         val displayFoldersMap = mapOf(
-            displayAccounts[0].account.uuid to createDisplayFolderList(1),
-            displayAccounts[1].account.uuid to createDisplayFolderList(5),
-            displayAccounts[2].account.uuid to createDisplayFolderList(10),
+            displayAccounts[0].uuid to createDisplayFolderList(1),
+            displayAccounts[1].uuid to createDisplayFolderList(5),
+            displayAccounts[2].uuid to createDisplayFolderList(10),
         )
+        val displayFoldersFlow = MutableStateFlow(displayFoldersMap)
         val testSubject = createTestSubject(
             displayAccountsFlow = getDisplayAccountsFlow,
-            displayFoldersMap = displayFoldersMap,
+            displayFoldersFlow = displayFoldersFlow,
         )
 
         advanceUntilIdle()
 
-        testSubject.event(Event.OnAccountClick(displayAccounts[1]))
+        testSubject.event(Event.SelectAccount(displayAccounts[1].uuid))
 
         advanceUntilIdle()
 
@@ -198,21 +307,22 @@ class DrawerViewModelTest {
     }
 
     @Test
-    fun `should set selected folder when OnFolderClick event is received`() = runTest {
+    fun `should emit OpenFolder effect when OnFolderClick event is received`() = runTest {
         val displayAccounts = createDisplayAccountList(3)
         val getDisplayAccountsFlow = MutableStateFlow(displayAccounts)
         val displayFoldersMap = mapOf(
             displayAccounts[0].account.uuid to createDisplayFolderList(3),
         )
+        val displayFoldersFlow = MutableStateFlow(displayFoldersMap)
         val initialState = State(
             accounts = displayAccounts.toImmutableList(),
-            selectedAccount = displayAccounts[0],
+            selectedAccountUuid = displayAccounts[0].uuid,
             folders = displayFoldersMap[displayAccounts[0].account.uuid]!!.toImmutableList(),
-            selectedFolder = displayFoldersMap[displayAccounts[0].account.uuid]!![0],
+            selectedFolderId = displayFoldersMap[displayAccounts[0].account.uuid]!![0].id,
         )
         val testSubject = createTestSubject(
             displayAccountsFlow = getDisplayAccountsFlow,
-            displayFoldersMap = displayFoldersMap,
+            displayFoldersFlow = displayFoldersFlow,
         )
         val turbines = turbinesWithInitialStateCheck(testSubject, initialState)
 
@@ -221,14 +331,46 @@ class DrawerViewModelTest {
         val displayFolders = displayFoldersMap[displayAccounts[0].account.uuid] ?: emptyList()
         testSubject.event(Event.OnFolderClick(displayFolders[1]))
 
-        assertThat(turbines.awaitStateItem().selectedFolder).isEqualTo(displayFolders[1])
-
         assertThat(turbines.awaitEffectItem()).isEqualTo(Effect.OpenFolder(displayFolders[1].folder.id))
 
         turbines.assertThatAndEffectTurbineConsumed {
             isEqualTo(Effect.CloseDrawer)
         }
     }
+
+    @Test
+    fun `should emit OpenUnifiedFolder when OnFolderClick event for unified folder is received`() =
+        runTest {
+            val displayAccounts = createDisplayAccountList(1)
+            val getDisplayAccountsFlow = MutableStateFlow(displayAccounts)
+            val displayFoldersMap = mapOf(
+                displayAccounts[0].account.uuid to
+                    createDisplayFolderList(1) + listOf(createDisplayUnifiedFolder()),
+            )
+            val displayFoldersFlow = MutableStateFlow(displayFoldersMap)
+            val initialState = State(
+                accounts = displayAccounts.toImmutableList(),
+                selectedAccountUuid = displayAccounts[0].account.uuid,
+                folders = displayFoldersMap[displayAccounts[0].account.uuid]!!.toImmutableList(),
+                selectedFolderId = displayFoldersMap[displayAccounts[0].account.uuid]!![0].id,
+            )
+            val testSubject = createTestSubject(
+                displayAccountsFlow = getDisplayAccountsFlow,
+                displayFoldersFlow = displayFoldersFlow,
+            )
+            val turbines = turbinesWithInitialStateCheck(testSubject, initialState)
+
+            advanceUntilIdle()
+
+            val displayFolders = displayFoldersMap[displayAccounts[0].account.uuid] ?: emptyList()
+            testSubject.event(Event.OnFolderClick(displayFolders[1]))
+
+            assertThat(turbines.awaitEffectItem()).isEqualTo(Effect.OpenUnifiedFolder)
+
+            turbines.assertThatAndEffectTurbineConsumed {
+                isEqualTo(Effect.CloseDrawer)
+            }
+        }
 
     @Test
     fun `should change state when OnAccountSelectorClick event is received`() = runTest {
@@ -271,18 +413,22 @@ class DrawerViewModelTest {
     }
 
     private fun createTestSubject(
+        initialState: State = State(),
         drawerConfigFlow: Flow<DrawerConfig> = flow { emit(createDrawerConfig()) },
         displayAccountsFlow: Flow<List<DisplayAccount>> = flow { emit(emptyList()) },
-        displayFoldersMap: Map<String, List<DisplayAccountFolder>> = emptyMap(),
-        syncMailFlow: Flow<Result<Unit>> = flow { emit(Result.success(Unit)) },
+        displayFoldersFlow: Flow<Map<String, List<DisplayFolder>>> = flow { emit(emptyMap()) },
+        syncAccountFlow: Flow<Result<Unit>> = flow { emit(Result.success(Unit)) },
+        syncAllAccounts: Flow<Result<Unit>> = flow { emit(Result.success(Unit)) },
     ): DrawerViewModel {
         return DrawerViewModel(
+            initialState = initialState,
             getDrawerConfig = { drawerConfigFlow },
             getDisplayAccounts = { displayAccountsFlow },
-            getDisplayFoldersForAccount = { accountUuid ->
-                flow { emit(displayFoldersMap[accountUuid] ?: emptyList()) }
+            getDisplayFoldersForAccount = { accountUuid, _ ->
+                displayFoldersFlow.map { it[accountUuid] ?: emptyList() }
             },
-            syncMail = { syncMailFlow },
+            syncAccount = { syncAccountFlow },
+            syncAllAccounts = { syncAllAccounts },
         )
     }
 
@@ -291,7 +437,7 @@ class DrawerViewModelTest {
         showStarredCount: Boolean = false,
     ): DrawerConfig {
         return DrawerConfig(
-            showUnifiedInbox = showUnifiedInbox,
+            showUnifiedFolders = showUnifiedInbox,
             showStarredCount = showStarredCount,
         )
     }
@@ -364,5 +510,19 @@ class DrawerViewModelTest {
                 id = index.toLong() + 100,
             )
         }
+    }
+
+    private fun createDisplayUnifiedFolder(
+        id: String = "unified_inbox",
+        unifiedType: DisplayUnifiedFolderType = DisplayUnifiedFolderType.INBOX,
+        unreadCount: Int = 0,
+        starredCount: Int = 0,
+    ): DisplayUnifiedFolder {
+        return DisplayUnifiedFolder(
+            id = id,
+            unifiedType = unifiedType,
+            unreadMessageCount = unreadCount,
+            starredMessageCount = starredCount,
+        )
     }
 }

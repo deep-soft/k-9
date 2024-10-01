@@ -6,8 +6,8 @@ data class FolderDetails(
     val folder: Folder,
     val isInTopGroup: Boolean,
     val isIntegrate: Boolean,
-    val syncClass: FolderClass,
+    val isSyncEnabled: Boolean,
     val displayClass: FolderClass,
     val isNotificationsEnabled: Boolean,
-    val pushClass: FolderClass,
+    val isPushEnabled: Boolean,
 )

@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Outbox
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.AllInbox
 import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.ChevronLeft
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Report
 import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.k9mail.core.ui.compose.designsystem.atom.icon.filled.Dot
@@ -49,6 +51,9 @@ object Icons {
     object Outlined {
         val AccountCircle: ImageVector
             get() = MaterialIcons.Outlined.AccountCircle
+
+        val AllInbox: ImageVector
+            get() = MaterialIcons.Outlined.AllInbox
 
         val Archive: ImageVector
             get() = MaterialIcons.Outlined.Archive
@@ -106,6 +111,9 @@ object Icons {
 
         val Settings: ImageVector
             get() = MaterialIcons.Outlined.Settings
+
+        val Sync: ImageVector
+            get() = MaterialIcons.Outlined.Sync
 
         val Report: ImageVector
             get() = MaterialIcons.Outlined.Report

@@ -1,18 +1,18 @@
 package app.k9mail.feature.navigation.drawer.domain.usecase
 
-import app.k9mail.feature.navigation.drawer.domain.entity.DrawerConfig
+import app.k9mail.feature.navigation.drawer.NavigationDrawerExternalContract.DrawerConfig
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import kotlin.test.Test
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 
-class GetDrawerConfigTest {
+internal class GetDrawerConfigTest {
 
     @Test
     fun `should get drawer config`() = runTest {
         val drawerConfig = DrawerConfig(
-            showUnifiedInbox = true,
+            showUnifiedFolders = true,
             showStarredCount = true,
         )
 
@@ -24,7 +24,7 @@ class GetDrawerConfigTest {
 
         assertThat(result).isEqualTo(
             DrawerConfig(
-                showUnifiedInbox = true,
+                showUnifiedFolders = true,
                 showStarredCount = true,
             ),
         )
