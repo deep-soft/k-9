@@ -10,6 +10,10 @@ android {
 dependencies {
     api(projects.feature.funding.api)
 
+    implementation(projects.core.ui.compose.designsystem)
+
     implementation(libs.android.billing)
     implementation(libs.android.billing.ktx)
+
+    testImplementation(projects.core.ui.compose.testing)
 }
