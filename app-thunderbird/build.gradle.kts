@@ -174,6 +174,14 @@ android {
         }
     }
 
+    @Suppress("UnstableApiUsage")
+    bundle {
+        language {
+            // Don't split by language. Otherwise our in-app language switcher won't work.
+            enableSplit = false
+        }
+    }
+
     packaging {
         jniLibs {
             excludes += listOf("kotlin/**")
@@ -232,6 +240,10 @@ dependencies {
 
     implementation(projects.feature.onboarding.migration.thunderbird)
     implementation(projects.feature.migration.launcher.thunderbird)
+
+    // TODO remove once OAuth ids have been moved from TBD to TBA
+    "betaImplementation"(libs.appauth)
+    releaseImplementation(libs.appauth)
 
     testImplementation(libs.robolectric)
 
