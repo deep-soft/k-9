@@ -21,7 +21,7 @@ android {
         testApplicationId = "net.thunderbird.android.tests"
 
         versionCode = 4
-        versionName = "8.0"
+        versionName = "10.0"
 
         // Keep in sync with the resource string array "supported_languages"
         resourceConfigurations.addAll(
@@ -29,7 +29,6 @@ android {
                 "ar",
                 "be",
                 "bg",
-                "br",
                 "ca",
                 "co",
                 "cs",
@@ -47,7 +46,7 @@ android {
                 "fi",
                 "fr",
                 "fy",
-                "gd",
+                "ga",
                 "gl",
                 "hr",
                 "hu",
@@ -59,7 +58,6 @@ android {
                 "ko",
                 "lt",
                 "lv",
-                "ml",
                 "nb",
                 "nl",
                 "nn",
@@ -68,7 +66,6 @@ android {
                 "pt_PT",
                 "ro",
                 "ru",
-                "sk",
                 "sl",
                 "sq",
                 "sr",
@@ -81,7 +78,7 @@ android {
             ),
         )
 
-        buildConfigField("String", "CLIENT_INFO_APP_NAME", "\"Thunderbird\"")
+        buildConfigField("String", "CLIENT_INFO_APP_NAME", "\"Thunderbird for Android\"")
     }
 
     signingConfigs {

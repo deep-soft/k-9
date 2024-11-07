@@ -53,8 +53,8 @@ android {
         testApplicationId = "com.fsck.k9.tests"
 
         versionCode = 39004
-        versionName = "9.0"
-        versionNameSuffix = "-SNAPSHOT"
+        versionName = "10.0"
+        versionNameSuffix = "a1"
 
         // Keep in sync with the resource string array "supported_languages"
         resourceConfigurations.addAll(
@@ -62,7 +62,6 @@ android {
                 "ar",
                 "be",
                 "bg",
-                "br",
                 "ca",
                 "co",
                 "cs",
@@ -80,7 +79,7 @@ android {
                 "fi",
                 "fr",
                 "fy",
-                "gd",
+                "ga",
                 "gl",
                 "hr",
                 "hu",
@@ -92,7 +91,6 @@ android {
                 "ko",
                 "lt",
                 "lv",
-                "ml",
                 "nb",
                 "nl",
                 "nn",
@@ -101,7 +99,6 @@ android {
                 "pt_PT",
                 "ro",
                 "ru",
-                "sk",
                 "sl",
                 "sq",
                 "sr",
