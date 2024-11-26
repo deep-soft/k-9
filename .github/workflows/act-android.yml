@@ -115,6 +115,7 @@ jobs:
           path: |
             ./app-${{ env.PRG_NAME }}/build/outputs/apk/
 
+# full begin
       - name: set env.PRG_TYPE full
         shell: bash
         run: |
@@ -186,7 +187,15 @@ jobs:
           files: |
             ./signed-apk/${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE }}-release-unsigned.apk
             _tag_name_.txt
+# full end
+# prepare for upload foss
+      - name: prepare for upload foss
+        shell: bash
+        run: |
+          rm -fr ./signed-apk || true;
+          mkdir -p signed-apk || true;
 
+# foss begin
       - name: set env.PRG_TYPE foss
         shell: bash
         run: |
@@ -258,3 +267,4 @@ jobs:
           files: |
             ./signed-apk/${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE }}-release-unsigned.apk
             _tag_name_.txt
+# foss end
