@@ -1,4 +1,5 @@
-#2024-01-28 21:20
+#2024-11-26 15:50
+# full or foss ?!
 #act-android.yml
 name: act - Android CI
 
@@ -14,6 +15,11 @@ on:
 #      - 'LICENSE'
 #      - 'NOTICE'
   workflow_dispatch:
+    inputs:
+      full_or_foss:
+        description: "full or foss?"
+        default: "full"
+        required: true
 
 env:
   PRG_NAME: "k9mail"
@@ -65,7 +71,7 @@ jobs:
           echo "REF: ${{ env.TAG_REF }}
           echo "BLD: ${{ env.TAG_BUILD }}
           echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > _tag_name_.txt
-          echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-release-signed.txt
+          echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ inputs.full_or_foss }}-release-signed.txt
 
       - name: Create source archive
         continue-on-error: true
@@ -110,22 +116,22 @@ jobs:
           path: |
             ./app-${{ env.PRG_NAME }}/build/outputs/apk/
 
-      - name: Copy apk from outputs/
+      - name: Copy apk from outputs/ (${{ inputs.full_or_foss }})
         shell: bash
         run: |
           set -x
           mkdir -p signed-apk
           echo "LIST: " ./app-${{ env.PRG_NAME }}/build/outputs/apk/release/
-          ls -l ./app-${{ env.PRG_NAME }}/build/outputs/apk/release/
-          cp ./app-${{ env.PRG_NAME }}/build/outputs/apk/release/*.apk ./signed-apk/
+          ls -l ./app-${{ env.PRG_NAME }}/build/outputs/apk/${{ inputs.full_or_foss }}/release/
+          cp ./app-${{ env.PRG_NAME }}/build/outputs/apk/${{ inputs.full_or_foss }}/release/*.apk ./signed-apk/
           echo "LIST: " ./signed-apk/
           ls -l ./signed-apk/
-          mv ./signed-apk/app-${{ env.PRG_NAME }}-release-unsigned.apk ./signed-apk/${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-release.apk
-          echo "LIST: " ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-release.apk
+          mv ./signed-apk/app-${{ env.PRG_NAME }}-${{ inputs.full_or_foss }}-release-unsigned.apk ./signed-apk/${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ inputs.full_or_foss }}-release.apk
+          echo "LIST: " ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ inputs.full_or_foss }}-release.apk
           ls -l ./signed-apk/
 
       - uses: deep-soft/sign-android-release@v1
-        name: Sign app APK
+        name: Sign app APK (${{ inputs.full_or_foss }})
         if: env.ANDROID_SIGNING_KEY != null
         id: sign-k9mail
         with:
@@ -138,14 +144,14 @@ jobs:
           # override default build-tools version (29.0.3) -- optional
           BUILD_TOOLS_VERSION: "34.0.0"
 
-      - name: Upload Artifacts
+      - name: Upload Artifacts (${{ inputs.full_or_foss }})
         if: env.ANDROID_SIGNING_KEY != null
         uses: deep-soft/upload-artifact@v4
         with:
-          name: ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-release-signed.apk
+          name: ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ inputs.full_or_foss }}-release-signed.apk
           path: ${{steps.sign-k9mail.outputs.signedReleaseFile}}
 
-      - name: Publish signed apk package
+      - name: Publish signed apk package (${{ inputs.full_or_foss }})
         if: env.ANDROID_SIGNING_KEY != null
         uses: deep-soft/action-gh-release@v2.1
         with:
@@ -156,7 +162,7 @@ jobs:
             ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-release-signed.txt
             _tag_name_.txt
 
-      - name: Publish version build - signed apk package
+      - name: Publish version build - signed apk package (${{ inputs.full_or_foss }})
         if: env.ANDROID_SIGNING_KEY != null
         uses: deep-soft/action-gh-release@v2.1
         with:
@@ -164,15 +170,15 @@ jobs:
           tag_name: ${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}${{ env.TAG_BUILD }}
           files: |
             ${{steps.sign-k9mail.outputs.signedReleaseFile}}
-            ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-release-signed.txt
+            ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ inputs.full_or_foss }}-release-signed.txt
             _tag_name_.txt
 
-      - name: Publish unsigned apk package
+      - name: Publish unsigned apk package (${{ inputs.full_or_foss }})
         if: env.ANDROID_SIGNING_KEY == null
         uses: deep-soft/action-gh-release@v2.1
         with:
           draft: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            ./signed-apk/${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-release-unsigned.apk
+            ./signed-apk/${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ inputs.full_or_foss }}-release-unsigned.apk
             _tag_name_.txt
