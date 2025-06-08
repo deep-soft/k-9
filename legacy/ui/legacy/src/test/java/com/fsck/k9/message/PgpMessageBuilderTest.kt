@@ -4,8 +4,6 @@ import android.app.Activity
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Parcelable
-import app.k9mail.legacy.account.Account.QuoteStyle
-import app.k9mail.legacy.account.Identity
 import assertk.Assert
 import assertk.all
 import assertk.assertThat
@@ -28,26 +26,30 @@ import com.fsck.k9.autocrypt.AutocryptOperationsHelper.assertMessageHasAutocrypt
 import com.fsck.k9.mail.Address
 import com.fsck.k9.mail.BoundaryGenerator
 import com.fsck.k9.mail.MessagingException
-import com.fsck.k9.mail.assertk.asBytes
-import com.fsck.k9.mail.assertk.asText
-import com.fsck.k9.mail.assertk.body
-import com.fsck.k9.mail.assertk.bodyPart
-import com.fsck.k9.mail.assertk.bodyParts
-import com.fsck.k9.mail.assertk.contentTransferEncoding
-import com.fsck.k9.mail.assertk.contentType
-import com.fsck.k9.mail.assertk.mimeType
-import com.fsck.k9.mail.assertk.parameter
-import com.fsck.k9.mail.assertk.value
 import com.fsck.k9.mail.internet.BinaryTempFileBody
 import com.fsck.k9.mail.internet.MessageIdGenerator
 import com.fsck.k9.mail.internet.MimeMessage
 import com.fsck.k9.mail.internet.MimeMultipart
 import com.fsck.k9.mail.internet.TextBody
+import com.fsck.k9.mail.testing.assertk.asBytes
+import com.fsck.k9.mail.testing.assertk.asText
+import com.fsck.k9.mail.testing.assertk.body
+import com.fsck.k9.mail.testing.assertk.bodyPart
+import com.fsck.k9.mail.testing.assertk.bodyParts
+import com.fsck.k9.mail.testing.assertk.contentTransferEncoding
+import com.fsck.k9.mail.testing.assertk.contentType
+import com.fsck.k9.mail.testing.assertk.mimeType
+import com.fsck.k9.mail.testing.assertk.parameter
+import com.fsck.k9.mail.testing.assertk.value
 import com.fsck.k9.message.MessageBuilder.Callback
 import com.fsck.k9.message.quote.InsertableHtmlContent
 import com.fsck.k9.view.RecipientSelectView
 import java.io.OutputStream
 import java.util.Date
+import net.thunderbird.core.android.account.Identity
+import net.thunderbird.core.android.account.QuoteStyle
+import net.thunderbird.core.logging.legacy.Log
+import net.thunderbird.core.logging.testing.TestLogger
 import org.apache.james.mime4j.util.MimeUtil
 import org.junit.Before
 import org.junit.Test
@@ -93,6 +95,7 @@ class PgpMessageBuilderTest : K9RobolectricTest() {
     @Before
     @Throws(Exception::class)
     fun setUp() {
+        Log.logger = TestLogger()
         BinaryTempFileBody.setTempDirectory(RuntimeEnvironment.getApplication().cacheDir)
         `when`(autocryptOpenPgpApiInteractor.getKeyMaterialForKeyId(openPgpApi, TEST_KEY_ID, SENDER_EMAIL))
             .thenReturn(AUTOCRYPT_KEY_MATERIAL)

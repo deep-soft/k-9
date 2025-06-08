@@ -181,7 +181,7 @@
     <string name="account_setup_options_mail_display_count_1000">1000 meldingar</string>
     <string name="account_setup_options_mail_display_count_2500">2500 meldingar</string>
     <string name="account_setup_options_mail_display_count_5000">5000 meldingar</string>
-    <string name="account_setup_options_mail_display_count_10000">dritmange meldingar</string>
+    <string name="account_setup_options_mail_display_count_10000">10000 meldingar</string>
     <string name="account_setup_options_mail_display_count_all">alle meldingar</string>
     <string name="account_settings_push_advanced_title">Innfløkt</string>
     <string name="account_settings_title_fmt">Kontoinnstillingar</string>
@@ -384,7 +384,7 @@
     <string name="global_settings_threaded_view_summary">Grupper meldingar i samtalar</string>
     <string name="upgrade_databases_title">Oppgraderer databasar</string>
     <string name="upgrade_databases_unspecified">Oppgraderer databasar …</string>
-    <string name="upgrade_database_format">Oppgraderer databasen til kontoen «<xliff:g id="account">%s</xliff:g>»</string>
+    <string name="upgrade_database_format">Oppgraderer databasen til kontoen \"<xliff:g id="account">%s</xliff:g>\"</string>
     <string name="global_settings_splitview_mode_label">Splitt skjermen</string>
     <string name="global_settings_splitview_always">Alltid</string>
     <string name="global_settings_splitview_never">Aldri</string>
@@ -605,7 +605,6 @@
     <string name="account_settings_sync_remote_deletetions_label">Synkroniser serversletting</string>
     <string name="account_settings_openpgp_missing">Manglande OpenPGP app - var den avinstallert?</string>
     <string name="folder_settings_in_top_group_label">Vis i toppgruppe</string>
-    <string name="folder_settings_in_top_group_summary">Vi nær toppen av mappelista</string>
     <string name="account_settings_strip_signature_label">Fjern signaturar under svar</string>
     <string name="account_settings_reading_mail">Lesing av e-post</string>
     <string name="account_settings_autodownload_message_size_64">64 KiB</string>
@@ -726,7 +725,6 @@
     <string name="font_size_message_view_recipients">Mottakarar</string>
     <string name="dialog_confirm_clear_local_folder_title">Fjern lokale meldingar?</string>
     <string name="dialog_confirm_clear_local_folder_action">Fjern meldingar</string>
-    <string name="folder_settings_include_in_integrated_inbox_summary">Alle meldingar er vist i samla innboks</string>
     <string name="folder_settings_include_in_integrated_inbox_label">Samle</string>
     <string name="font_size_message_compose_input">Tekstinndatafelter</string>
     <string name="dialog_confirm_clear_local_folder_message">Dette vil fjerne alle lokale meldingar frå mappa. Ingen meldingar vil bli sletta frå tenaren.</string>
@@ -895,4 +893,8 @@
     <string name="volume_navigation_title_short">Volumknappnavigasjon</string>
     <string name="volume_navigation_summary">Naviger mellom meldingar med å bruke volumknappar i meldingsvising</string>
     <string name="save_attachment_action">Lagre vedlegg</string>
+    <string name="empty_spam_action">Tøm søppelpost</string>
+    <string name="dialog_confirm_empty_spam_message">Ønskjer du å tømme søppelpostmappa?</string>
+    <string name="dialog_confirm_empty_spam_title">Stadfest tømming av søppelpost</string>
+    <string name="expand_content_description">Utvid</string>
 </resources>

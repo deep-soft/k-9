@@ -9,10 +9,10 @@ import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.PendingIntentCompat
-import app.k9mail.legacy.account.Account
 import com.fsck.k9.K9
 import com.fsck.k9.notification.NotificationChannelManager.ChannelType
-import timber.log.Timber
+import net.thunderbird.core.android.account.LegacyAccount
+import net.thunderbird.core.logging.legacy.Log
 
 class NotificationHelper(
     private val context: Context,
@@ -28,12 +28,12 @@ class NotificationHelper(
         return notificationManager
     }
 
-    fun createNotificationBuilder(account: Account, channelType: ChannelType): NotificationCompat.Builder {
+    fun createNotificationBuilder(account: LegacyAccount, channelType: ChannelType): NotificationCompat.Builder {
         val notificationChannel = notificationChannelManager.getChannelIdFor(account, channelType)
         return NotificationCompat.Builder(context, notificationChannel)
     }
 
-    fun notify(account: Account, notificationId: Int, notification: Notification) {
+    fun notify(account: LegacyAccount, notificationId: Int, notification: Notification) {
         try {
             notificationManager.notify(notificationId, notification)
         } catch (e: SecurityException) {
@@ -45,7 +45,7 @@ class NotificationHelper(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
                 e.message?.contains("does not have permission to") == true
             ) {
-                Timber.e(e, "Failed to create a notification for a new message")
+                Log.e(e, "Failed to create a notification for a new message")
                 showNotifyErrorNotification(account)
             } else {
                 throw e
@@ -53,7 +53,7 @@ class NotificationHelper(
         }
     }
 
-    private fun showNotifyErrorNotification(account: Account) {
+    private fun showNotifyErrorNotification(account: LegacyAccount) {
         val title = resourceProvider.notifyErrorTitle()
         val text = resourceProvider.notifyErrorText()
 

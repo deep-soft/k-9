@@ -71,8 +71,8 @@
     <string name="flag_action">Přidat \u2605</string>
     <string name="unflag_action">Odebrat \u2606</string>
     <string name="copy_action">Kopírovat</string>
-    <string name="unsubscribe_action">Zrušit přihlášení se k odběru</string>
-    <string name="show_headers_action">Zobraz hlavičku</string>
+    <string name="unsubscribe_action">Odhlásit odběr</string>
+    <string name="show_headers_action">Zobrazit hlavičku</string>
     <plurals name="copy_address_to_clipboard">
         <item quantity="one">Adresa zkopírována do schránky</item>
         <item quantity="few">Adresy zkopírovány do schránky</item>
@@ -106,7 +106,7 @@
     <plurals name="notification_new_messages_title">
         <item quantity="one"><xliff:g id="new_message_count">%d</xliff:g> nová zpráva</item>
         <item quantity="few"><xliff:g id="new_message_count">%d</xliff:g> nové zprávy</item>
-        <item quantity="other"><xliff:g id="new_message_count">%d</xliff:g> nových zpráv</item>
+        <item quantity="many"><xliff:g id="new_message_count">%d</xliff:g> nových zpráv</item>
     </plurals>
     <string name="notification_additional_messages">+ <xliff:g id="additional_messages">%1$d</xliff:g> pro účet <xliff:g id="account">%2$s</xliff:g></string>
     <string name="notification_action_reply">Odpovědět</string>
@@ -353,7 +353,7 @@
     <string name="account_settings_sync">Stahování pošty</string>
     <string name="account_settings_folders">Složky</string>
     <string name="account_settings_quote_prefix_label">Předpona citovaného textu</string>
-    <string name="account_settings_crypto">Šifrování mezi odesilatelem a příjemcem</string>
+    <string name="account_settings_crypto">Koncové šifrování</string>
     <string name="account_settings_crypto_app">Zapnout podporu OpenPGP</string>
     <string name="account_settings_crypto_app_select_title">Vybrat OpenPGP aplikaci</string>
     <string name="account_settings_crypto_key">Nastavit klíč pro šifrování mezi odesilatelem a příjemcem</string>
@@ -401,7 +401,6 @@
     <string name="account_settings_openpgp_missing">Chybí OpenPGP aplikace – byla odinstalována?</string>
     <string name="folder_settings_title">Nastavení složky</string>
     <string name="folder_settings_in_top_group_label">Zobrazit v nejvyšší skupině</string>
-    <string name="folder_settings_in_top_group_summary">Zobrazit blízko špičky seznamu složek</string>
     <string name="folder_settings_clear_local_folder_action">Vyčistit místní zprávy</string>
     <string name="account_settings_incoming_label">Server příchozí pošty</string>
     <string name="account_settings_incoming_summary">Nastavení serveru příchozí pošty</string>
@@ -534,7 +533,6 @@
     <string name="integrated_inbox_title">Jednotná schránka</string>
     <string name="integrated_inbox_detail">Všechny zprávy v integrovaných složkách</string>
     <string name="folder_settings_include_in_integrated_inbox_label">Integrovat</string>
-    <string name="folder_settings_include_in_integrated_inbox_summary">Všechny zprávy jsou zobrazeny v Integrované doručené poště</string>
     <string name="account_settings_no_folder_selected">Žádné</string>
     <string name="account_settings_automatic_special_folder">Automaticky (%s)</string>
     <string name="font_size_settings_title">Velikost písma</string>
@@ -646,7 +644,7 @@
     <plurals name="remote_search_downloading_limited">
         <item quantity="one">Stahování %1$d z %2$d výsledku</item>
         <item quantity="few">Stahování %1$d ze %2$d výsledků</item>
-        <item quantity="other">Stahování %1$d z %2$d výsledků</item>
+        <item quantity="many">Stahování %1$d z %2$d výsledků</item>
     </plurals>
     <string name="remote_search_error">Vzdálené vyhledávání se nezdařilo</string>
     <string name="account_settings_search">Hledání</string>
@@ -791,7 +789,7 @@
     <string name="account_settings_crypto_encrypt_subject_subtitle">Nemusí být podporováno některými příjemci</string>
     <string name="toast_account_not_found">Vnitřní chyba: neplatný účet!</string>
     <string name="toast_openpgp_provider_error">Chyba při připojování k %s!</string>
-    <string name="ac_transfer_setting_title">Poslat Autocrypt nastavovací zprávu</string>
+    <string name="ac_transfer_setting_title">Poslat nastavovací zprávu Autocrypt</string>
     <string name="ac_transfer_setting_summary">Zabezpečeně sdílet nastavení s ostatními zařízeními</string>
     <string name="ac_transfer_title">Autocrypt nastavovací zpráva</string>
     <string name="ac_transfer_intro">Autocrypt nastavovací zpráva zabezpečeně sdílí vaše nastavení s ostatními zařízeními.</string>
@@ -851,7 +849,7 @@ Tuto zprávu si můžete ponechat a použít jí jako zálohu svého tajného kl
     <!--Title of the toolbar that is displayed when the message details bottom sheet has been expanded-->
     <string name="message_details_toolbar_title">Informace o zprávě</string>
     <!--Displayed when an email is missing the 'Date' header field and no date can be displayed in the message details bottom sheet.-->
-    <string name="message_details_missing_date">Neznámí datum</string>
+    <string name="message_details_missing_date">Neznámé datum</string>
     <!--Title of the "From" section in the message details bottom sheet. This should probably be the same as the string 'recipient_from'.-->
     <string name="message_details_from_section_title">Odesílatel</string>
     <!--Title of the "Sender" section in the message details bottom sheet. This refers to the 'Sender' header. Be careful with translations.-->
@@ -908,4 +906,8 @@ Tuto zprávu si můžete ponechat a použít jí jako zálohu svého tajného kl
     <string name="volume_navigation_title_short">Navigace pomocí tlačítek hlasitosti</string>
     <string name="volume_navigation_summary">Navigovat se mezi zprávami pomocí tlačítek hlasitosti v režimu zobrazení zpráv</string>
     <string name="save_attachment_action">Uložit přílohu</string>
+    <string name="expand_content_description">Rozbalit</string>
+    <string name="empty_spam_action">Vysypat nevyžádané</string>
+    <string name="dialog_confirm_empty_spam_title">Potvrdit vysypání nevyžádaných</string>
+    <string name="dialog_confirm_empty_spam_message">Opravdu chcete vyprázdnit složku Nevyžádané?</string>
 </resources>

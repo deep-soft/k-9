@@ -11,7 +11,8 @@ import android.os.SystemClock;
 
 import com.fsck.k9.preferences.K9StoragePersister.StoragePersistOperationCallback;
 import com.fsck.k9.preferences.K9StoragePersister.StoragePersistOperations;
-import timber.log.Timber;
+import net.thunderbird.core.logging.legacy.Log;
+import net.thunderbird.core.preferences.Storage;
 
 
 public class K9StorageEditor implements StorageEditor {
@@ -33,14 +34,14 @@ public class K9StorageEditor implements StorageEditor {
             storageUpdater.updateStorage(this::commitChanges);
             return true;
         } catch (Exception e) {
-            Timber.e(e, "Failed to save preferences");
+            Log.e(e, "Failed to save preferences");
             return false;
         }
     }
 
     private Storage commitChanges(Storage storage) {
         long startTime = SystemClock.elapsedRealtime();
-        Timber.i("Committing preference changes");
+        Log.i("Committing preference changes");
 
         Map<String, String> newValues = new HashMap<>();
         Map<String, String> oldValues = storage.getAll();
@@ -72,9 +73,9 @@ public class K9StorageEditor implements StorageEditor {
         };
         storagePersister.doInTransaction(committer);
         long endTime = SystemClock.elapsedRealtime();
-        Timber.i("Preferences commit took %d ms", endTime - startTime);
+        Log.i("Preferences commit took %d ms", endTime - startTime);
 
-        return new Storage(newValues);
+        return new DefaultStorage(newValues);
     }
 
     @Override

@@ -1,11 +1,9 @@
 package app.k9mail.feature.funding.googleplay.ui.contribution
 
-import app.k9mail.core.ui.compose.testing.MainDispatcherRule
 import app.k9mail.core.ui.compose.testing.mvi.MviContext
 import app.k9mail.core.ui.compose.testing.mvi.MviTurbines
 import app.k9mail.core.ui.compose.testing.mvi.runMviTest
 import app.k9mail.core.ui.compose.testing.mvi.turbinesWithInitialStateCheck
-import app.k9mail.feature.funding.googleplay.domain.Outcome
 import app.k9mail.feature.funding.googleplay.domain.entity.AvailableContributions
 import app.k9mail.feature.funding.googleplay.domain.entity.Contribution
 import app.k9mail.feature.funding.googleplay.ui.contribution.ContributionContract.ContributionListState
@@ -15,6 +13,8 @@ import app.k9mail.feature.funding.googleplay.ui.contribution.ContributionContrac
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import kotlin.test.Test
+import net.thunderbird.core.outcome.Outcome
+import net.thunderbird.core.testing.coroutines.MainDispatcherRule
 import org.junit.Rule
 
 class ContributionViewModelTest {

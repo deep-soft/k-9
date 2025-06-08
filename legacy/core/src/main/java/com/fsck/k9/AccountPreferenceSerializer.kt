@@ -1,47 +1,58 @@
 package com.fsck.k9
 
-import app.k9mail.legacy.account.Account
-import app.k9mail.legacy.account.Account.Companion.DEFAULT_SORT_ASCENDING
-import app.k9mail.legacy.account.Account.Companion.DEFAULT_SORT_TYPE
-import app.k9mail.legacy.account.Account.Companion.DEFAULT_SYNC_INTERVAL
-import app.k9mail.legacy.account.Account.Companion.NO_OPENPGP_KEY
-import app.k9mail.legacy.account.Account.Companion.UNASSIGNED_ACCOUNT_NUMBER
-import app.k9mail.legacy.account.Account.DeletePolicy
-import app.k9mail.legacy.account.Account.Expunge
-import app.k9mail.legacy.account.Account.FolderMode
-import app.k9mail.legacy.account.Account.MessageFormat
-import app.k9mail.legacy.account.Account.QuoteStyle
-import app.k9mail.legacy.account.Account.ShowPictures
-import app.k9mail.legacy.account.Account.SortType
-import app.k9mail.legacy.account.Account.SpecialFolderSelection
-import app.k9mail.legacy.account.Identity
-import app.k9mail.legacy.notification.NotificationLight
-import app.k9mail.legacy.notification.NotificationSettings
-import app.k9mail.legacy.notification.NotificationVibration
-import app.k9mail.legacy.notification.VibratePattern
 import com.fsck.k9.helper.Utility
-import com.fsck.k9.preferences.Storage
 import com.fsck.k9.preferences.StorageEditor
-import timber.log.Timber
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.DEFAULT_MAXIMUM_AUTO_DOWNLOAD_MESSAGE_SIZE
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.DEFAULT_MESSAGE_FORMAT
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.DEFAULT_MESSAGE_FORMAT_AUTO
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.DEFAULT_MESSAGE_READ_RECEIPT
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.DEFAULT_QUOTED_TEXT_SHOWN
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.DEFAULT_QUOTE_PREFIX
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.DEFAULT_QUOTE_STYLE
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.DEFAULT_REMOTE_SEARCH_NUM_RESULTS
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.DEFAULT_REPLY_AFTER_QUOTE
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.DEFAULT_RINGTONE_URI
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.DEFAULT_STRIP_SIGNATURE
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.DEFAULT_SYNC_INTERVAL
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.NO_OPENPGP_KEY
+import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.UNASSIGNED_ACCOUNT_NUMBER
+import net.thunderbird.core.android.account.DeletePolicy
+import net.thunderbird.core.android.account.Expunge
+import net.thunderbird.core.android.account.FolderMode
+import net.thunderbird.core.android.account.Identity
+import net.thunderbird.core.android.account.LegacyAccount
+import net.thunderbird.core.android.account.MessageFormat
+import net.thunderbird.core.android.account.QuoteStyle
+import net.thunderbird.core.android.account.ShowPictures
+import net.thunderbird.core.android.account.SortType
+import net.thunderbird.core.logging.legacy.Log
+import net.thunderbird.core.preferences.Storage
+import net.thunderbird.core.preferences.getEnumOrDefault
+import net.thunderbird.feature.account.storage.legacy.ServerSettingsSerializer
+import net.thunderbird.feature.mail.folder.api.SpecialFolderSelection
+import net.thunderbird.feature.notification.NotificationLight
+import net.thunderbird.feature.notification.NotificationSettings
+import net.thunderbird.feature.notification.NotificationVibration
+import net.thunderbird.feature.notification.VibratePattern
 
 class AccountPreferenceSerializer(
-    private val resourceProvider: CoreResourceProvider,
     private val serverSettingsSerializer: ServerSettingsSerializer,
 ) {
 
+    @Suppress("LongMethod")
     @Synchronized
-    fun loadAccount(account: Account, storage: Storage) {
+    fun loadAccount(account: LegacyAccount, storage: Storage) {
         val accountUuid = account.uuid
         with(account) {
             incomingServerSettings = serverSettingsSerializer.deserialize(
-                storage.getString("$accountUuid.$INCOMING_SERVER_SETTINGS_KEY", ""),
+                storage.getStringOrDefault("$accountUuid.$INCOMING_SERVER_SETTINGS_KEY", ""),
             )
             outgoingServerSettings = serverSettingsSerializer.deserialize(
-                storage.getString("$accountUuid.$OUTGOING_SERVER_SETTINGS_KEY", ""),
+                storage.getStringOrDefault("$accountUuid.$OUTGOING_SERVER_SETTINGS_KEY", ""),
             )
-            oAuthState = storage.getString("$accountUuid.oAuthState", null)
-            name = storage.getString("$accountUuid.description", null)
-            alwaysBcc = storage.getString("$accountUuid.alwaysBcc", alwaysBcc)
+            oAuthState = storage.getStringOrNull("$accountUuid.oAuthState")
+            name = storage.getStringOrNull("$accountUuid.description")
+            alwaysBcc = storage.getStringOrNull("$accountUuid.alwaysBcc") ?: alwaysBcc
             automaticCheckIntervalMinutes = storage.getInt(
                 "" +
                     "$accountUuid.automaticCheckIntervalMinutes",
@@ -53,7 +64,6 @@ class AccountPreferenceSerializer(
                 displayCount = K9.DEFAULT_VISIBLE_LIMIT
             }
             isNotifyNewMail = storage.getBoolean("$accountUuid.notifyNewMail", false)
-
             folderNotifyNewMailMode = getEnumStringPref<FolderMode>(
                 storage,
                 "$accountUuid.folderNotifyNewMailMode",
@@ -65,17 +75,17 @@ class AccountPreferenceSerializer(
             isNotifySync = storage.getBoolean("$accountUuid.notifyMailCheck", false)
             messagesNotificationChannelVersion = storage.getInt("$accountUuid.messagesNotificationChannelVersion", 0)
             deletePolicy = DeletePolicy.fromInt(storage.getInt("$accountUuid.deletePolicy", DeletePolicy.NEVER.setting))
-            legacyInboxFolder = storage.getString("$accountUuid.inboxFolderName", null)
-            importedDraftsFolder = storage.getString("$accountUuid.draftsFolderName", null)
-            importedSentFolder = storage.getString("$accountUuid.sentFolderName", null)
-            importedTrashFolder = storage.getString("$accountUuid.trashFolderName", null)
-            importedArchiveFolder = storage.getString("$accountUuid.archiveFolderName", null)
-            importedSpamFolder = storage.getString("$accountUuid.spamFolderName", null)
+            legacyInboxFolder = storage.getStringOrNull("$accountUuid.inboxFolderName")
+            importedDraftsFolder = storage.getStringOrNull("$accountUuid.draftsFolderName")
+            importedSentFolder = storage.getStringOrNull("$accountUuid.sentFolderName")
+            importedTrashFolder = storage.getStringOrNull("$accountUuid.trashFolderName")
+            importedArchiveFolder = storage.getStringOrNull("$accountUuid.archiveFolderName")
+            importedSpamFolder = storage.getStringOrNull("$accountUuid.spamFolderName")
 
-            inboxFolderId = storage.getString("$accountUuid.inboxFolderId", null)?.toLongOrNull()
-            outboxFolderId = storage.getString("$accountUuid.outboxFolderId", null)?.toLongOrNull()
+            inboxFolderId = storage.getStringOrNull("$accountUuid.inboxFolderId")?.toLongOrNull()
+            outboxFolderId = storage.getStringOrNull("$accountUuid.outboxFolderId")?.toLongOrNull()
 
-            val draftsFolderId = storage.getString("$accountUuid.draftsFolderId", null)?.toLongOrNull()
+            val draftsFolderId = storage.getStringOrNull("$accountUuid.draftsFolderId")?.toLongOrNull()
             val draftsFolderSelection = getEnumStringPref<SpecialFolderSelection>(
                 storage,
                 "$accountUuid.draftsFolderSelection",
@@ -83,7 +93,7 @@ class AccountPreferenceSerializer(
             )
             setDraftsFolderId(draftsFolderId, draftsFolderSelection)
 
-            val sentFolderId = storage.getString("$accountUuid.sentFolderId", null)?.toLongOrNull()
+            val sentFolderId = storage.getStringOrNull("$accountUuid.sentFolderId")?.toLongOrNull()
             val sentFolderSelection = getEnumStringPref<SpecialFolderSelection>(
                 storage,
                 "$accountUuid.sentFolderSelection",
@@ -91,7 +101,7 @@ class AccountPreferenceSerializer(
             )
             setSentFolderId(sentFolderId, sentFolderSelection)
 
-            val trashFolderId = storage.getString("$accountUuid.trashFolderId", null)?.toLongOrNull()
+            val trashFolderId = storage.getStringOrNull("$accountUuid.trashFolderId")?.toLongOrNull()
             val trashFolderSelection = getEnumStringPref<SpecialFolderSelection>(
                 storage,
                 "$accountUuid.trashFolderSelection",
@@ -99,7 +109,7 @@ class AccountPreferenceSerializer(
             )
             setTrashFolderId(trashFolderId, trashFolderSelection)
 
-            val archiveFolderId = storage.getString("$accountUuid.archiveFolderId", null)?.toLongOrNull()
+            val archiveFolderId = storage.getStringOrNull("$accountUuid.archiveFolderId")?.toLongOrNull()
             val archiveFolderSelection = getEnumStringPref<SpecialFolderSelection>(
                 storage,
                 "$accountUuid.archiveFolderSelection",
@@ -107,7 +117,7 @@ class AccountPreferenceSerializer(
             )
             setArchiveFolderId(archiveFolderId, archiveFolderSelection)
 
-            val spamFolderId = storage.getString("$accountUuid.spamFolderId", null)?.toLongOrNull()
+            val spamFolderId = storage.getStringOrNull("$accountUuid.spamFolderId")?.toLongOrNull()
             val spamFolderSelection = getEnumStringPref<SpecialFolderSelection>(
                 storage,
                 "$accountUuid.spamFolderSelection",
@@ -115,7 +125,7 @@ class AccountPreferenceSerializer(
             )
             setSpamFolderId(spamFolderId, spamFolderSelection)
 
-            autoExpandFolderId = storage.getString("$accountUuid.autoExpandFolderId", null)?.toLongOrNull()
+            autoExpandFolderId = storage.getStringOrNull("$accountUuid.autoExpandFolderId")?.toLongOrNull()
 
             expungePolicy = getEnumStringPref(storage, "$accountUuid.expungePolicy", Expunge.EXPUNGE_IMMEDIATELY)
             isSyncRemoteDeletions = storage.getBoolean("$accountUuid.syncRemoteDeletions", true)
@@ -134,7 +144,7 @@ class AccountPreferenceSerializer(
             }
             isMessageReadReceipt = storage.getBoolean("$accountUuid.messageReadReceipt", DEFAULT_MESSAGE_READ_RECEIPT)
             quoteStyle = getEnumStringPref<QuoteStyle>(storage, "$accountUuid.quoteStyle", DEFAULT_QUOTE_STYLE)
-            quotePrefix = storage.getString("$accountUuid.quotePrefix", DEFAULT_QUOTE_PREFIX)
+            quotePrefix = storage.getStringOrDefault("$accountUuid.quotePrefix", DEFAULT_QUOTE_PREFIX)
             isDefaultQuotedTextShown = storage.getBoolean(
                 "$accountUuid.defaultQuotedTextShown",
                 DEFAULT_QUOTED_TEXT_SHOWN,
@@ -144,7 +154,7 @@ class AccountPreferenceSerializer(
             useCompression = storage.getBoolean("$accountUuid.useCompression", true)
             isSendClientInfoEnabled = storage.getBoolean("$accountUuid.sendClientInfo", true)
 
-            importedAutoExpandFolder = storage.getString("$accountUuid.autoExpandFolderName", null)
+            importedAutoExpandFolder = storage.getStringOrNull("$accountUuid.autoExpandFolderName")
 
             accountNumber = storage.getInt("$accountUuid.accountNumber", UNASSIGNED_ACCOUNT_NUMBER)
 
@@ -159,11 +169,20 @@ class AccountPreferenceSerializer(
             updateNotificationSettings {
                 NotificationSettings(
                     isRingEnabled = storage.getBoolean("$accountUuid.ring", true),
-                    ringtone = storage.getString("$accountUuid.ringtone", DEFAULT_RINGTONE_URI),
-                    light = getEnumStringPref(storage, "$accountUuid.notificationLight", NotificationLight.Disabled),
+                    ringtone = storage.getStringOrDefault("$accountUuid.ringtone", DEFAULT_RINGTONE_URI),
+                    light = getEnumStringPref(
+                        storage,
+                        "$accountUuid.notificationLight",
+                        NotificationLight.Disabled,
+                    ),
                     vibration = NotificationVibration(
                         isEnabled = storage.getBoolean("$accountUuid.vibrate", false),
-                        pattern = VibratePattern.deserialize(storage.getInt("$accountUuid.vibratePattern", 0)),
+                        pattern = VibratePattern.deserialize(
+                            storage.getInt(
+                                "$accountUuid.vibratePattern",
+                                0,
+                            ),
+                        ),
                         repeatCount = storage.getInt("$accountUuid.vibrateTimes", 5),
                     ),
                 )
@@ -180,7 +199,7 @@ class AccountPreferenceSerializer(
             isSignatureBeforeQuotedText = storage.getBoolean("$accountUuid.signatureBeforeQuotedText", false)
             replaceIdentities(loadIdentities(accountUuid, storage))
 
-            openPgpProvider = storage.getString("$accountUuid.openPgpProvider", "")
+            openPgpProvider = storage.getStringOrDefault("$accountUuid.openPgpProvider", "")
             openPgpKey = storage.getLong("$accountUuid.cryptoKey", NO_OPENPGP_KEY)
             isOpenPgpHideSignOnly = storage.getBoolean("$accountUuid.openPgpHideSignOnly", true)
             isOpenPgpEncryptSubject = storage.getBoolean("$accountUuid.openPgpEncryptSubject", true)
@@ -213,12 +232,12 @@ class AccountPreferenceSerializer(
         var gotOne: Boolean
         do {
             gotOne = false
-            val name = storage.getString("$accountUuid.$IDENTITY_NAME_KEY.$ident", null)
-            val email = storage.getString("$accountUuid.$IDENTITY_EMAIL_KEY.$ident", null)
+            val name = storage.getStringOrNull("$accountUuid.$IDENTITY_NAME_KEY.$ident")
+            val email = storage.getStringOrNull("$accountUuid.$IDENTITY_EMAIL_KEY.$ident")
             val signatureUse = storage.getBoolean("$accountUuid.signatureUse.$ident", false)
-            val signature = storage.getString("$accountUuid.signature.$ident", null)
-            val description = storage.getString("$accountUuid.$IDENTITY_DESCRIPTION_KEY.$ident", null)
-            val replyTo = storage.getString("$accountUuid.replyTo.$ident", null)
+            val signature = storage.getStringOrNull("$accountUuid.signature.$ident")
+            val description = storage.getStringOrNull("$accountUuid.$IDENTITY_DESCRIPTION_KEY.$ident")
+            val replyTo = storage.getStringOrNull("$accountUuid.replyTo.$ident")
             if (email != null) {
                 val identity = Identity(
                     name = name,
@@ -235,10 +254,10 @@ class AccountPreferenceSerializer(
         } while (gotOne)
 
         if (newIdentities.isEmpty()) {
-            val name = storage.getString("$accountUuid.name", null)
-            val email = storage.getString("$accountUuid.email", null)
+            val name = storage.getStringOrNull("$accountUuid.name")
+            val email = storage.getStringOrNull("$accountUuid.email")
             val signatureUse = storage.getBoolean("$accountUuid.signatureUse", false)
-            val signature = storage.getString("$accountUuid.signature", null)
+            val signature = storage.getStringOrNull("$accountUuid.signature")
             val identity = Identity(
                 name = name,
                 email = email,
@@ -252,12 +271,13 @@ class AccountPreferenceSerializer(
         return newIdentities
     }
 
+    @Suppress("LongMethod")
     @Synchronized
-    fun save(editor: StorageEditor, storage: Storage, account: Account) {
+    fun save(editor: StorageEditor, storage: Storage, account: LegacyAccount) {
         val accountUuid = account.uuid
 
-        if (!storage.getString("accountUuids", "").contains(account.uuid)) {
-            var accountUuids = storage.getString("accountUuids", "")
+        if (!storage.getStringOrDefault("accountUuids", "").contains(account.uuid)) {
+            var accountUuids = storage.getStringOrDefault("accountUuids", "")
             accountUuids += (if (accountUuids.isNotEmpty()) "," else "") + account.uuid
             editor.putString("accountUuids", accountUuids)
         }
@@ -366,13 +386,17 @@ class AccountPreferenceSerializer(
         saveIdentities(account, storage, editor)
     }
 
+    @Suppress("LongMethod")
     @Synchronized
-    fun delete(editor: StorageEditor, storage: Storage, account: Account) {
+    fun delete(editor: StorageEditor, storage: Storage, account: LegacyAccount) {
         val accountUuid = account.uuid
 
         // Get the list of account UUIDs
-        val uuids =
-            storage.getString("accountUuids", "").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val uuids = storage
+            .getStringOrDefault("accountUuids", "")
+            .split(",".toRegex())
+            .dropLastWhile { it.isEmpty() }
+            .toTypedArray()
 
         // Create a list of all account UUIDs excluding this account
         val newUuids = ArrayList<String>(uuids.size)
@@ -484,7 +508,7 @@ class AccountPreferenceSerializer(
     }
 
     @Synchronized
-    private fun saveIdentities(account: Account, storage: Storage, editor: StorageEditor) {
+    private fun saveIdentities(account: LegacyAccount, storage: Storage, editor: StorageEditor) {
         deleteIdentities(account, storage, editor)
         var ident = 0
 
@@ -502,14 +526,14 @@ class AccountPreferenceSerializer(
     }
 
     @Synchronized
-    private fun deleteIdentities(account: Account, storage: Storage, editor: StorageEditor) {
+    private fun deleteIdentities(account: LegacyAccount, storage: Storage, editor: StorageEditor) {
         val accountUuid = account.uuid
 
         var identityIndex = 0
         var gotOne: Boolean
         do {
             gotOne = false
-            val email = storage.getString("$accountUuid.$IDENTITY_EMAIL_KEY.$identityIndex", null)
+            val email = storage.getStringOrNull("$accountUuid.$IDENTITY_EMAIL_KEY.$identityIndex")
             if (email != null) {
                 editor.remove("$accountUuid.$IDENTITY_NAME_KEY.$identityIndex")
                 editor.remove("$accountUuid.$IDENTITY_EMAIL_KEY.$identityIndex")
@@ -523,8 +547,8 @@ class AccountPreferenceSerializer(
         } while (gotOne)
     }
 
-    fun move(editor: StorageEditor, account: Account, storage: Storage, newPosition: Int) {
-        val accountUuids = storage.getString("accountUuids", "").split(",").filter { it.isNotEmpty() }
+    fun move(editor: StorageEditor, account: LegacyAccount, storage: Storage, newPosition: Int) {
+        val accountUuids = storage.getStringOrDefault("accountUuids", "").split(",").filter { it.isNotEmpty() }
         val oldPosition = accountUuids.indexOf(account.uuid)
         if (oldPosition == -1 || oldPosition == newPosition) return
 
@@ -538,100 +562,18 @@ class AccountPreferenceSerializer(
         editor.putString("accountUuids", newAccountUuidsString)
     }
 
-    private fun <T : Enum<T>> getEnumStringPref(storage: Storage, key: String, defaultEnum: T): T {
-        val stringPref = storage.getString(key, null)
-
-        return if (stringPref == null) {
-            defaultEnum
-        } else {
-            try {
-                java.lang.Enum.valueOf<T>(defaultEnum.declaringJavaClass, stringPref)
-            } catch (ex: IllegalArgumentException) {
-                Timber.w(
-                    ex,
-                    "Unable to convert preference key [%s] value [%s] to enum of type %s",
-                    key,
-                    stringPref,
-                    defaultEnum.declaringJavaClass,
-                )
-
-                defaultEnum
-            }
-        }
-    }
-
-    fun loadDefaults(account: Account) {
-        with(account) {
-            automaticCheckIntervalMinutes = DEFAULT_SYNC_INTERVAL
-            idleRefreshMinutes = 24
-            displayCount = K9.DEFAULT_VISIBLE_LIMIT
-            accountNumber = UNASSIGNED_ACCOUNT_NUMBER
-            isNotifyNewMail = true
-            folderNotifyNewMailMode = FolderMode.ALL
-            isNotifySync = false
-            isNotifySelfNewMail = true
-            isNotifyContactsMailOnly = false
-            isIgnoreChatMessages = false
-            messagesNotificationChannelVersion = 0
-            folderDisplayMode = FolderMode.NOT_SECOND_CLASS
-            folderSyncMode = FolderMode.FIRST_CLASS
-            folderPushMode = FolderMode.NONE
-            sortType = DEFAULT_SORT_TYPE
-            setSortAscending(DEFAULT_SORT_TYPE, DEFAULT_SORT_ASCENDING)
-            showPictures = ShowPictures.NEVER
-            isSignatureBeforeQuotedText = false
-            expungePolicy = Expunge.EXPUNGE_IMMEDIATELY
-            importedAutoExpandFolder = null
-            legacyInboxFolder = null
-            maxPushFolders = 10
-            isSubscribedFoldersOnly = false
-            maximumPolledMessageAge = -1
-            maximumAutoDownloadMessageSize = DEFAULT_MAXIMUM_AUTO_DOWNLOAD_MESSAGE_SIZE
-            messageFormat = DEFAULT_MESSAGE_FORMAT
-            isMessageFormatAuto = DEFAULT_MESSAGE_FORMAT_AUTO
-            isMessageReadReceipt = DEFAULT_MESSAGE_READ_RECEIPT
-            quoteStyle = DEFAULT_QUOTE_STYLE
-            quotePrefix = DEFAULT_QUOTE_PREFIX
-            isDefaultQuotedTextShown = DEFAULT_QUOTED_TEXT_SHOWN
-            isReplyAfterQuote = DEFAULT_REPLY_AFTER_QUOTE
-            isStripSignature = DEFAULT_STRIP_SIGNATURE
-            isSyncRemoteDeletions = true
-            openPgpKey = NO_OPENPGP_KEY
-            isRemoteSearchFullText = false
-            remoteSearchNumResults = DEFAULT_REMOTE_SEARCH_NUM_RESULTS
-            isUploadSentMessages = true
-            isMarkMessageAsReadOnView = true
-            isMarkMessageAsReadOnDelete = true
-            isAlwaysShowCcBcc = false
-            lastSyncTime = 0L
-            lastFolderListRefreshTime = 0L
-
-            setArchiveFolderId(null, SpecialFolderSelection.AUTOMATIC)
-            setDraftsFolderId(null, SpecialFolderSelection.AUTOMATIC)
-            setSentFolderId(null, SpecialFolderSelection.AUTOMATIC)
-            setSpamFolderId(null, SpecialFolderSelection.AUTOMATIC)
-            setTrashFolderId(null, SpecialFolderSelection.AUTOMATIC)
-            setArchiveFolderId(null, SpecialFolderSelection.AUTOMATIC)
-
-            identities = ArrayList<Identity>()
-
-            val identity = Identity(
-                signatureUse = false,
-                signature = null,
-                description = resourceProvider.defaultIdentityDescription(),
+    private inline fun <reified T : Enum<T>> getEnumStringPref(storage: Storage, key: String, defaultEnum: T): T {
+        return try {
+            storage.getEnumOrDefault<T>(key, defaultEnum)
+        } catch (ex: IllegalArgumentException) {
+            Log.w(
+                ex,
+                "Unable to convert preference key [%s] to enum of type %s",
+                key,
+                defaultEnum.declaringJavaClass,
             )
-            identities.add(identity)
 
-            updateNotificationSettings {
-                NotificationSettings(
-                    isRingEnabled = true,
-                    ringtone = DEFAULT_RINGTONE_URI,
-                    light = NotificationLight.Disabled,
-                    vibration = NotificationVibration.DEFAULT,
-                )
-            }
-
-            resetChangeMarkers()
+            defaultEnum
         }
     }
 
@@ -645,20 +587,5 @@ class AccountPreferenceSerializer(
         const val IDENTITY_DESCRIPTION_KEY = "description"
 
         const val FALLBACK_ACCOUNT_COLOR = 0x0099CC
-
-        @JvmField
-        val DEFAULT_MESSAGE_FORMAT = MessageFormat.HTML
-
-        @JvmField
-        val DEFAULT_QUOTE_STYLE = QuoteStyle.PREFIX
-        const val DEFAULT_MESSAGE_FORMAT_AUTO = false
-        const val DEFAULT_MESSAGE_READ_RECEIPT = false
-        const val DEFAULT_QUOTE_PREFIX = ">"
-        const val DEFAULT_QUOTED_TEXT_SHOWN = true
-        const val DEFAULT_REPLY_AFTER_QUOTE = false
-        const val DEFAULT_STRIP_SIGNATURE = true
-        const val DEFAULT_REMOTE_SEARCH_NUM_RESULTS = 25
-        const val DEFAULT_RINGTONE_URI = "content://settings/system/notification_sound"
-        const val DEFAULT_MAXIMUM_AUTO_DOWNLOAD_MESSAGE_SIZE = 131072
     }
 }

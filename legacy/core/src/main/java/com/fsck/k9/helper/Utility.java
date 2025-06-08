@@ -7,14 +7,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.content.Context;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Handler;
 import android.text.TextUtils;
 
-import timber.log.Timber;
+import net.thunderbird.core.logging.legacy.Log;
 
 public class Utility {
 
@@ -31,8 +27,6 @@ public class Utility {
      */
     private static final Pattern TAG_PATTERN = Pattern.compile("\\[[-_a-z0-9]+\\] ",
             Pattern.CASE_INSENSITIVE);
-
-    private static Handler sMainThreadHandler;
 
     public static boolean arrayContains(Object[] a, Object o) {
         for (Object element : a) {
@@ -184,12 +178,12 @@ public class Utility {
         while (imgMatches.find()) {
             String uriScheme = imgMatches.group(1);
             if (uriScheme.equals("http") || uriScheme.equals("https")) {
-                Timber.d("External images found");
+                Log.d("External images found");
                 return true;
             }
         }
 
-        Timber.d("No external images.");
+        Log.d("No external images.");
         return false;
     }
 
@@ -202,23 +196,6 @@ public class Utility {
     public static void closeQuietly(final Cursor cursor) {
         if (cursor != null) {
             cursor.close();
-        }
-    }
-
-    /**
-     * Check to see if we have network connectivity.
-     */
-    public static boolean hasConnectivity(final Context context) {
-        final ConnectivityManager connectivityManager =
-            (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager == null) {
-            return false;
-        }
-        final NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
-            return true;
-        } else {
-            return false;
         }
     }
 

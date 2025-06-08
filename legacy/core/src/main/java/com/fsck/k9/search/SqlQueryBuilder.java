@@ -2,11 +2,11 @@ package com.fsck.k9.search;
 
 import java.util.List;
 
-import app.k9mail.legacy.search.ConditionsTreeNode;
-import app.k9mail.legacy.search.api.SearchAttribute;
-import app.k9mail.legacy.search.api.SearchCondition;
-import app.k9mail.legacy.search.api.SearchField;
-import timber.log.Timber;
+import net.thunderbird.feature.search.ConditionsTreeNode;
+import net.thunderbird.feature.search.api.SearchAttribute;
+import net.thunderbird.feature.search.api.SearchCondition;
+import net.thunderbird.feature.search.api.SearchField;
+import net.thunderbird.core.logging.legacy.Log;
 
 
 public class SqlQueryBuilder {
@@ -27,7 +27,7 @@ public class SqlQueryBuilder {
             if (condition.field == SearchField.MESSAGE_CONTENTS) {
                 String fulltextQueryString = condition.value;
                 if (condition.attribute != SearchAttribute.CONTAINS) {
-                    Timber.e("message contents can only be matched!");
+                    Log.e("message contents can only be matched!");
                 }
                 query.append("messages.id IN (SELECT docid FROM messages_fulltext WHERE fulltext MATCH ?)");
                 selectionArgs.add(fulltextQueryString);

@@ -12,10 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import app.k9mail.core.android.testing.RobolectricTest;
-import app.k9mail.legacy.account.Account.QuoteStyle;
+import net.thunderbird.core.android.testing.RobolectricTest;
+import net.thunderbird.core.android.account.QuoteStyle;
 import com.fsck.k9.CoreResourceProvider;
-import app.k9mail.legacy.account.Identity;
+import net.thunderbird.core.android.account.Identity;
 import com.fsck.k9.TestCoreResourceProvider;
 import com.fsck.k9.mail.Address;
 import com.fsck.k9.mail.BodyPart;
@@ -29,6 +29,8 @@ import com.fsck.k9.mail.internet.MimeMessage;
 import com.fsck.k9.mail.internet.MimeMultipart;
 import com.fsck.k9.message.MessageBuilder.Callback;
 import com.fsck.k9.message.quote.InsertableHtmlContent;
+import net.thunderbird.core.logging.legacy.Log;
+import net.thunderbird.core.logging.testing.TestLogger;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -199,6 +201,7 @@ public class MessageBuilderTest extends RobolectricTest {
 
     @Before
     public void setUp() throws Exception {
+        Log.logger = new TestLogger();
         messageIdGenerator = mock(MessageIdGenerator.class);
         when(messageIdGenerator.generateMessageId(any(Message.class))).thenReturn(TEST_MESSAGE_ID);
 

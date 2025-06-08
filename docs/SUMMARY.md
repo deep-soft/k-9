@@ -1,14 +1,17 @@
 # Summary
 
-[Thunderbird for Android](README.md)
-
 ---
 
 - [Contributing](CONTRIBUTING.md)
+  - [Git Commit Guide](contributing/git-commit-guide.md)
+  - [Testing Guide](contributing/testing-guide.md)
+  - [Java to Kotlin Conversion Guide](contributing/java-to-kotlin-conversion-guide.md)
 - [Design](DESIGN.md)
-- [Releasing](RELEASING.md)
+- [Release](ci/README.md)
+  - [Release Process](ci/RELEASE.md)
+  - [Release Automation](ci/AUTOMATION.md)
+  - [Manual Release (historical)](ci/HISTORICAL_RELEASE.md)
 - [Translations](translations.md)
-- [Java to Kotlin Conversion Guide](contributing/java-to-kotlin-conversion-guide.md)
 - [Architecture Decision Records](architecture/adr/README.md)
   - [Accepted]()
     - [0001 - Switch From Java to Kotlin](architecture/adr/0001-switch-from-java-to-kotlin.md)
@@ -18,9 +21,10 @@
     - [0005 - Central Project Configuration](architecture/adr/0005-central-project-configuration.md)
     - [0006 - White Label Architecture](architecture/adr/0006-white-label-architecture.md)
     - [0007 - Project Structure](architecture/adr/0007-project-structure.md)
+    - [0008 - Change Shared Module package to `net.thunderbird`](architecture/adr/0008-change-shared-modules-package-name.md)
   - [Proposed]()
   - [Rejected]()
 
 ---
 
-[How to Document](how-to-document.md)
+[How to Document](HOW-TO-DOCUMENT.md)

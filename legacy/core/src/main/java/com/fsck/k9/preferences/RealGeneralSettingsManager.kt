@@ -2,12 +2,6 @@
 
 package com.fsck.k9.preferences
 
-import app.k9mail.legacy.preferences.AppTheme
-import app.k9mail.legacy.preferences.BackgroundSync
-import app.k9mail.legacy.preferences.GeneralSettings
-import app.k9mail.legacy.preferences.GeneralSettingsManager
-import app.k9mail.legacy.preferences.SettingsChangePublisher
-import app.k9mail.legacy.preferences.SubTheme
 import com.fsck.k9.K9
 import com.fsck.k9.Preferences
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,7 +11,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import net.thunderbird.core.logging.legacy.Log
+import net.thunderbird.core.preferences.AppTheme
+import net.thunderbird.core.preferences.BackgroundSync
+import net.thunderbird.core.preferences.GeneralSettings
+import net.thunderbird.core.preferences.GeneralSettingsManager
+import net.thunderbird.core.preferences.SettingsChangePublisher
+import net.thunderbird.core.preferences.Storage
+import net.thunderbird.core.preferences.SubTheme
+import net.thunderbird.core.preferences.getEnumOrDefault
 
 /**
  * Retrieve and modify general settings.
@@ -132,12 +134,22 @@ internal class RealGeneralSettingsManager(
         getSettings().copy(fixedMessageViewTheme = fixedMessageViewTheme).persist()
     }
 
+    override fun setIsShowUnifiedInbox(isShowUnifiedInbox: Boolean) {
+        getSettings().copy(isShowUnifiedInbox = isShowUnifiedInbox).persist()
+    }
+
+    override fun setIsShowStarredCount(isShowStarredCount: Boolean) {
+        getSettings().copy(isShowStarredCount = isShowStarredCount).persist()
+    }
+
     private fun writeSettings(editor: StorageEditor, settings: GeneralSettings) {
         editor.putBoolean("showRecentChanges", settings.showRecentChanges)
         editor.putEnum("theme", settings.appTheme)
         editor.putEnum("messageViewTheme", settings.messageViewTheme)
         editor.putEnum("messageComposeTheme", settings.messageComposeTheme)
         editor.putBoolean("fixedMessageViewTheme", settings.fixedMessageViewTheme)
+        editor.putBoolean("showUnifiedInbox", settings.isShowUnifiedInbox)
+        editor.putBoolean("showStarredCount", settings.isShowStarredCount)
     }
 
     private fun loadGeneralSettings(): GeneralSettings {
@@ -147,9 +159,17 @@ internal class RealGeneralSettingsManager(
             backgroundSync = K9.backgroundOps.toBackgroundSync(),
             showRecentChanges = storage.getBoolean("showRecentChanges", true),
             appTheme = storage.getEnum("theme", AppTheme.FOLLOW_SYSTEM),
-            messageViewTheme = storage.getEnum("messageViewTheme", SubTheme.USE_GLOBAL),
-            messageComposeTheme = storage.getEnum("messageComposeTheme", SubTheme.USE_GLOBAL),
+            messageViewTheme = storage.getEnum(
+                "messageViewTheme",
+                SubTheme.USE_GLOBAL,
+            ),
+            messageComposeTheme = storage.getEnum(
+                "messageComposeTheme",
+                SubTheme.USE_GLOBAL,
+            ),
             fixedMessageViewTheme = storage.getBoolean("fixedMessageViewTheme", true),
+            isShowUnifiedInbox = storage.getBoolean("showUnifiedInbox", false),
+            isShowStarredCount = storage.getBoolean("showStarredCount", false),
         )
 
         updateSettingsFlow(settings)
@@ -168,14 +188,9 @@ private fun K9.BACKGROUND_OPS.toBackgroundSync(): BackgroundSync {
 
 private inline fun <reified T : Enum<T>> Storage.getEnum(key: String, defaultValue: T): T {
     return try {
-        val value = getString(key, null)
-        if (value != null) {
-            enumValueOf(value)
-        } else {
-            defaultValue
-        }
+        getEnumOrDefault(key, defaultValue)
     } catch (e: Exception) {
-        Timber.e("Couldn't read setting '%s'. Using default value instead.", key)
+        Log.e(e, "Couldn't read setting '%s'. Using default value instead.", key)
         defaultValue
     }
 }

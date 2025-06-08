@@ -1,16 +1,16 @@
 package com.fsck.k9.preferences
 
 import android.content.Context
-import app.k9mail.legacy.account.Account
 import com.fsck.k9.AccountPreferenceSerializer.Companion.ACCOUNT_DESCRIPTION_KEY
 import com.fsck.k9.AccountPreferenceSerializer.Companion.INCOMING_SERVER_SETTINGS_KEY
 import com.fsck.k9.AccountPreferenceSerializer.Companion.OUTGOING_SERVER_SETTINGS_KEY
 import com.fsck.k9.Core
 import com.fsck.k9.Preferences
-import com.fsck.k9.ServerSettingsSerializer
 import com.fsck.k9.mailstore.SpecialLocalFoldersCreator
 import java.util.UUID
 import kotlinx.datetime.Clock
+import net.thunderbird.core.android.account.LegacyAccount
+import net.thunderbird.feature.account.storage.legacy.ServerSettingsSerializer
 
 internal class AccountSettingsWriter(
     private val preferences: Preferences,
@@ -87,7 +87,7 @@ internal class AccountSettingsWriter(
     }
 
     private fun updateAccountUuids(editor: StorageEditor, accountUuid: String) {
-        val oldAccountUuids = preferences.storage.getString("accountUuids", "")
+        val oldAccountUuids = preferences.storage.getStringOrDefault("accountUuids", "")
             .split(',')
             .dropLastWhile { it.isEmpty() }
         val newAccountUuids = oldAccountUuids + accountUuid
@@ -140,7 +140,7 @@ internal class AccountSettingsWriter(
         error("Unexpected exit")
     }
 
-    private fun isAccountNameUsed(name: String?, accounts: List<Account>): Boolean {
+    private fun isAccountNameUsed(name: String?, accounts: List<LegacyAccount>): Boolean {
         return accounts.any { it.displayName == name }
     }
 }

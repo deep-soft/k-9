@@ -10,6 +10,7 @@ import com.fsck.k9.mail.ssl.TrustedSocketFactory
 import com.fsck.k9.mailstore.LocalStoreProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
+import net.thunderbird.feature.account.storage.legacy.ServerSettingsSerializer
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -21,6 +22,7 @@ val mainModule = module {
             storagePersister = get(),
             localStoreProvider = get(),
             accountPreferenceSerializer = get(),
+            accountDefaultsProvider = get(),
         )
     }
     single { get<Context>().resources }

@@ -307,12 +307,12 @@
     <string name="move_copy_cannot_copy_unsynced_message">Немагчыма скапіяваць ці перамясціць ліст, які не сінхранізаваны з серверам</string>
     <string name="account_settings_push_advanced_title">Дадаткова</string>
     <string name="account_settings_title_fmt">Налады акаўнта</string>
-    <string name="account_settings_notify_label">Апавяшчэнне пра новую пошту</string>
+    <string name="account_settings_notify_label">Атрыманне пошты</string>
     <string name="account_settings_notify_sync_label">Апавяшчэнне пра сінхранізацыю</string>
     <string name="account_settings_email_label">Ваш адрас электроннай пошты</string>
     <string name="account_settings_notify_summary">Паказваць на панэлі стану апавяшчэнні пра новую пошту</string>
     <string name="account_settings_notify_sync_summary">Паказваць на панэлі стану апавяшчэнні пра правяранне пошты</string>
-    <string name="account_settings_notify_self_label">Уключаючы адпраўленую пошту</string>
+    <string name="account_settings_notify_self_label">Адпраўленне пошты</string>
     <string name="account_settings_notify_self_summary">Паказваць апавяшчэнні пры атрыманні пошты</string>
     <string name="account_notify_contacts_mail_only_label">Толькі кантакты</string>
     <string name="account_notify_contacts_mail_only_summary">Апавяшчаць толькі пра лісты ад кантактаў</string>
@@ -401,7 +401,6 @@
     <string name="account_settings_openpgp_missing">Праграма OpenPGP адсутнічае. Яна была выдаленая?</string>
     <string name="folder_settings_title">Налады каталога</string>
     <string name="folder_settings_in_top_group_label">Паказваць у пачатку</string>
-    <string name="folder_settings_in_top_group_summary">Паказваць бліжэй да спіса каталогаў</string>
     <string name="folder_settings_clear_local_folder_action">Выдаліць лакальныя лісты</string>
     <string name="account_settings_incoming_label">Сервер уваходных лістоў</string>
     <string name="account_settings_incoming_summary">Наладжванне сервера ўваходнай пошты</string>
@@ -534,7 +533,6 @@
     <string name="integrated_inbox_title">Усе атрыманыя</string>
     <string name="integrated_inbox_detail">Усе лісты са ўсіх каталогаў</string>
     <string name="folder_settings_include_in_integrated_inbox_label">Усе атрыманыя</string>
-    <string name="folder_settings_include_in_integrated_inbox_summary">Усе лісты паказваюцца ў агульным каталозе</string>
     <string name="account_settings_no_folder_selected">Няма</string>
     <string name="account_settings_automatic_special_folder">Аўтаматычна (%s)</string>
     <string name="font_size_settings_title">Памер шрыфту</string>

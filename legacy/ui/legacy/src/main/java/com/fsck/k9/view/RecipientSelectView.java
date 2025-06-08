@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -46,7 +47,7 @@ import com.fsck.k9.view.RecipientSelectView.Recipient;
 import com.google.android.material.textview.MaterialTextView;
 import com.tokenautocomplete.TokenCompleteTextView;
 import de.hdodenhof.circleimageview.CircleImageView;
-import timber.log.Timber;
+import net.thunderbird.core.logging.legacy.Log;
 
 import static com.fsck.k9.FontSizes.FONT_DEFAULT;
 
@@ -167,21 +168,33 @@ public class RecipientSelectView extends TokenCompleteTextView<Recipient> implem
         holder.showCryptoState(isAvailable, showCryptoEnabled);
     }
 
-    @Override
-    protected Recipient defaultObject(String completionText) {
+    private List<Recipient> parseRecipients(String text) {
         try {
-            List<Address> parsedAddresses = emailAddressParser.parse(completionText);
+            List<Address> parsedAddresses = emailAddressParser.parse(text);
 
             if (parsedAddresses.isEmpty()) {
                 setError(getContext().getString(R.string.recipient_error_parse_failed));
-                return null;
+                return List.of();
             }
 
-            return new Recipient(parsedAddresses.get(0));
+            List<Recipient> recipients = new ArrayList<>();
+            for (Address a : parsedAddresses) {
+                recipients.add(new Recipient(a));
+            }
+            return recipients;
         } catch (NonAsciiEmailAddressException e) {
             setError(getContext().getString(R.string.recipient_error_non_ascii));
-            return null;
+            return List.of();
         }
+    }
+
+    @Override
+    protected Recipient defaultObject(String completionText) {
+        List<Recipient> recipients = parseRecipients(completionText);
+        if (!recipients.isEmpty()) {
+            return recipients.get(0);
+        }
+        return null;
     }
 
     public void setLoaderManager(@Nullable LoaderManager loaderManager) {
@@ -245,9 +258,12 @@ public class RecipientSelectView extends TokenCompleteTextView<Recipient> implem
     @Override
     public void performCompletion() {
         if (getListSelection() == ListView.INVALID_POSITION && enoughToFilter()) {
-            Object recipientText = defaultObject(currentCompletionText());
-            if (recipientText != null) {
-                replaceText(convertSelectionToString(recipientText));
+            List<Recipient> recipients = parseRecipients(currentCompletionText());
+            if (!recipients.isEmpty()) {
+                clearCompletionText();
+                for (Recipient r : recipients) {
+                    addObjectSync(r);
+                }
             }
         } else {
             super.performCompletion();
@@ -455,7 +471,7 @@ public class RecipientSelectView extends TokenCompleteTextView<Recipient> implem
         List<Recipient> currentRecipients = getObjects();
         int indexOfRecipient = currentRecipients.indexOf(recipientToReplace);
         if (indexOfRecipient == -1) {
-            Timber.e("Tried to refresh invalid view token!");
+            Log.e("Tried to refresh invalid view token!");
             return;
         }
         Recipient currentRecipient = currentRecipients.get(indexOfRecipient);
@@ -466,7 +482,7 @@ public class RecipientSelectView extends TokenCompleteTextView<Recipient> implem
 
         View recipientTokenView = getTokenViewForRecipient(currentRecipient);
         if (recipientTokenView == null) {
-            Timber.e("Tried to refresh invalid view token!");
+            Log.e("Tried to refresh invalid view token!");
             return;
         }
 

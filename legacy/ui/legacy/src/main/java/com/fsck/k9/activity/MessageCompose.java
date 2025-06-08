@@ -4,11 +4,12 @@ package com.fsck.k9.activity;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
-
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.IntentSender.SendIntentException;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,17 +29,17 @@ import android.text.TextWatcher;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewStub;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -47,16 +49,16 @@ import androidx.core.os.BundleCompat;
 import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import app.k9mail.legacy.account.Account;
-import app.k9mail.legacy.account.Account.MessageFormat;
+import net.thunderbird.core.android.account.LegacyAccount;
 import app.k9mail.legacy.di.DI;
-import app.k9mail.legacy.account.Identity;
+import net.thunderbird.core.android.account.Identity;
 import com.fsck.k9.K9;
 import com.fsck.k9.Preferences;
 import com.fsck.k9.activity.MessageLoaderHelper.MessageLoaderCallbacks;
 import com.fsck.k9.activity.compose.AttachmentPresenter;
 import com.fsck.k9.activity.compose.AttachmentPresenter.AttachmentMvpView;
 import com.fsck.k9.activity.compose.AttachmentPresenter.WaitingAction;
+import app.k9mail.core.android.common.camera.CameraCaptureHandler;
 import com.fsck.k9.activity.compose.ComposeCryptoStatus;
 import com.fsck.k9.activity.compose.ComposeCryptoStatus.SendErrorState;
 import com.fsck.k9.activity.compose.IdentityAdapter;
@@ -71,7 +73,6 @@ import com.fsck.k9.activity.compose.ReplyToView;
 import com.fsck.k9.activity.compose.SaveMessageTask;
 import com.fsck.k9.activity.misc.Attachment;
 import com.fsck.k9.autocrypt.AutocryptDraftStateHeaderParser;
-import com.fsck.k9.contact.ContactIntentHelper;
 import app.k9mail.legacy.message.controller.MessageReference;
 import com.fsck.k9.controller.MessagingController;
 import app.k9mail.legacy.message.controller.MessagingListener;
@@ -104,10 +105,8 @@ import com.fsck.k9.message.PgpMessageBuilder;
 import com.fsck.k9.message.QuotedTextMode;
 import com.fsck.k9.message.SimpleMessageBuilder;
 import com.fsck.k9.message.SimpleMessageFormat;
-import app.k9mail.legacy.search.LocalSearch;
 import com.fsck.k9.ui.R;
 import com.fsck.k9.ui.base.K9Activity;
-import app.k9mail.legacy.ui.theme.ThemeManager;
 import com.fsck.k9.ui.compose.IntentData;
 import com.fsck.k9.ui.compose.IntentDataMapper;
 import com.fsck.k9.ui.compose.QuotedMessageMvpView;
@@ -117,9 +116,16 @@ import com.fsck.k9.ui.helper.SizeFormatter;
 import com.fsck.k9.ui.messagelist.DefaultFolderProvider;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textview.MaterialTextView;
+import net.thunderbird.core.android.account.MessageFormat;
+import net.thunderbird.core.android.contact.ContactIntentHelper;
+import net.thunderbird.core.ui.theme.manager.ThemeManager;
+import net.thunderbird.feature.search.LocalSearch;
 import org.openintents.openpgp.OpenPgpApiManager;
 import org.openintents.openpgp.util.OpenPgpIntentStarter;
-import timber.log.Timber;
+import net.thunderbird.core.logging.legacy.Log;
+import static com.fsck.k9.activity.compose.AttachmentPresenter.REQUEST_CODE_ATTACHMENT_URI;
+import static app.k9mail.core.android.common.camera.CameraCaptureHandler.CAMERA_PERMISSION_REQUEST_CODE;
+import static app.k9mail.core.android.common.camera.CameraCaptureHandler.REQUEST_IMAGE_CAPTURE;
 
 
 @SuppressWarnings("deprecation") // TODO get rid of activity dialogs and indeterminate progress bars
@@ -171,6 +177,8 @@ public class MessageCompose extends K9Activity implements OnClickListener,
     private static final int REQUEST_MASK_ATTACHMENT_PRESENTER = (1 << 10);
     private static final int REQUEST_MASK_MESSAGE_BUILDER = (1 << 11);
 
+
+
     /**
      * Regular expression to remove the first localized "Re:" prefix in subjects.
      *
@@ -188,6 +196,8 @@ public class MessageCompose extends K9Activity implements OnClickListener,
 
     private final Contacts contacts = DI.get(Contacts.class);
 
+    private final CameraCaptureHandler cameraCaptureHandler = DI.get(CameraCaptureHandler.class);
+
     private QuotedMessagePresenter quotedMessagePresenter;
     private MessageLoaderHelper messageLoaderHelper;
     private AttachmentPresenter attachmentPresenter;
@@ -196,7 +206,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
     /**
      * The account used for message composition.
      */
-    private Account account;
+    private LegacyAccount account;
     private Identity identity;
     private boolean identityChanged = false;
     private boolean signatureChanged = false;
@@ -251,7 +261,6 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             finish();
             return;
         }
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         setLayout(R.layout.message_compose);
         ViewStub contentContainer = findViewById(R.id.message_compose_content);
@@ -324,6 +333,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         EditText upperSignature = findViewById(R.id.upper_signature);
         EditText lowerSignature = findViewById(R.id.lower_signature);
 
+
         QuotedMessageMvpView quotedMessageMvpView = new QuotedMessageMvpView(this);
         quotedMessagePresenter = new QuotedMessagePresenter(this, quotedMessageMvpView, account);
         attachmentPresenter = new AttachmentPresenter(getApplicationContext(), attachmentMvpView,
@@ -390,9 +400,15 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             messageContentView.setText(CrLfConverter.toLf(intentData.getExtraText()));
         }
 
-        if (intentData.getExtraStream() != null) {
-            attachmentPresenter.addExternalAttachment(intentData.getExtraStream(), intentData.getIntentType());
+        List<Uri> uriList = intentData.getExtraStream();
+        String intentType = intentData.getIntentType();
+
+        if (intentType != null) {
+            for (Uri uri : uriList) {
+                attachmentPresenter.addExternalAttachment(uri, intentType);
+            }
         }
+
 
         if (intentData.getSubject() != null && subjectView.getText().length() == 0) {
             subjectView.setText(intentData.getSubject());
@@ -426,7 +442,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
                 this.action = Action.EDIT_DRAFT;
             } else {
                 // This shouldn't happen
-                Timber.w("MessageCompose was started with an unsupported action");
+                Log.w("MessageCompose was started with an unsupported action");
                 this.action = Action.COMPOSE;
             }
         }
@@ -503,7 +519,6 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             setProgressBarIndeterminateVisibility(true);
             currentMessageBuilder.reattachCallback(this);
         }
-
     }
 
     @Override
@@ -606,7 +621,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
 
         ComposeCryptoStatus cryptoStatus = recipientPresenter.getCurrentCachedCryptoStatus();
         if (cryptoStatus == null) {
-            Timber.w("Couldn't retrieve crypto status; not creating MessageBuilder!");
+            Log.w("Couldn't retrieve crypto status; not creating MessageBuilder!");
             return null;
         }
 
@@ -771,7 +786,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             if ((requestCode & REQUEST_MASK_MESSAGE_BUILDER) == REQUEST_MASK_MESSAGE_BUILDER) {
                 requestCode ^= REQUEST_MASK_MESSAGE_BUILDER;
                 if (currentMessageBuilder == null) {
-                    Timber.e("Got a message builder activity result for no message builder, " +
+                    Log.e("Got a message builder activity result for no message builder, " +
                             "this is an illegal state!");
                     return;
                 }
@@ -796,14 +811,34 @@ public class MessageCompose extends K9Activity implements OnClickListener,
                 attachmentPresenter.onActivityResult(resultCode, requestCode, data);
                 return;
             }
+
+            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+                Intent intent = new Intent();
+                intent.setData(cameraCaptureHandler.getCapturedImageUri());
+                attachmentPresenter.onActivityResult(resultCode, REQUEST_CODE_ATTACHMENT_URI, intent);
+                return;
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void onAccountChosen(Account account, Identity identity) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                cameraCaptureHandler.openCamera(this);
+            } else {
+                Toast.makeText(this,R.string.camera_permission_denied,Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+
+    private void onAccountChosen(LegacyAccount account, Identity identity) {
         if (!this.account.equals(account)) {
-            Timber.v("Switching account from %s to %s", this.account, account);
+            Log.v("Switching account from %s to %s", this.account, account);
 
             // on draft edit, make sure we don't keep previous message UID
             if (action == Action.EDIT_DRAFT) {
@@ -813,7 +848,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             // test whether there is something to save
             if (changesMadeSinceLastSave || (draftMessageId != null)) {
                 final Long previousDraftId = draftMessageId;
-                final Account previousAccount = this.account;
+                final LegacyAccount previousAccount = this.account;
 
                 // make current message appear as new
                 draftMessageId = null;
@@ -821,11 +856,11 @@ public class MessageCompose extends K9Activity implements OnClickListener,
                 // actual account switch
                 this.account = account;
 
-                Timber.v("Account switch, saving new draft in new account");
+                Log.v("Account switch, saving new draft in new account");
                 checkToSaveDraftImplicitly();
 
                 if (previousDraftId != null) {
-                    Timber.v("Account switch, deleting draft from previous account: %d", previousDraftId);
+                    Log.v("Account switch, deleting draft from previous account: %d", previousDraftId);
 
                     messagingController.deleteDraft(previousAccount, previousDraftId);
                 }
@@ -844,6 +879,29 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         }
 
         switchToIdentity(identity);
+    }
+
+    private void showPopupMenu(View view) {
+        PopupMenu popup = new PopupMenu(this, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.message_attachment_option, popup.getMenu());
+        popup.getMenu().findItem(R.id.open_camera).setVisible(cameraCaptureHandler.canLaunchCamera(this));
+        popup.setOnMenuItemClickListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.open_camera) {
+                if(!cameraCaptureHandler.hasCameraPermission(this)){
+                    cameraCaptureHandler.requestCameraPermission(this);
+                }else {
+                    cameraCaptureHandler.openCamera(this);
+                }
+                return true;
+            } else if (itemId == R.id.attach_file) {
+                attachmentPresenter.onClickAddAttachment(recipientPresenter);
+                return true;
+            }
+            return false;
+        });
+        popup.show();
     }
 
     private void switchToIdentity(Identity identity) {
@@ -952,7 +1010,8 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         } else if (id == R.id.openpgp_sign_only_disable) {
             recipientPresenter.onMenuSetSignOnly(false);
         } else if (id == R.id.add_attachment) {
-            attachmentPresenter.onClickAddAttachment(recipientPresenter);
+            View attachmentMenuAnchor = findViewById(com.fsck.k9.ui.base.R.id.toolbar).findViewById(R.id.add_attachment);
+            showPopupMenu(attachmentMenuAnchor);
         } else if (id == R.id.read_receipt) {
             onReadReceipt();
         } else {
@@ -1008,7 +1067,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             if (draftMessageId == null) {
                 onDiscard();
             } else {
-                if (navigateUp) {
+                if (navigateUp && this.action != action.EDIT_DRAFT) {
                     openDefaultFolder();
                 } else {
                     super.onBackPressed();
@@ -1184,7 +1243,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
                     break;
                 }
                 default: {
-                    Timber.w("processSourceMessage() called with unsupported action");
+                    Log.w("processSourceMessage() called with unsupported action");
                     break;
                 }
             }
@@ -1193,7 +1252,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
              * Let the user continue composing their message even if we have a problem processing
              * the source message. Log it as an error, though.
              */
-            Timber.e(e, "Error while processing source message: ");
+            Log.e(e, "Error while processing source message: ");
         } finally {
             relatedMessageProcessed = true;
             changesMadeSinceLastSave = false;
@@ -1235,7 +1294,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             }
 
         } else {
-            Timber.d("could not get Message-ID.");
+            Log.d("could not get Message-ID.");
         }
 
         // Quote the message and setup the UI.
@@ -1265,7 +1324,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             repliedToMessageId = message.getMessageId();
             referencedMessageIds = repliedToMessageId;
         } else {
-            Timber.d("could not get Message-ID.");
+            Log.d("could not get Message-ID.");
         }
 
         // Quote the message and setup the UI.
@@ -1356,7 +1415,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
 
             if (messageReference != null) {
                 // Check if this is a valid account in our database
-                Account account = preferences.getAccount(messageReference.getAccountUuid());
+                LegacyAccount account = preferences.getAccount(messageReference.getAccountUuid());
                 if (account != null) {
                     relatedMessageReference = messageReference;
                 }
@@ -1375,7 +1434,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
     static class SendMessageTask extends AsyncTask<Void, Void, Void> {
         final MessagingController messagingController;
         final Preferences preferences;
-        final Account account;
+        final LegacyAccount account;
         final Contacts contacts;
         final Message message;
         final Long draftId;
@@ -1383,7 +1442,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         final MessageReference messageReference;
         final Flag flag;
 
-        SendMessageTask(MessagingController messagingController, Preferences preferences, Account account,
+        SendMessageTask(MessagingController messagingController, Preferences preferences, LegacyAccount account,
                 Contacts contacts, Message message, Long draftId, String plaintextSubject,
                 MessageReference messageReference, Flag flag) {
             this.messagingController = messagingController;
@@ -1405,7 +1464,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
                 contacts.markAsContacted(message.getRecipients(RecipientType.BCC));
                 addFlagToReferencedMessage();
             } catch (Exception e) {
-                Timber.e(e, "Failed to mark contact as contacted.");
+                Log.e(e, "Failed to mark contact as contacted.");
             }
 
             messagingController.sendMessage(account, message, plaintextSubject, null);
@@ -1423,11 +1482,11 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         private void addFlagToReferencedMessage() {
             if (messageReference != null && flag != null) {
                 String accountUuid = messageReference.getAccountUuid();
-                Account account = preferences.getAccount(accountUuid);
+                LegacyAccount account = preferences.getAccount(accountUuid);
                 long folderId = messageReference.getFolderId();
                 String sourceMessageUid = messageReference.getUid();
 
-                Timber.d("Setting referenced message (%d, %s) flag to %s", folderId, sourceMessageUid, flag);
+                Log.d("Setting referenced message (%d, %s) flag to %s", folderId, sourceMessageUid, flag);
 
                 messagingController.setFlag(account, folderId, sourceMessageUid, flag, true);
             }
@@ -1533,7 +1592,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
 
     @Override
     public void onMessageBuildException(MessagingException me) {
-        Timber.e(me, "Error sending message");
+        Log.e(me, "Error sending message");
         Toast.makeText(MessageCompose.this,
                 getString(R.string.send_failed_reason, me.getLocalizedMessage()), Toast.LENGTH_LONG).show();
         sendMessageHasBeenTriggered = false;
@@ -1547,7 +1606,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         try {
             OpenPgpIntentStarter.startIntentSenderForResult(this, pendingIntent.getIntentSender(), requestCode);
         } catch (SendIntentException e) {
-            Timber.e(e, "Error starting pending intent from builder!");
+            Log.e(e, "Error starting pending intent from builder!");
         }
     }
 
@@ -1556,7 +1615,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         try {
             OpenPgpIntentStarter.startIntentSenderForResult(this, pendingIntent.getIntentSender(), requestCode);
         } catch (SendIntentException e) {
-            Timber.e(e, "Error starting pending intent from builder!");
+            Log.e(e, "Error starting pending intent from builder!");
         }
     }
 
@@ -1573,7 +1632,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             } catch (MessagingException e) {
                 // Hm, if we couldn't populate the UI after source reprocessing, let's just delete it?
                 quotedMessagePresenter.showOrHideQuotedText(QuotedTextMode.HIDE);
-                Timber.e(e, "Could not re-process source message; deleting quoted text to be safe.");
+                Log.e(e, "Could not re-process source message; deleting quoted text to be safe.");
             }
             updateMessageFormat();
         } else {
@@ -1631,7 +1690,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
                 requestCode |= REQUEST_MASK_LOADER_HELPER;
                 OpenPgpIntentStarter.startIntentSenderForResult(MessageCompose.this, intentSender, requestCode);
             } catch (SendIntentException e) {
-                Timber.e(e, "Irrecoverable error calling PendingIntent!");
+                Log.e(e, "Irrecoverable error calling PendingIntent!");
             }
 
             return true;
@@ -1667,7 +1726,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
     public MessagingListener messagingListener = new SimpleMessagingListener() {
 
         @Override
-        public void messageUidChanged(Account account, long folderId, String oldUid, String newUid) {
+        public void messageUidChanged(LegacyAccount account, long folderId, String oldUid, String newUid) {
             if (relatedMessageReference == null) {
                 return;
             }

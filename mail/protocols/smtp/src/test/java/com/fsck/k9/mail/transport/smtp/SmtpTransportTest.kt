@@ -15,13 +15,16 @@ import com.fsck.k9.mail.Message
 import com.fsck.k9.mail.MessagingException
 import com.fsck.k9.mail.MissingCapabilityException
 import com.fsck.k9.mail.ServerSettings
-import com.fsck.k9.mail.XOAuth2ChallengeParserTest
 import com.fsck.k9.mail.filter.Base64
-import com.fsck.k9.mail.helpers.TestMessageBuilder
-import com.fsck.k9.mail.helpers.TestTrustedSocketFactory
 import com.fsck.k9.mail.internet.MimeMessage
 import com.fsck.k9.mail.oauth.OAuth2TokenProvider
+import com.fsck.k9.mail.testing.XOAuth2ChallengeParserTestData
+import com.fsck.k9.mail.testing.message.TestMessageBuilder
+import com.fsck.k9.mail.testing.security.TestTrustedSocketFactory
 import com.fsck.k9.mail.transport.mockServer.MockSmtpServer
+import net.thunderbird.core.logging.legacy.Log
+import net.thunderbird.core.logging.testing.TestLogger
+import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.kotlin.doReturn
@@ -35,8 +38,13 @@ private const val PASSWORD = "password"
 private val CLIENT_CERTIFICATE_ALIAS: String? = null
 
 class SmtpTransportTest {
-    private val socketFactory = TestTrustedSocketFactory.newInstance()
+    private val socketFactory = TestTrustedSocketFactory
     private val oAuth2TokenProvider = createMockOAuth2TokenProvider()
+
+    @Before
+    fun setUp() {
+        Log.logger = TestLogger()
+    }
 
     @Test
     fun `open() should issue EHLO command`() {
@@ -235,7 +243,7 @@ class SmtpTransportTest {
             output("250-ENHANCEDSTATUSCODES")
             output("250 AUTH XOAUTH2")
             expect("AUTH XOAUTH2 dXNlcj11c2VyAWF1dGg9QmVhcmVyIG9sZFRva2VuAQE=")
-            output("334 " + XOAuth2ChallengeParserTest.STATUS_401_RESPONSE)
+            output("334 " + XOAuth2ChallengeParserTestData.STATUS_401_RESPONSE)
             expect("")
             output("535-5.7.1 Username and Password not accepted. Learn more at")
             output("535 5.7.1 http://support.google.com/mail/bin/answer.py?answer=14257 hx9sm5317360pbc.68")
@@ -268,7 +276,7 @@ class SmtpTransportTest {
             output("250-localhost Hello client.localhost")
             output("250 AUTH XOAUTH2")
             expect("AUTH XOAUTH2 dXNlcj11c2VyAWF1dGg9QmVhcmVyIG9sZFRva2VuAQE=")
-            output("334 " + XOAuth2ChallengeParserTest.STATUS_400_RESPONSE)
+            output("334 " + XOAuth2ChallengeParserTestData.STATUS_400_RESPONSE)
             expect("")
             output("535-5.7.1 Username and Password not accepted. Learn more at")
             output("535 5.7.1 http://support.google.com/mail/bin/answer.py?answer=14257 hx9sm5317360pbc.68")
@@ -296,7 +304,7 @@ class SmtpTransportTest {
             output("250-localhost Hello client.localhost")
             output("250 AUTH XOAUTH2")
             expect("AUTH XOAUTH2 dXNlcj11c2VyAWF1dGg9QmVhcmVyIG9sZFRva2VuAQE=")
-            output("334 " + XOAuth2ChallengeParserTest.INVALID_RESPONSE)
+            output("334 " + XOAuth2ChallengeParserTestData.INVALID_RESPONSE)
             expect("")
             output("535-5.7.1 Username and Password not accepted. Learn more at")
             output("535 5.7.1 http://support.google.com/mail/bin/answer.py?answer=14257 hx9sm5317360pbc.68")
@@ -324,7 +332,7 @@ class SmtpTransportTest {
             output("250-localhost Hello client.localhost")
             output("250 AUTH XOAUTH2")
             expect("AUTH XOAUTH2 dXNlcj11c2VyAWF1dGg9QmVhcmVyIG9sZFRva2VuAQE=")
-            output("334 " + XOAuth2ChallengeParserTest.MISSING_STATUS_RESPONSE)
+            output("334 " + XOAuth2ChallengeParserTestData.MISSING_STATUS_RESPONSE)
             expect("")
             output("535-5.7.1 Username and Password not accepted. Learn more at")
             output("535 5.7.1 http://support.google.com/mail/bin/answer.py?answer=14257 hx9sm5317360pbc.68")
@@ -353,12 +361,12 @@ class SmtpTransportTest {
             output("250-ENHANCEDSTATUSCODES")
             output("250 AUTH XOAUTH2")
             expect("AUTH XOAUTH2 dXNlcj11c2VyAWF1dGg9QmVhcmVyIG9sZFRva2VuAQE=")
-            output("334 " + XOAuth2ChallengeParserTest.STATUS_400_RESPONSE)
+            output("334 " + XOAuth2ChallengeParserTestData.STATUS_400_RESPONSE)
             expect("")
             output("535-5.7.1 Username and Password not accepted. Learn more at")
             output("535 5.7.1 http://support.google.com/mail/bin/answer.py?answer=14257 hx9sm5317360pbc.68")
             expect("AUTH XOAUTH2 dXNlcj11c2VyAWF1dGg9QmVhcmVyIG5ld1Rva2VuAQE=")
-            output("334 " + XOAuth2ChallengeParserTest.STATUS_400_RESPONSE)
+            output("334 " + XOAuth2ChallengeParserTestData.STATUS_400_RESPONSE)
             expect("")
             output("535-5.7.1 Username and Password not accepted. Learn more at")
             output("535 5.7.1 http://support.google.com/mail/bin/answer.py?answer=14257 hx9sm5317360pbc.68")
@@ -490,7 +498,7 @@ class SmtpTransportTest {
         server.output("250-ENHANCEDSTATUSCODES")
         server.output("250 AUTH XOAUTH2")
         server.expect("AUTH XOAUTH2 dXNlcj11c2VyAWF1dGg9QmVhcmVyIG9sZFRva2VuAQE=")
-        server.output("334 " + XOAuth2ChallengeParserTest.STATUS_401_RESPONSE)
+        server.output("334 " + XOAuth2ChallengeParserTestData.STATUS_401_RESPONSE)
         server.expect("")
         server.output("535-5.7.1 Username and Password not accepted. Learn more at")
         server.output("535 5.7.1 http://support.google.com/mail/bin/answer.py?answer=14257 hx9sm5317360pbc.68")

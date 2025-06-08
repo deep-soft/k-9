@@ -1,8 +1,8 @@
 package net.thunderbird.android.auth
 
-import app.k9mail.core.common.oauth.OAuthConfiguration
-import app.k9mail.core.common.oauth.OAuthConfigurationFactory
 import net.thunderbird.android.BuildConfig
+import net.thunderbird.core.common.oauth.OAuthConfiguration
+import net.thunderbird.core.common.oauth.OAuthConfigurationFactory
 
 @Suppress("ktlint:standard:max-line-length")
 class TbOAuthConfigurationFactory : OAuthConfigurationFactory {
@@ -50,11 +50,11 @@ class TbOAuthConfigurationFactory : OAuthConfigurationFactory {
             "smtp.gmail.com",
             "smtp.googlemail.com",
         ) to OAuthConfiguration(
-            clientId = "406964657835-808044gjdn5vac6dsn99jtka3v8igtle.apps.googleusercontent.com",
+            clientId = "560629489500-rvmv3suifbrl1888pl6ppulog8krnlcp.apps.googleusercontent.com",
             scopes = listOf("https://mail.google.com/"),
             authorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth",
             tokenEndpoint = "https://oauth2.googleapis.com/token",
-            redirectUri = "${BuildConfig.APPLICATION_ID}.desktop:/oauth2redirect",
+            redirectUri = "${BuildConfig.APPLICATION_ID}.mobile:/oauth2redirect",
         )
     }
 
@@ -65,6 +65,8 @@ class TbOAuthConfigurationFactory : OAuthConfigurationFactory {
         ) to OAuthConfiguration(
             clientId = "e6f8716e-299d-4ed9-bbf3-453f192f44e5",
             scopes = listOf(
+                "openid",
+                "email",
                 "https://outlook.office.com/IMAP.AccessAsUser.All",
                 "https://outlook.office.com/SMTP.Send",
                 "offline_access",
