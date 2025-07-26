@@ -58,7 +58,7 @@ import java.util.Locale
 import net.thunderbird.core.android.account.AccountManager
 import net.thunderbird.core.android.account.LegacyAccount
 import net.thunderbird.core.logging.legacy.Log
-import net.thunderbird.core.preferences.GeneralSettingsManager
+import net.thunderbird.core.preference.GeneralSettingsManager
 import net.thunderbird.core.ui.theme.api.Theme
 import net.thunderbird.core.ui.theme.manager.ThemeManager
 import org.koin.android.ext.android.inject
@@ -319,7 +319,7 @@ class MessageViewFragment :
         menu.findItem(R.id.compose).isVisible = true
 
         val toggleTheme = menu.findItem(R.id.toggle_message_view_theme)
-        if (generalSettingsManager.getSettings().fixedMessageViewTheme) {
+        if (generalSettingsManager.getConfig().display.fixedMessageViewTheme) {
             toggleTheme.isVisible = false
         } else {
             // Set title of menu item to switch to dark/light theme

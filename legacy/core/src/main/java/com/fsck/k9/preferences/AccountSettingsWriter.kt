@@ -1,27 +1,31 @@
 package com.fsck.k9.preferences
 
 import android.content.Context
-import com.fsck.k9.AccountPreferenceSerializer.Companion.ACCOUNT_DESCRIPTION_KEY
-import com.fsck.k9.AccountPreferenceSerializer.Companion.INCOMING_SERVER_SETTINGS_KEY
-import com.fsck.k9.AccountPreferenceSerializer.Companion.OUTGOING_SERVER_SETTINGS_KEY
 import com.fsck.k9.Core
 import com.fsck.k9.Preferences
 import com.fsck.k9.mailstore.SpecialLocalFoldersCreator
 import java.util.UUID
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import net.thunderbird.core.android.account.LegacyAccount
-import net.thunderbird.feature.account.storage.legacy.ServerSettingsSerializer
+import net.thunderbird.core.preference.storage.StorageEditor
+import net.thunderbird.feature.account.storage.legacy.LegacyAccountStorageHandler.Companion.ACCOUNT_DESCRIPTION_KEY
+import net.thunderbird.feature.account.storage.legacy.LegacyAccountStorageHandler.Companion.INCOMING_SERVER_SETTINGS_KEY
+import net.thunderbird.feature.account.storage.legacy.LegacyAccountStorageHandler.Companion.OUTGOING_SERVER_SETTINGS_KEY
+import net.thunderbird.feature.account.storage.legacy.serializer.ServerSettingsDtoSerializer
 
-internal class AccountSettingsWriter(
+internal class AccountSettingsWriter
+@OptIn(ExperimentalTime::class)
+constructor(
     private val preferences: Preferences,
     private val localFoldersCreator: SpecialLocalFoldersCreator,
     private val clock: Clock,
-    serverSettingsSerializer: ServerSettingsSerializer,
+    serverSettingsDtoSerializer: ServerSettingsDtoSerializer,
     private val context: Context,
 ) {
     private val identitySettingsWriter = IdentitySettingsWriter()
     private val folderSettingsWriter = FolderSettingsWriter()
-    private val serverSettingsWriter = ServerSettingsWriter(serverSettingsSerializer)
+    private val serverSettingsWriter = ServerSettingsWriter(serverSettingsDtoSerializer)
 
     fun write(account: ValidatedSettings.Account): Pair<AccountDescription, AccountDescription> {
         val editor = preferences.createStorageEditor()
@@ -49,6 +53,7 @@ internal class AccountSettingsWriter(
         // When deleting an account and then restoring it using settings import, the same account UUID will be used.
         // To avoid reusing a previously existing notification channel ID, we need to make sure to use a unique value
         // for `messagesNotificationChannelVersion`.
+        @OptIn(ExperimentalTime::class)
         val messageNotificationChannelVersion = clock.now().epochSeconds.toString()
         editor.putStringWithLogging(
             key = "$accountUuid.messagesNotificationChannelVersion",

@@ -46,10 +46,14 @@ import com.fsck.k9.message.quote.InsertableHtmlContent
 import com.fsck.k9.view.RecipientSelectView
 import java.io.OutputStream
 import java.util.Date
+import kotlinx.coroutines.flow.Flow
 import net.thunderbird.core.android.account.Identity
 import net.thunderbird.core.android.account.QuoteStyle
 import net.thunderbird.core.logging.legacy.Log
 import net.thunderbird.core.logging.testing.TestLogger
+import net.thunderbird.core.preference.GeneralSettings
+import net.thunderbird.core.preference.GeneralSettingsManager
+import net.thunderbird.core.preference.privacy.PrivacySettings
 import org.apache.james.mime4j.util.MimeUtil
 import org.junit.Before
 import org.junit.Test
@@ -774,6 +778,7 @@ class PgpMessageBuilderTest : K9RobolectricTest() {
                 AutocryptOperations.getInstance(),
                 autocryptOpenPgpApiInteractor,
                 resourceProvider,
+                fakeGeneralSettingsManager,
             )
             builder.setOpenPgpApi(openPgpApi)
 
@@ -836,6 +841,19 @@ class PgpMessageBuilderTest : K9RobolectricTest() {
                     else -> assertThat(intentExtra, name).isEqualTo(expectedExtra)
                 }
             }
+        }
+
+        private val fakeGeneralSettingsManager = object : GeneralSettingsManager {
+            override fun getSettings() = GeneralSettings(
+                privacy = PrivacySettings(isHideUserAgent = false, isHideTimeZone = false),
+            )
+
+            override fun getSettingsFlow(): Flow<GeneralSettings> = error("not implemented")
+            override fun save(config: GeneralSettings) = error("not implemented")
+
+            override fun getConfig(): GeneralSettings = error("not implemented")
+
+            override fun getConfigFlow(): Flow<GeneralSettings> = error("not implemented")
         }
     }
 }

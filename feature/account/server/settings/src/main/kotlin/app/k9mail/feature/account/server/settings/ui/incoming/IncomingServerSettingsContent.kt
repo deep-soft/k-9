@@ -11,13 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
 import app.k9mail.core.ui.compose.designsystem.template.ResponsiveWidthContainer
 import app.k9mail.core.ui.compose.theme2.MainTheme
 import app.k9mail.feature.account.common.domain.entity.InteractionMode
 import app.k9mail.feature.account.server.settings.ui.incoming.IncomingServerSettingsContract.Event
 import app.k9mail.feature.account.server.settings.ui.incoming.IncomingServerSettingsContract.State
 import app.k9mail.feature.account.server.settings.ui.incoming.content.incomingFormItems
+import net.thunderbird.core.ui.compose.common.modifier.testTagAsResourceId
 
 @Composable
 internal fun IncomingServerSettingsContent(
@@ -31,15 +31,16 @@ internal fun IncomingServerSettingsContent(
 
     ResponsiveWidthContainer(
         modifier = Modifier
-            .testTag("IncomingServerSettingsContent")
+            .testTagAsResourceId("IncomingServerSettingsContent")
             .padding(contentPadding)
             .fillMaxWidth()
             .then(modifier),
-    ) {
+    ) { contentPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .imePadding(),
+            contentPadding = contentPadding,
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.spacedBy(MainTheme.spacings.default),
         ) {

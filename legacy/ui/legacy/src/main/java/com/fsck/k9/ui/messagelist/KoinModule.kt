@@ -8,7 +8,7 @@ import org.koin.dsl.module
 val messageListUiModule = module {
     includes(navigationDropDownDrawerModule, navigationSideRailDrawerModule)
 
-    viewModel { MessageListViewModel(get()) }
+    viewModel { MessageListViewModel(messageListLiveDataFactory = get(), logger = get()) }
     factory { DefaultFolderProvider() }
     factory {
         MessageListLoader(
@@ -16,6 +16,7 @@ val messageListUiModule = module {
             localStoreProvider = get(),
             messageListRepository = get(),
             messageHelper = get(),
+            generalSettingsManager = get(),
         )
     }
     factory {

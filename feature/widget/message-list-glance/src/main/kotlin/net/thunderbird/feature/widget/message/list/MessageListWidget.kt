@@ -12,7 +12,6 @@ import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
 import com.fsck.k9.CoreResourceProvider
-import com.fsck.k9.K9
 import com.fsck.k9.activity.MessageList.Companion.intentDisplaySearch
 import kotlin.random.Random.Default.nextInt
 import kotlinx.collections.immutable.toImmutableList
@@ -20,7 +19,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.thunderbird.core.android.account.SortType
-import net.thunderbird.feature.search.SearchAccount.Companion.createUnifiedInboxAccount
+import net.thunderbird.core.preference.GeneralSettingsManager
+import net.thunderbird.feature.search.legacy.SearchAccount.Companion.createUnifiedInboxAccount
 import net.thunderbird.feature.widget.message.list.ui.MessageListWidgetContent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -29,6 +29,7 @@ internal class MessageListWidget : GlanceAppWidget(), KoinComponent {
 
     private val messageListLoader: MessageListLoader by inject()
     private val coreResourceProvider: CoreResourceProvider by inject()
+    private val generalSettingsManager: GeneralSettingsManager by inject()
 
     companion object {
         private var lastMailList = emptyList<MessageListItem>()
@@ -47,7 +48,8 @@ internal class MessageListWidget : GlanceAppWidget(), KoinComponent {
                     ).relatedSearch
                     val messageListConfig = MessageListConfig(
                         search = unifiedInboxSearch,
-                        showingThreadedList = K9.isThreadedViewEnabled,
+                        showingThreadedList = generalSettingsManager.getConfig()
+                            .display.isThreadedViewEnabled,
                         sortType = SortType.SORT_DATE,
                         sortAscending = false,
                         sortDateAscending = false,

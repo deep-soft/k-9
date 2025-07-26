@@ -663,7 +663,7 @@ class RealImapConnectionTest {
 
     @Test(expected = IOException::class)
     fun `open() with connection error should throw`() {
-        val settings = createImapSettings(host = "127.1.2.3")
+        val settings = createImapSettings(host = "192.0.2.123")
         val imapConnection = createImapConnection(settings, socketFactory, oAuth2TokenProvider)
 
         imapConnection.open()
@@ -1185,6 +1185,7 @@ class RealImapConnectionTest {
             settings,
             socketFactory,
             oAuth2TokenProvider,
+            FolderNameCodec(),
             connectionGeneration,
             SOCKET_CONNECT_TIMEOUT,
             SOCKET_READ_TIMEOUT,

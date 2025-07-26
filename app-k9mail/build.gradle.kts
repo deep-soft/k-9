@@ -18,7 +18,7 @@ android {
         testApplicationId = "com.fsck.k9.tests"
 
         versionCode = 39004
-        versionName = "12.0"
+        versionName = "13.0"
         versionNameSuffix = "a1"
 
         buildConfigField("String", "CLIENT_INFO_APP_NAME", "\"K-9 Mail\"")
@@ -138,6 +138,7 @@ dependencies {
     implementation(projects.core.ui.compose.theme2.k9mail)
     implementation(projects.core.ui.legacy.theme2.k9mail)
     implementation(projects.feature.launcher)
+    implementation(projects.feature.mail.message.list)
 
     implementation(projects.legacy.core)
     implementation(projects.legacy.ui.legacy)
@@ -162,7 +163,11 @@ dependencies {
     debugImplementation(projects.backend.demo)
     debugImplementation(projects.feature.autodiscovery.demo)
 
-    testImplementation(libs.robolectric)
+    // Required for DependencyInjectionTest
+    testImplementation(projects.feature.account.api)
+    testImplementation(projects.feature.account.common)
+    testImplementation(projects.plugins.openpgpApiLib.openpgpApi)
+    testImplementation(libs.appauth)
 }
 
 dependencyGuard {

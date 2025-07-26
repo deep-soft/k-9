@@ -10,22 +10,25 @@ dependencies {
     api(projects.core.mail.mailserver)
     api(projects.core.android.common)
     api(projects.core.android.account)
-    api(projects.core.preferences)
+    api(projects.core.preference.impl)
     api(projects.core.android.logging)
+    api(projects.core.logging.implFile)
+    api(projects.core.logging.implComposite)
     api(projects.core.android.network)
     api(projects.feature.mail.folder.api)
     api(projects.feature.account.storage.legacy)
 
-    api(projects.feature.search)
+    api(projects.feature.search.implLegacy)
     api(projects.feature.mail.account.api)
     api(projects.legacy.di)
     api(projects.legacy.mailstore)
     api(projects.legacy.message)
-    api(projects.feature.notification)
+    implementation(projects.feature.notification.api)
 
     implementation(projects.plugins.openpgpApiLib.openpgpApi)
     implementation(projects.feature.telemetry.api)
     implementation(projects.core.featureflag)
+    implementation(projects.core.logging.implComposite)
 
     api(libs.androidx.annotation)
 
@@ -56,6 +59,9 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.jdom2)
+
+    // test fakes
+    testImplementation(projects.feature.account.fake)
 }
 
 android {

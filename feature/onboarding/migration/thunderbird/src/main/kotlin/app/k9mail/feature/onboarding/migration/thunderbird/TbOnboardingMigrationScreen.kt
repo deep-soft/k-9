@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -46,6 +45,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import net.thunderbird.core.common.provider.BrandNameProvider
 import net.thunderbird.core.logging.legacy.Log
+import net.thunderbird.core.ui.compose.common.modifier.testTagAsResourceId
 import org.koin.compose.koinInject
 
 @Composable
@@ -62,11 +62,12 @@ internal fun TbOnboardingMigrationScreen(
         modifier = Modifier
             .fillMaxSize()
             .then(modifier),
-    ) {
+    ) { contentPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState),
+                .verticalScroll(scrollState)
+                .padding(contentPadding),
         ) {
             AppTitleTopHeader(
                 title = brandNameProvider.brandName,
@@ -86,7 +87,7 @@ internal fun TbOnboardingMigrationScreen(
                 ButtonOutlined(
                     text = stringResource(R.string.onboarding_migration_thunderbird_new_account_button_text),
                     onClick = onAddAccount,
-                    modifier = Modifier.testTag("AddAccountButton"),
+                    modifier = Modifier.testTagAsResourceId("onboarding_migration_new_account_button"),
                 )
             }
 
@@ -94,7 +95,7 @@ internal fun TbOnboardingMigrationScreen(
                 ButtonOutlined(
                     text = stringResource(R.string.onboarding_migration_thunderbird_import_button_text),
                     onClick = onImport,
-                    modifier = Modifier.testTag("ImportButton"),
+                    modifier = Modifier.testTagAsResourceId("ImportButton"),
                 )
             }
 
@@ -136,7 +137,7 @@ private fun AlreadyUsingThunderbirdCard(onQrCodeScan: () -> Unit) {
             text = stringResource(R.string.onboarding_migration_thunderbird_qr_code_import_button_text),
             onClick = onQrCodeScan,
             modifier = Modifier
-                .testTag("QrCodeImportButton")
+                .testTagAsResourceId("QrCodeImportButton")
                 .align(Alignment.CenterHorizontally),
         )
 

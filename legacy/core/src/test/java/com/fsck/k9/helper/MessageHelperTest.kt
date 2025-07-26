@@ -14,27 +14,62 @@ import com.fsck.k9.mail.Address
 import net.thunderbird.core.android.testing.RobolectricTest
 import net.thunderbird.core.common.mail.EmailAddress
 import net.thunderbird.core.common.mail.toEmailAddressOrThrow
+import net.thunderbird.core.preference.GeneralSettings
+import net.thunderbird.core.preference.GeneralSettingsManager
+import net.thunderbird.core.preference.display.DisplaySettings
+import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.stub
+import org.mockito.kotlin.whenever
 
 class MessageHelperTest : RobolectricTest() {
 
     private val contactRepository: ContactRepository = mock()
+    private val generalSettingsManager: GeneralSettingsManager = mock()
     private val resourceProvider: CoreResourceProvider = TestCoreResourceProvider()
-    private val messageHelper: MessageHelper = MessageHelper(resourceProvider, contactRepository)
+    private val messageHelper: MessageHelper =
+        MessageHelper(resourceProvider, contactRepository, generalSettingsManager)
+
+    @Before
+    fun setUp() {
+        val displaySettings = DisplaySettings(
+            isShowCorrespondentNames = true,
+            isChangeContactNameColor = false,
+        )
+
+        val generalSettings = mock<GeneralSettings> {
+            on { display } doReturn displaySettings
+        }
+
+        whenever(generalSettingsManager.getConfig()).thenReturn(generalSettings)
+    }
 
     @Test
     fun testToFriendlyShowsPersonalPartIfItExists() {
         val address = Address("test@testor.com", "Tim Testor")
-        assertThat(toFriendly(address, contactRepository)).isEqualTo("Tim Testor")
+        assertThat(
+            toFriendly(
+                address,
+                generalSettingsManager.getConfig().display.isShowCorrespondentNames,
+                generalSettingsManager.getConfig().display.isChangeContactNameColor,
+                contactRepository,
+            ),
+        ).isEqualTo("Tim Testor")
     }
 
     @Test
     fun testToFriendlyShowsEmailPartIfNoPersonalPartExists() {
         val address = Address("test@testor.com")
-        assertThat(toFriendly(address, contactRepository)).isEqualTo("test@testor.com")
+        assertThat(
+            toFriendly(
+                address,
+                generalSettingsManager.getConfig().display.isShowCorrespondentNames,
+                generalSettingsManager.getConfig().display.isChangeContactNameColor,
+                contactRepository,
+            ),
+        ).isEqualTo("test@testor.com")
     }
 
     @Test
@@ -42,7 +77,14 @@ class MessageHelperTest : RobolectricTest() {
         val address1 = Address("test@testor.com", "Tim Testor")
         val address2 = Address("foo@bar.com", "Foo Bar")
         val addresses = arrayOf(address1, address2)
-        assertThat(toFriendly(addresses, contactRepository).toString()).isEqualTo("Tim Testor,Foo Bar")
+        assertThat(
+            toFriendly(
+                addresses,
+                generalSettingsManager.getConfig().display.isShowCorrespondentNames,
+                generalSettingsManager.getConfig().display.isChangeContactNameColor,
+                contactRepository,
+            ).toString(),
+        ).isEqualTo("Tim Testor,Foo Bar")
     }
 
     @Test
@@ -50,7 +92,14 @@ class MessageHelperTest : RobolectricTest() {
         val address = Address(EMAIL_ADDRESS.address)
         setupContactRepositoryWithFakeContact(EMAIL_ADDRESS)
 
-        assertThat(toFriendly(address, contactRepository)).isEqualTo("Tim Testor")
+        assertThat(
+            toFriendly(
+                address,
+                generalSettingsManager.getConfig().display.isShowCorrespondentNames,
+                generalSettingsManager.getConfig().display.isChangeContactNameColor,
+                contactRepository,
+            ),
+        ).isEqualTo("Tim Testor")
     }
 
     @Test
@@ -87,21 +136,39 @@ class MessageHelperTest : RobolectricTest() {
     @Test
     fun toFriendly_spoofPreventionOverridesPersonal() {
         val address = Address("test@testor.com", "potus@whitehouse.gov")
-        val friendly = toFriendly(address, contactRepository)
+        val friendly =
+            toFriendly(
+                address,
+                generalSettingsManager.getConfig().display.isShowCorrespondentNames,
+                generalSettingsManager.getConfig().display.isChangeContactNameColor,
+                contactRepository,
+            )
         assertThat(friendly).isEqualTo("test@testor.com")
     }
 
     @Test
     fun toFriendly_atPrecededByOpeningParenthesisShouldNotTriggerSpoofPrevention() {
         val address = Address("gitlab@gitlab.example", "username (@username)")
-        val friendly = toFriendly(address, contactRepository)
+        val friendly =
+            toFriendly(
+                address,
+                generalSettingsManager.getConfig().display.isShowCorrespondentNames,
+                generalSettingsManager.getConfig().display.isChangeContactNameColor,
+                contactRepository,
+            )
         assertThat(friendly).isEqualTo("username (@username)")
     }
 
     @Test
     fun toFriendly_nameStartingWithAtShouldNotTriggerSpoofPrevention() {
         val address = Address("address@domain.example", "@username")
-        val friendly = toFriendly(address, contactRepository)
+        val friendly =
+            toFriendly(
+                address,
+                generalSettingsManager.getConfig().display.isShowCorrespondentNames,
+                generalSettingsManager.getConfig().display.isChangeContactNameColor,
+                contactRepository,
+            )
         assertThat(friendly).isEqualTo("@username")
     }
 
@@ -126,7 +193,11 @@ class MessageHelperTest : RobolectricTest() {
         val address2 = Address("foo@bar.com", "Foo Bar")
         val addresses = arrayOf(address1, address2)
         setupContactRepositoryWithFakeContact(EMAIL_ADDRESS)
-        val displayName = messageHelper.getRecipientDisplayNames(addresses)
+        val displayName = messageHelper.getRecipientDisplayNames(
+            addresses,
+            generalSettingsManager.getConfig().display.isShowCorrespondentNames,
+            generalSettingsManager.getConfig().display.isChangeContactNameColor,
+        )
         assertThat(displayName.toString()).isEqualTo("To: Tim Testor,Foo Bar")
     }
 
@@ -136,13 +207,22 @@ class MessageHelperTest : RobolectricTest() {
         val address2 = Address("foo@bar.com")
         val addresses = arrayOf(address1, address2)
 
-        val displayName = messageHelper.getRecipientDisplayNames(addresses)
+        val displayName = messageHelper.getRecipientDisplayNames(
+            addresses,
+            generalSettingsManager.getConfig().display.isShowCorrespondentNames,
+            generalSettingsManager.getConfig().display.isChangeContactNameColor,
+        )
         assertThat(displayName.toString()).isEqualTo("To: test@testor.com,foo@bar.com")
     }
 
     @Test
     fun testGetSenderDisplayNameWithoutInputReturnCorrectOutput() {
-        val displayName = messageHelper.getRecipientDisplayNames(null)
+        val displayName =
+            messageHelper.getRecipientDisplayNames(
+                null,
+                generalSettingsManager.getConfig().display.isShowCorrespondentNames,
+                generalSettingsManager.getConfig().display.isChangeContactNameColor,
+            )
         assertThat(displayName.toString()).isEqualTo(resourceProvider.contactUnknownRecipient())
     }
 

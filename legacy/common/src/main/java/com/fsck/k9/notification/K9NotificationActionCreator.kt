@@ -17,8 +17,8 @@ import com.fsck.k9.activity.compose.MessageActions
 import com.fsck.k9.ui.messagelist.DefaultFolderProvider
 import com.fsck.k9.ui.notification.DeleteConfirmationActivity
 import net.thunderbird.core.android.account.LegacyAccount
-import net.thunderbird.core.preferences.GeneralSettingsManager
-import net.thunderbird.feature.search.LocalSearch
+import net.thunderbird.core.preference.GeneralSettingsManager
+import net.thunderbird.feature.search.legacy.LocalMessageSearch
 
 /**
  * This class contains methods to create the [PendingIntent]s for the actions of our notifications.
@@ -41,7 +41,7 @@ internal class K9NotificationActionCreator(
 
     override fun createViewMessagePendingIntent(messageReference: MessageReference): PendingIntent {
         val openInUnifiedInbox =
-            generalSettingsManager.getSettings().isShowUnifiedInbox && isIncludedInUnifiedInbox(messageReference)
+            generalSettingsManager.getConfig().display.isShowUnifiedInbox && isIncludedInUnifiedInbox(messageReference)
         val intent = createMessageViewIntent(messageReference, openInUnifiedInbox)
 
         return PendingIntentCompat.getActivity(context, 0, intent, FLAG_UPDATE_CURRENT, false)!!
@@ -58,7 +58,7 @@ internal class K9NotificationActionCreator(
     ): PendingIntent {
         val folderIds = extractFolderIds(messageReferences)
 
-        val intent = if (generalSettingsManager.getSettings().isShowUnifiedInbox &&
+        val intent = if (generalSettingsManager.getConfig().display.isShowUnifiedInbox &&
             areAllIncludedInUnifiedInbox(account, folderIds)
         ) {
             createUnifiedInboxIntent(account)
@@ -209,7 +209,7 @@ internal class K9NotificationActionCreator(
 
     private fun createMessageListIntent(account: LegacyAccount): Intent {
         val folderId = defaultFolderProvider.getDefaultFolder(account)
-        val search = LocalSearch().apply {
+        val search = LocalMessageSearch().apply {
             addAllowedFolder(folderId)
             addAccountUuid(account.uuid)
         }
@@ -226,7 +226,7 @@ internal class K9NotificationActionCreator(
     }
 
     private fun createMessageListIntent(account: LegacyAccount, folderId: Long): Intent {
-        val search = LocalSearch().apply {
+        val search = LocalMessageSearch().apply {
             addAllowedFolder(folderId)
             addAccountUuid(account.uuid)
         }

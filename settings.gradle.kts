@@ -63,10 +63,12 @@ include(
 
 include(
     ":feature:account:api",
-    ":feature:account:avatar",
+    ":feature:account:avatar:api",
+    ":feature:account:avatar:impl",
     ":feature:account:core",
     ":feature:account:common",
     ":feature:account:edit",
+    ":feature:account:fake",
     ":feature:account:oauth",
     ":feature:account:settings:api",
     ":feature:account:settings:impl",
@@ -74,6 +76,7 @@ include(
     ":feature:account:server:settings",
     ":feature:account:server:validation",
     ":feature:account:setup",
+    ":feature:account:storage:api",
     ":feature:account:storage:legacy",
 )
 
@@ -94,6 +97,7 @@ include(
 include(
     ":feature:mail:account:api",
     ":feature:mail:folder:api",
+    ":feature:mail:message:list",
 )
 
 include(
@@ -111,7 +115,8 @@ include(
 )
 
 include(
-    ":feature:notification",
+    ":feature:notification:api",
+    ":feature:notification:impl",
 )
 
 include(
@@ -124,7 +129,7 @@ include(
 )
 
 include(
-    ":feature:search",
+    ":feature:search:impl-legacy",
 )
 
 include(
@@ -145,15 +150,18 @@ include(
 )
 
 include(
+    ":core:architecture:api",
     ":core:common",
     ":core:featureflag",
     ":core:logging:api",
     ":core:logging:impl-composite",
     ":core:logging:impl-console",
     ":core:logging:impl-legacy",
+    ":core:logging:impl-file",
     ":core:logging:testing",
     ":core:mail:mailserver",
-    ":core:preferences",
+    ":core:preference:api",
+    ":core:preference:impl",
     ":core:outcome",
     ":core:testing",
 )
@@ -238,6 +246,10 @@ include(
 
 include(
     ":quality:konsist",
+)
+
+include(
+    ":feature:debug-settings",
 )
 
 check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {

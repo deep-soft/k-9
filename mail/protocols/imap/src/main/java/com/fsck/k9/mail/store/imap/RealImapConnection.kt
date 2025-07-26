@@ -45,6 +45,7 @@ internal class RealImapConnection(
     private val settings: ImapSettings,
     private val socketFactory: TrustedSocketFactory,
     private val oauthTokenProvider: OAuth2TokenProvider?,
+    private val folderNameCodec: FolderNameCodec,
     override val connectionGeneration: Int,
     private val socketConnectTimeout: Int = SOCKET_CONNECT_TIMEOUT,
     private val socketReadTimeout: Int = SOCKET_READ_TIMEOUT,
@@ -206,7 +207,7 @@ internal class RealImapConnection(
 
     private fun setUpStreamsAndParser(input: InputStream, output: OutputStream) {
         inputStream = PeekableInputStream(BufferedInputStream(input, BUFFER_SIZE))
-        responseParser = ImapResponseParser(inputStream)
+        responseParser = ImapResponseParser(inputStream, folderNameCodec)
         imapOutputStream = BufferedOutputStream(output, BUFFER_SIZE)
     }
 
@@ -403,7 +404,7 @@ internal class RealImapConnection(
         val oauthTokenProvider = checkNotNull(oauthTokenProvider)
         val responseParser = checkNotNull(responseParser)
 
-        val token = oauthTokenProvider.getToken(OAuth2TokenProvider.OAUTH2_TIMEOUT)
+        val token = oauthTokenProvider.getToken(OAuth2TokenProvider.OAUTH2_TIMEOUT.toLong())
 
         val authString = method.buildInitialClientResponse(settings.username, token)
         val tag = sendSaslIrCommand(method.command, authString, true)
@@ -676,6 +677,10 @@ internal class RealImapConnection(
         return isListResponse && hierarchyDelimiterValid
     }
 
+    override fun canSendUTF8QuotedStrings(): Boolean {
+        return isUtf8AcceptCapable // later: or IMAP4Rev2 is enabled
+    }
+
     override fun hasCapability(capability: String): Boolean {
         if (!open) {
             open()
@@ -832,15 +837,20 @@ internal class RealImapConnection(
     @Synchronized
     @Throws(IOException::class)
     override fun sendContinuation(continuation: String) {
-        val outputStream = checkNotNull(imapOutputStream)
+        try {
+            val outputStream = checkNotNull(imapOutputStream)
 
-        outputStream.write(continuation.toByteArray())
-        outputStream.write('\r'.code)
-        outputStream.write('\n'.code)
-        outputStream.flush()
+            outputStream.write(continuation.toByteArray())
+            outputStream.write('\r'.code)
+            outputStream.write('\n'.code)
+            outputStream.flush()
 
-        if (K9MailLib.isDebug() && K9MailLib.DEBUG_PROTOCOL_IMAP) {
-            Log.v("%s>>> %s", logId, continuation)
+            if (K9MailLib.isDebug() && K9MailLib.DEBUG_PROTOCOL_IMAP) {
+                Log.v("%s>>> %s", logId, continuation)
+            }
+        } catch (e: IOException) {
+            close()
+            throw e
         }
     }
 

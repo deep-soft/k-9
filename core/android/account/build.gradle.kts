@@ -8,13 +8,19 @@ android {
 }
 
 dependencies {
-    api(projects.feature.notification)
+    api(projects.feature.account.api)
+    api(projects.feature.account.storage.api)
+
+    implementation(projects.feature.notification.api)
     api(projects.mail.common)
 
-    implementation(projects.core.preferences)
+    implementation(projects.core.common)
+    implementation(projects.core.preference.api)
 
     implementation(projects.feature.mail.account.api)
     implementation(projects.feature.mail.folder.api)
 
     implementation(projects.backend.api)
+
+    testImplementation(projects.feature.account.fake)
 }

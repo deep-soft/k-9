@@ -4,6 +4,10 @@ plugins {
 
 android {
     namespace = "net.thunderbird.app.common"
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -21,16 +25,24 @@ dependencies {
     implementation(projects.core.logging.implComposite)
     implementation(projects.core.logging.implConsole)
     implementation(projects.core.logging.implLegacy)
+    implementation(projects.core.logging.implFile)
 
     implementation(projects.core.featureflag)
     implementation(projects.core.ui.legacy.theme2.common)
 
+    implementation(projects.feature.account.avatar.api)
+    implementation(projects.feature.account.avatar.impl)
     implementation(projects.feature.account.setup)
     implementation(projects.feature.mail.account.api)
     implementation(projects.feature.migration.provider)
+    implementation(projects.feature.notification.api)
+    implementation(projects.feature.notification.impl)
     implementation(projects.feature.widget.messageList)
 
     implementation(projects.mail.protocols.imap)
 
     implementation(libs.androidx.work.runtime)
+    implementation(libs.androidx.lifecycle.process)
+
+    testImplementation(projects.feature.account.fake)
 }

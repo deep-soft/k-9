@@ -1,11 +1,11 @@
 package com.fsck.k9.activity
 
 import com.fsck.k9.K9
-import com.fsck.k9.SwipeAction
 import com.fsck.k9.UiDensity
-import net.thunderbird.core.preferences.AppTheme
-import net.thunderbird.core.preferences.GeneralSettingsManager
-import net.thunderbird.core.preferences.SubTheme
+import net.thunderbird.core.common.action.SwipeAction
+import net.thunderbird.core.preference.AppTheme
+import net.thunderbird.core.preference.GeneralSettingsManager
+import net.thunderbird.core.preference.SubTheme
 
 data class MessageListActivityConfig(
     val appTheme: AppTheme,
@@ -42,21 +42,21 @@ data class MessageListActivityConfig(
         fun create(
             generalSettingsManager: GeneralSettingsManager,
         ): MessageListActivityConfig {
-            val settings = generalSettingsManager.getSettings()
+            val settings = generalSettingsManager.getConfig()
             return MessageListActivityConfig(
-                appTheme = settings.appTheme,
-                isShowUnifiedInbox = generalSettingsManager.getSettings().isShowUnifiedInbox,
-                isShowMessageListStars = K9.isShowMessageListStars,
-                isShowCorrespondentNames = K9.isShowCorrespondentNames,
-                isMessageListSenderAboveSubject = K9.isMessageListSenderAboveSubject,
-                isShowContactName = K9.isShowContactName,
-                isChangeContactNameColor = K9.isChangeContactNameColor,
-                isShowContactPicture = K9.isShowContactPicture,
-                isColorizeMissingContactPictures = K9.isColorizeMissingContactPictures,
-                isUseBackgroundAsUnreadIndicator = K9.isUseBackgroundAsUnreadIndicator,
-                isShowComposeButton = K9.isShowComposeButtonOnMessageList,
+                appTheme = settings.display.appTheme,
+                isShowUnifiedInbox = settings.display.isShowUnifiedInbox,
+                isShowMessageListStars = settings.display.isShowMessageListStars,
+                isShowCorrespondentNames = settings.display.isShowCorrespondentNames,
+                isMessageListSenderAboveSubject = settings.display.isMessageListSenderAboveSubject,
+                isShowContactName = settings.display.isShowContactName,
+                isChangeContactNameColor = settings.display.isChangeContactNameColor,
+                isShowContactPicture = settings.display.isShowContactPicture,
+                isColorizeMissingContactPictures = settings.display.isColorizeMissingContactPictures,
+                isUseBackgroundAsUnreadIndicator = settings.display.isUseBackgroundAsUnreadIndicator,
+                isShowComposeButton = settings.display.isShowComposeButtonOnMessageList,
                 contactNameColor = K9.contactNameColor,
-                messageViewTheme = settings.messageViewTheme,
+                messageViewTheme = settings.display.messageViewTheme,
                 messageListPreviewLines = K9.messageListPreviewLines,
                 messageListDensity = K9.messageListDensity,
                 splitViewMode = K9.splitViewMode,

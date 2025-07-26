@@ -7,15 +7,22 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.fsck.k9.K9
 import java.util.concurrent.TimeUnit
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import net.thunderbird.core.android.account.LegacyAccount
+import net.thunderbird.core.logging.Logger
 import net.thunderbird.core.logging.legacy.Log
+import net.thunderbird.core.preference.BackgroundOps
+import net.thunderbird.core.preference.GeneralSettingsManager
 
-class MailSyncWorkerManager(
+class MailSyncWorkerManager
+@OptIn(ExperimentalTime::class)
+constructor(
     private val workManager: WorkManager,
     val clock: Clock,
+    val syncDebugLogger: Logger,
+    val generalSettingsManager: GeneralSettingsManager,
 ) {
 
     fun cancelMailSync(account: LegacyAccount) {
@@ -30,6 +37,8 @@ class MailSyncWorkerManager(
         getSyncIntervalIfEnabled(account)?.let { syncIntervalMinutes ->
             Log.v("Scheduling mail sync worker for %s", account)
             Log.v("  sync interval: %d minutes", syncIntervalMinutes)
+            syncDebugLogger.info(null, null) { "Scheduling mail sync worker $account" }
+            syncDebugLogger.info(null, null) { "  sync interval: $syncIntervalMinutes minutes\"" }
 
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -38,9 +47,11 @@ class MailSyncWorkerManager(
 
             val lastSyncTime = account.lastSyncTime
             Log.v("  last sync time: %tc", lastSyncTime)
+            syncDebugLogger.info(null, null) { "last sync time: $lastSyncTime" }
 
             val initialDelay = calculateInitialDelay(lastSyncTime, syncIntervalMinutes)
             Log.v("  initial delay: %d ms", initialDelay)
+            syncDebugLogger.info(null, null) { "  initial delay: $initialDelay ms" }
 
             val data = workDataOf(MailSyncWorker.EXTRA_ACCOUNT_UUID to account.uuid)
 
@@ -53,11 +64,16 @@ class MailSyncWorkerManager(
                 .build()
 
             val uniqueWorkName = createUniqueWorkName(account.uuid)
-            workManager.enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.REPLACE, mailSyncRequest)
+            workManager.enqueueUniquePeriodicWork(
+                uniqueWorkName,
+                ExistingPeriodicWorkPolicy.REPLACE,
+                mailSyncRequest,
+            )
         }
     }
 
-    private fun isNeverSyncInBackground() = K9.backgroundOps == K9.BACKGROUND_OPS.NEVER
+    private fun isNeverSyncInBackground() =
+        generalSettingsManager.getConfig().network.backgroundOps == BackgroundOps.NEVER
 
     private fun getSyncIntervalIfEnabled(account: LegacyAccount): Long? {
         val intervalMinutes = account.automaticCheckIntervalMinutes
@@ -69,6 +85,7 @@ class MailSyncWorkerManager(
     }
 
     private fun calculateInitialDelay(lastSyncTime: Long, syncIntervalMinutes: Long): Long {
+        @OptIn(ExperimentalTime::class)
         val now = clock.now().toEpochMilliseconds()
         val nextSyncTime = lastSyncTime + (syncIntervalMinutes * 60L * 1000L)
 

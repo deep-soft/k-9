@@ -22,11 +22,14 @@ dependencies {
     implementation(projects.feature.navigation.drawer.api)
     implementation(projects.feature.navigation.drawer.dropdown)
     implementation(projects.feature.navigation.drawer.siderail)
+    implementation(projects.feature.notification.api)
     // TODO: Remove AccountOauth dependency
     implementation(projects.feature.account.oauth)
     implementation(projects.feature.funding.api)
+    implementation(projects.feature.search.implLegacy)
     implementation(projects.feature.settings.import)
     implementation(projects.feature.telemetry.api)
+    implementation(projects.feature.mail.message.list)
 
     compileOnly(projects.mail.protocols.imap)
 
@@ -67,6 +70,7 @@ dependencies {
     annotationProcessor(libs.glide.compiler)
 
     testImplementation(projects.core.logging.testing)
+    testImplementation(projects.feature.account.fake)
 
     // This is necessary as RecipientPresenterTest fails to inject
     testImplementation(projects.legacy.common)

@@ -10,11 +10,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import app.k9mail.core.ui.compose.designsystem.template.ResponsiveWidthContainer
 import app.k9mail.core.ui.compose.theme2.MainTheme
 import app.k9mail.feature.funding.googleplay.ui.contribution.ContributionContract.Event
 import app.k9mail.feature.funding.googleplay.ui.contribution.ContributionContract.State
+import net.thunderbird.core.ui.compose.common.modifier.testTagAsResourceId
 
 @Composable
 internal fun ContributionContent(
@@ -25,16 +25,17 @@ internal fun ContributionContent(
 ) {
     ResponsiveWidthContainer(
         modifier = modifier
-            .testTag("ContributionContent")
+            .testTagAsResourceId("ContributionContent")
             .padding(contentPadding),
-    ) {
+    ) { contentPadding ->
         val scrollState = rememberScrollState()
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = MainTheme.spacings.quadruple)
-                .verticalScroll(scrollState),
+                .verticalScroll(scrollState)
+                .padding(contentPadding),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.spacedBy(MainTheme.spacings.triple),
         ) {

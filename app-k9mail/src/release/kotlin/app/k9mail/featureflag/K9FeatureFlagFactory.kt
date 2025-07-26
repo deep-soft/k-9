@@ -2,6 +2,7 @@ package app.k9mail.featureflag
 
 import net.thunderbird.core.featureflag.FeatureFlag
 import net.thunderbird.core.featureflag.FeatureFlagFactory
+import net.thunderbird.core.featureflag.FeatureFlagKey
 import net.thunderbird.core.featureflag.toFeatureFlagKey
 
 class K9FeatureFlagFactory : FeatureFlagFactory {
@@ -12,6 +13,9 @@ class K9FeatureFlagFactory : FeatureFlagFactory {
             FeatureFlag("disable_font_size_config".toFeatureFlagKey(), enabled = false),
             FeatureFlag("email_notification_default".toFeatureFlagKey(), enabled = false),
             FeatureFlag("enable_dropdown_drawer".toFeatureFlagKey(), enabled = false),
+            FeatureFlag("enable_dropdown_drawer_ui".toFeatureFlagKey(), enabled = false),
+            FeatureFlag(FeatureFlagKey.DisplayInAppNotifications, enabled = false),
+            FeatureFlag(FeatureFlagKey.UseNotificationSenderForSystemNotifications, enabled = false),
         )
     }
 }

@@ -18,7 +18,7 @@ android {
         testApplicationId = "net.thunderbird.android.tests"
 
         versionCode = 4
-        versionName = "12.0"
+        versionName = "13.0"
 
         buildConfigField("String", "CLIENT_INFO_APP_NAME", "\"Thunderbird for Android\"")
     }
@@ -185,11 +185,18 @@ android {
         resources {
             excludes += listOf(
                 "META-INF/*.kotlin_module",
-                "META-INF/*.version",
                 "kotlin/**",
                 "DebugProbesKt.bin",
             )
         }
+    }
+}
+
+androidComponents {
+    onVariants(selector().withBuildType("release")) { variant ->
+        variant.packaging.resources.excludes.addAll(
+            "META-INF/*.version",
+        )
     }
 }
 
@@ -212,6 +219,7 @@ dependencies {
     implementation(projects.core.featureflag)
 
     implementation(projects.feature.account.settings.impl)
+    implementation(projects.feature.mail.message.list)
 
     implementation(projects.feature.widget.messageList)
     implementation(projects.feature.widget.messageListGlance)
@@ -243,7 +251,11 @@ dependencies {
     "betaImplementation"(libs.appauth)
     releaseImplementation(libs.appauth)
 
-    testImplementation(libs.robolectric)
+    // Required for DependencyInjectionTest
+    testImplementation(projects.feature.account.api)
+    testImplementation(projects.feature.account.common)
+    testImplementation(projects.plugins.openpgpApiLib.openpgpApi)
+    testImplementation(libs.appauth)
 }
 
 dependencyGuard {
