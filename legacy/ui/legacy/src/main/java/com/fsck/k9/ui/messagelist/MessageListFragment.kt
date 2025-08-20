@@ -17,11 +17,8 @@ import androidx.annotation.StringRes
 import androidx.appcompat.view.ActionMode
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsCompat.Type.navigationBars
 import androidx.core.view.WindowInsetsCompat.Type.systemBars
-import androidx.core.view.insets.GradientProtection
-import androidx.core.view.insets.ProtectionLayout
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
@@ -48,7 +45,6 @@ import com.fsck.k9.fragment.ConfirmationDialogFragment.ConfirmationDialogFragmen
 import com.fsck.k9.helper.Utility
 import com.fsck.k9.helper.mapToSet
 import com.fsck.k9.mail.Flag
-import com.fsck.k9.mail.MessagingException
 import com.fsck.k9.search.getAccounts
 import com.fsck.k9.ui.R
 import com.fsck.k9.ui.changelog.RecentChangesActivity
@@ -57,6 +53,7 @@ import com.fsck.k9.ui.choosefolder.ChooseFolderActivity
 import com.fsck.k9.ui.choosefolder.ChooseFolderResultContract
 import com.fsck.k9.ui.helper.RelativeDateTimeFormatter
 import com.fsck.k9.ui.messagelist.MessageListFragment.MessageListFragmentListener.Companion.MAX_PROGRESS
+import com.fsck.k9.ui.messagelist.item.MessageViewHolder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
@@ -78,6 +75,7 @@ import net.thunderbird.core.android.account.SortType
 import net.thunderbird.core.android.network.ConnectivityManager
 import net.thunderbird.core.architecture.data.DataMapper
 import net.thunderbird.core.common.action.SwipeAction
+import net.thunderbird.core.common.exception.MessagingException
 import net.thunderbird.core.logging.legacy.Log
 import net.thunderbird.core.preference.GeneralSettingsManager
 import net.thunderbird.feature.account.storage.legacy.mapper.DefaultLegacyAccountWrapperDataMapper
@@ -333,15 +331,6 @@ class MessageListFragment :
                     typedValued,
                     true,
                 )
-                view.findViewById<ProtectionLayout>(R.id.protection_layout)
-                    .setProtections(
-                        listOf(
-                            GradientProtection(
-                                WindowInsetsCompat.Side.BOTTOM,
-                                typedValued.data,
-                            ),
-                        ),
-                    )
 
                 setFragmentResultListener(
                     SetupArchiveFolderDialogFragmentFactory.RESULT_CODE_DISMISS_REQUEST_KEY,
@@ -432,7 +421,7 @@ class MessageListFragment :
             v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 val fabMargin = view.resources.getDimensionPixelSize(R.dimen.floatingActionButtonMargin)
 
-                bottomMargin = fabMargin + insets.bottom
+                bottomMargin = fabMargin
                 rightMargin = fabMargin + insets.right
                 leftMargin = fabMargin + insets.left
             }
@@ -2226,7 +2215,8 @@ class MessageListFragment :
         MOVE,
     }
 
-    private enum class Error(@StringRes val errorText: Int) {
+    @Suppress("detekt.UnnecessaryAnnotationUseSiteTarget") // https://github.com/detekt/detekt/issues/8212
+    private enum class Error(@param:StringRes val errorText: Int) {
         FolderNotFound(R.string.message_list_error_folder_not_found),
     }
 
