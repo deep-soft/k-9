@@ -1,6 +1,6 @@
-#2025-01-23 16:40
+#2025-08-20 20:20
 # act-android.yml
-# full and foss
+# full and foss, gradle 4.4.1
 #act-android.yml
 name: act - Android CI
 
@@ -102,8 +102,11 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Gradle Build v3
-        uses: gradle/gradle-build-action@v3
+#      - name: Gradle Build v3
+#        uses: gradle/gradle-build-action@v3
+
+      - name: Gradle Build v4
+        uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96 # v4.4.1
 
       # - run: ./gradlew assembleDebug detekt spotlessCheck testsOnCi
       - name: gradlew assembleRelease
