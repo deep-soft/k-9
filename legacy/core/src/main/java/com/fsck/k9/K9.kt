@@ -114,9 +114,6 @@ object K9 : KoinComponent {
     }
 
     @JvmStatic
-    var isSensitiveDebugLoggingEnabled: Boolean = false
-
-    @JvmStatic
     val fontSizes = FontSizes()
 
     @JvmStatic
@@ -158,9 +155,6 @@ object K9 : KoinComponent {
         PostMarkAsUnreadNavigation.ReturnToMessageList
 
     @JvmStatic
-    var isUseVolumeKeysForNavigation = false
-
-    @JvmStatic
     var isShowAccountSelector = true
 
     var isNotificationDuringQuietTimeEnabled = true
@@ -170,11 +164,6 @@ object K9 : KoinComponent {
     @JvmStatic
     var sortType: SortType = AccountDefaultsProvider.DEFAULT_SORT_TYPE
     private val sortAscending = mutableMapOf<SortType, Boolean>()
-
-    @get:Synchronized
-    @set:Synchronized
-    @JvmStatic
-    var splitViewMode = SplitViewMode.NEVER
 
     @JvmStatic
     var isMessageViewArchiveActionVisible = false
@@ -234,7 +223,8 @@ object K9 : KoinComponent {
             object : K9MailLib.DebugStatus {
                 override fun enabled(): Boolean = generalSettingsManager.getConfig().debugging.isDebugLoggingEnabled
 
-                override fun debugSensitive(): Boolean = isSensitiveDebugLoggingEnabled
+                override fun debugSensitive(): Boolean = generalSettingsManager
+                    .getConfig().debugging.isSensitiveLoggingEnabled
             },
         )
 
@@ -246,8 +236,6 @@ object K9 : KoinComponent {
     @JvmStatic
     @Suppress("LongMethod")
     fun loadPrefs(storage: Storage) {
-        isSensitiveDebugLoggingEnabled = storage.getBoolean("enableSensitiveLogging", false)
-        isUseVolumeKeysForNavigation = storage.getBoolean("useVolumeKeysForNavigation", false)
         isShowAccountSelector = storage.getBoolean("showAccountSelector", true)
         messageListPreviewLines = storage.getInt("messageListPreviewLines", 2)
 
@@ -278,8 +266,6 @@ object K9 : KoinComponent {
             "lockScreenNotificationVisibility",
             LockScreenNotificationVisibility.MESSAGE_COUNT,
         )
-
-        splitViewMode = storage.getEnum("splitViewMode", SplitViewMode.NEVER)
 
         featureFlagProvider.provide("disable_font_size_config".toFeatureFlagKey())
             .onDisabledOrUnavailable {
@@ -314,8 +300,6 @@ object K9 : KoinComponent {
 
     @Suppress("LongMethod")
     internal fun save(editor: StorageEditor) {
-        editor.putBoolean("enableSensitiveLogging", isSensitiveDebugLoggingEnabled)
-        editor.putBoolean("useVolumeKeysForNavigation", isUseVolumeKeysForNavigation)
         editor.putBoolean("notificationDuringQuietTimeEnabled", isNotificationDuringQuietTimeEnabled)
         editor.putEnum("messageListDensity", messageListDensity)
         editor.putBoolean("showAccountSelector", isShowAccountSelector)
@@ -336,8 +320,6 @@ object K9 : KoinComponent {
 
         editor.putString("notificationQuickDelete", notificationQuickDeleteBehaviour.toString())
         editor.putString("lockScreenNotificationVisibility", lockScreenNotificationVisibility.toString())
-
-        editor.putEnum("splitViewMode", splitViewMode)
 
         editor.putBoolean("messageViewArchiveActionVisible", isMessageViewArchiveActionVisible)
         editor.putBoolean("messageViewDeleteActionVisible", isMessageViewDeleteActionVisible)
@@ -414,15 +396,6 @@ object K9 : KoinComponent {
         MESSAGE_COUNT,
         APP_NAME,
         NOTHING,
-    }
-
-    /**
-     * Controls when to use the message list split view.
-     */
-    enum class SplitViewMode {
-        ALWAYS,
-        NEVER,
-        WHEN_IN_LANDSCAPE,
     }
 
     /**

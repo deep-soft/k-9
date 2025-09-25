@@ -23,7 +23,7 @@ internal class MessageListRemoteViewFactory(private val context: Context) : Remo
     private val coreResourceProvider: CoreResourceProvider by inject()
     private val generalSettingsManager: GeneralSettingsManager by inject()
 
-    private lateinit var unifiedInboxSearch: LocalMessageSearch
+    private lateinit var unifiedInboxFolders: LocalMessageSearch
 
     private var messageListItems = emptyList<MessageListItem>()
     private var senderAboveSubject = false
@@ -31,12 +31,12 @@ internal class MessageListRemoteViewFactory(private val context: Context) : Remo
     private var unreadTextColor = 0
 
     override fun onCreate() {
-        unifiedInboxSearch = SearchAccount.createUnifiedInboxAccount(
-            unifiedInboxTitle = coreResourceProvider.searchUnifiedInboxTitle(),
-            unifiedInboxDetail = coreResourceProvider.searchUnifiedInboxDetail(),
+        unifiedInboxFolders = SearchAccount.createUnifiedFoldersSearch(
+            title = coreResourceProvider.searchUnifiedFoldersTitle(),
+            detail = coreResourceProvider.searchUnifiedFoldersDetail(),
         ).relatedSearch
 
-        senderAboveSubject = generalSettingsManager.getConfig().display.isMessageListSenderAboveSubject
+        senderAboveSubject = generalSettingsManager.getConfig().display.inboxSettings.isMessageListSenderAboveSubject
         readTextColor = ContextCompat.getColor(context, R.color.message_list_widget_text_read)
         unreadTextColor = ContextCompat.getColor(context, R.color.message_list_widget_text_unread)
     }
@@ -48,8 +48,11 @@ internal class MessageListRemoteViewFactory(private val context: Context) : Remo
     private fun loadMessageList() {
         // TODO: Use same sort order that is used for the Unified Inbox inside the app
         val messageListConfig = MessageListConfig(
-            search = unifiedInboxSearch,
-            showingThreadedList = generalSettingsManager.getConfig().display.isThreadedViewEnabled,
+            search = unifiedInboxFolders,
+            showingThreadedList = generalSettingsManager.getConfig()
+                .display
+                .inboxSettings
+                .isThreadedViewEnabled,
             sortType = SortType.SORT_DATE,
             sortAscending = false,
             sortDateAscending = false,

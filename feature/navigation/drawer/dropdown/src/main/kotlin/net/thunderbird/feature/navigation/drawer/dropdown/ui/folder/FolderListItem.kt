@@ -76,13 +76,14 @@ internal fun FolderListItem(
                 )
             },
             selected = selectedFolderId == displayFolder.id,
-            onClick = { onClick(displayFolder) },
-            modifier = Modifier.fillMaxWidth(),
-            icon = {
-                Icon(
-                    imageVector = mapFolderIcon(displayFolder),
-                )
+            onClick = {
+                when (displayFolder) {
+                    is MailDisplayFolder if displayFolder.accountId == null -> isExpanded.value = !isExpanded.value
+                    else -> onClick(displayFolder)
+                }
             },
+            modifier = Modifier.fillMaxWidth(),
+            icon = { Icon(imageVector = mapFolderIcon(displayFolder)) },
         )
 
         // Managing children
@@ -155,7 +156,11 @@ private fun mapFolderName(
     parentPrefix: String? = "",
 ): String {
     return when (displayFolder) {
-        is MailDisplayFolder -> folderNameFormatter.displayName(displayFolder.folder).removePrefix("$parentPrefix/")
+        is MailDisplayFolder ->
+            folderNameFormatter
+                .displayName(displayFolder.folder)
+                .removePrefix("$parentPrefix${displayFolder.pathDelimiter}")
+
         is UnifiedDisplayFolder -> mapUnifiedFolderName(displayFolder)
         else -> throw IllegalArgumentException("Unknown display folder: $displayFolder")
     }

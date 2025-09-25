@@ -5,6 +5,7 @@ import com.fsck.k9.UiDensity
 import net.thunderbird.core.common.action.SwipeAction
 import net.thunderbird.core.preference.AppTheme
 import net.thunderbird.core.preference.GeneralSettingsManager
+import net.thunderbird.core.preference.SplitViewMode
 import net.thunderbird.core.preference.SubTheme
 
 data class MessageListActivityConfig(
@@ -23,7 +24,7 @@ data class MessageListActivityConfig(
     val messageViewTheme: SubTheme,
     val messageListPreviewLines: Int,
     val messageListDensity: UiDensity,
-    val splitViewMode: K9.SplitViewMode,
+    val splitViewMode: SplitViewMode,
     val fontSizeMessageListSubject: Int,
     val fontSizeMessageListSender: Int,
     val fontSizeMessageListDate: Int,
@@ -44,22 +45,22 @@ data class MessageListActivityConfig(
         ): MessageListActivityConfig {
             val settings = generalSettingsManager.getConfig()
             return MessageListActivityConfig(
-                appTheme = settings.display.appTheme,
-                isShowUnifiedInbox = settings.display.isShowUnifiedInbox,
-                isShowMessageListStars = settings.display.isShowMessageListStars,
-                isShowCorrespondentNames = settings.display.isShowCorrespondentNames,
-                isMessageListSenderAboveSubject = settings.display.isMessageListSenderAboveSubject,
-                isShowContactName = settings.display.isShowContactName,
-                isChangeContactNameColor = settings.display.isChangeContactNameColor,
-                isShowContactPicture = settings.display.isShowContactPicture,
-                isColorizeMissingContactPictures = settings.display.isColorizeMissingContactPictures,
-                isUseBackgroundAsUnreadIndicator = settings.display.isUseBackgroundAsUnreadIndicator,
-                isShowComposeButton = settings.display.isShowComposeButtonOnMessageList,
+                appTheme = settings.display.coreSettings.appTheme,
+                isShowUnifiedInbox = settings.display.inboxSettings.isShowUnifiedInbox,
+                isShowMessageListStars = settings.display.inboxSettings.isShowMessageListStars,
+                isShowCorrespondentNames = settings.display.visualSettings.isShowCorrespondentNames,
+                isMessageListSenderAboveSubject = settings.display.inboxSettings.isMessageListSenderAboveSubject,
+                isShowContactName = settings.display.visualSettings.isShowContactName,
+                isChangeContactNameColor = settings.display.visualSettings.isChangeContactNameColor,
+                isShowContactPicture = settings.display.visualSettings.isShowContactPicture,
+                isColorizeMissingContactPictures = settings.display.visualSettings.isColorizeMissingContactPictures,
+                isUseBackgroundAsUnreadIndicator = settings.display.visualSettings.isUseBackgroundAsUnreadIndicator,
+                isShowComposeButton = settings.display.inboxSettings.isShowComposeButtonOnMessageList,
                 contactNameColor = K9.contactNameColor,
-                messageViewTheme = settings.display.messageViewTheme,
+                messageViewTheme = settings.display.coreSettings.messageViewTheme,
                 messageListPreviewLines = K9.messageListPreviewLines,
                 messageListDensity = K9.messageListDensity,
-                splitViewMode = K9.splitViewMode,
+                splitViewMode = settings.display.coreSettings.splitViewMode,
                 fontSizeMessageListSubject = K9.fontSizes.messageListSubject,
                 fontSizeMessageListSender = K9.fontSizes.messageListSender,
                 fontSizeMessageListDate = K9.fontSizes.messageListDate,

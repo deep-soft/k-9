@@ -35,12 +35,11 @@ import com.fsck.k9.CoreResourceProvider
 import com.fsck.k9.K9
 import com.fsck.k9.K9.PostMarkAsUnreadNavigation
 import com.fsck.k9.K9.PostRemoveNavigation
-import com.fsck.k9.K9.SplitViewMode
 import com.fsck.k9.Preferences
 import com.fsck.k9.account.BackgroundAccountRemover
 import com.fsck.k9.activity.compose.MessageActions
 import com.fsck.k9.controller.MessagingController
-import com.fsck.k9.search.isUnifiedInbox
+import com.fsck.k9.search.isUnifiedFolders
 import com.fsck.k9.ui.BuildConfig
 import com.fsck.k9.ui.R
 import com.fsck.k9.ui.base.K9Activity
@@ -56,13 +55,17 @@ import com.fsck.k9.ui.settings.SettingsActivity
 import com.fsck.k9.view.ViewSwitcher
 import com.fsck.k9.view.ViewSwitcher.OnSwitchCompleteListener
 import com.google.android.material.textview.MaterialTextView
-import net.thunderbird.core.android.account.AccountManager
+import kotlin.getValue
 import net.thunderbird.core.android.account.LegacyAccount
+import net.thunderbird.core.android.account.LegacyAccountDto
+import net.thunderbird.core.android.account.LegacyAccountDtoManager
 import net.thunderbird.core.featureflag.FeatureFlagKey
 import net.thunderbird.core.featureflag.FeatureFlagProvider
 import net.thunderbird.core.logging.Logger
 import net.thunderbird.core.logging.legacy.Log
 import net.thunderbird.core.preference.GeneralSettingsManager
+import net.thunderbird.core.preference.SplitViewMode
+import net.thunderbird.feature.account.storage.legacy.mapper.LegacyAccountDataMapper
 import net.thunderbird.feature.navigation.drawer.api.NavigationDrawer
 import net.thunderbird.feature.navigation.drawer.dropdown.DropDownDrawer
 import net.thunderbird.feature.navigation.drawer.dropdown.domain.entity.UnifiedDisplayAccount
@@ -93,7 +96,7 @@ open class MessageList :
     OnSwitchCompleteListener {
 
     private val preferences: Preferences by inject()
-    private val accountManager: AccountManager by inject()
+    private val accountManager: LegacyAccountDtoManager by inject()
     private val defaultFolderProvider: DefaultFolderProvider by inject()
     private val accountRemover: BackgroundAccountRemover by inject()
     private val generalSettingsManager: GeneralSettingsManager by inject()
@@ -103,6 +106,7 @@ open class MessageList :
     private val fundingManager: FundingManager by inject()
     private val featureFlagProvider: FeatureFlagProvider by inject()
     private val logger: Logger by inject()
+    private val legacyAccountDataMapper: LegacyAccountDataMapper by inject()
 
     private lateinit var actionBar: ActionBar
     private var searchView: SearchView? = null
@@ -115,7 +119,7 @@ open class MessageList :
     private var messageViewPlaceHolder: PlaceholderFragment? = null
     private var messageListFragment: MessageListFragment? = null
     private var messageViewContainerFragment: MessageViewContainerFragment? = null
-    private var account: LegacyAccount? = null
+    private var account: LegacyAccountDto? = null
     private var search: LocalMessageSearch? = null
     private var singleFolderMode = false
 
@@ -137,8 +141,8 @@ open class MessageList :
     private var messageListWasDisplayed = false
     private var viewSwitcher: ViewSwitcher? = null
 
-    private val isShowAccountChip: Boolean
-        get() = messageListFragment?.isShowAccountChip ?: true
+    private val isShowAccountIndicator: Boolean
+        get() = messageListFragment?.isShowAccountIndicator ?: true
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -250,7 +254,7 @@ open class MessageList :
         displayViews()
     }
 
-    private fun deleteIncompleteAccounts(accounts: List<LegacyAccount>) {
+    private fun deleteIncompleteAccounts(accounts: List<LegacyAccountDto>) {
         accounts.filter { !it.isFinishedSetup }.forEach {
             accountRemover.removeAccountAsync(it.uuid)
         }
@@ -278,7 +282,11 @@ open class MessageList :
             val messageListFragment = MessageListFragment.newInstance(
                 search!!,
                 false,
-                generalSettingsManager.getConfig().display.isThreadedViewEnabled && !noThreading,
+                generalSettingsManager.getConfig()
+                    .display
+                    .inboxSettings
+                    .isThreadedViewEnabled &&
+                    !noThreading,
             )
             fragmentTransaction.add(R.id.message_list_container, messageListFragment)
             fragmentTransaction.commitNow()
@@ -327,7 +335,7 @@ open class MessageList :
     }
 
     private fun useSplitView(): Boolean {
-        val splitViewMode = K9.splitViewMode
+        val splitViewMode = generalSettingsManager.getConfig().display.coreSettings.splitViewMode
         val orientation = resources.configuration.orientation
         return splitViewMode === SplitViewMode.ALWAYS ||
             splitViewMode === SplitViewMode.WHEN_IN_LANDSCAPE &&
@@ -379,18 +387,18 @@ open class MessageList :
         }
 
         val launchData = decodeExtrasToLaunchData(intent)
-        // If Unified Inbox was disabled show default account instead
-        val search = if (launchData.search.isUnifiedInbox &&
-            !generalSettingsManager.getConfig().display.isShowUnifiedInbox
+        // If Unified Folders was disabled show default account instead
+        val search = if (launchData.search.isUnifiedFolders &&
+            !generalSettingsManager.getConfig().display.inboxSettings.isShowUnifiedInbox
         ) {
             createDefaultLocalSearch()
         } else {
             launchData.search
         }
 
-        // If no account has been specified, keep the currently active account when opening the Unified Inbox
+        // If no account has been specified, keep the currently active account when opening the Unified Folders
         val account = launchData.account
-            ?: account?.takeIf { launchData.search.isUnifiedInbox }
+            ?: account?.takeIf { launchData.search.isUnifiedFolders }
             ?: search.firstAccount()
 
         if (account == null) {
@@ -415,7 +423,7 @@ open class MessageList :
         if (action == ACTION_SHORTCUT) {
             // Handle shortcut intents
             val specialFolder = intent.getStringExtra(EXTRA_SPECIAL_FOLDER)
-            if (specialFolder == SearchAccount.UNIFIED_INBOX) {
+            if (specialFolder == SearchAccount.UNIFIED_FOLDERS) {
                 return LaunchData(search = createSearchAccount().relatedSearch)
             }
 
@@ -542,7 +550,7 @@ open class MessageList :
         }
 
         // Default action
-        val search = if (generalSettingsManager.getConfig().display.isShowUnifiedInbox) {
+        val search = if (generalSettingsManager.getConfig().display.inboxSettings.isShowUnifiedInbox) {
             createSearchAccount().relatedSearch
         } else {
             createDefaultLocalSearch()
@@ -628,7 +636,7 @@ open class MessageList :
                     openAccount = { accountId -> openRealAccount(accountId) },
                     openAddAccount = { launchAddAccountScreen() },
                     openFolder = { accountId, folderId -> openFolder(accountId, folderId) },
-                    openUnifiedFolder = { openUnifiedInbox() },
+                    openUnifiedFolder = { openUnifiedFolders() },
                     openManageFolders = { launchManageFoldersScreen() },
                     openSettings = { SettingsActivity.launch(this) },
                     createDrawerListener = { createDrawerListener() },
@@ -639,7 +647,7 @@ open class MessageList :
                     parent = this,
                     openAccount = { accountId -> openRealAccount(accountId) },
                     openFolder = { accountId, folderId -> openFolder(accountId, folderId) },
-                    openUnifiedFolder = { openUnifiedInbox() },
+                    openUnifiedFolder = { openUnifiedFolders() },
                     openManageFolders = { launchManageFoldersScreen() },
                     openSettings = { SettingsActivity.launch(this) },
                     createDrawerListener = { createDrawerListener() },
@@ -694,7 +702,7 @@ open class MessageList :
         onMessageListDisplayed()
     }
 
-    private fun openUnifiedInbox() {
+    private fun openUnifiedFolders() {
         actionDisplaySearch(
             this,
             createSearchAccount().relatedSearch,
@@ -721,7 +729,7 @@ open class MessageList :
 
     fun openRealAccount(accountId: String) {
         if (accountId == UnifiedDisplayAccount.UNIFIED_ACCOUNT_ID) {
-            openUnifiedInbox()
+            openUnifiedFolders()
         } else {
             val account = accountManager.getAccount(accountId) ?: return
             val folderId = defaultFolderProvider.getDefaultFolder(account)
@@ -746,7 +754,7 @@ open class MessageList :
         val messageListFragment = MessageListFragment.newInstance(
             search,
             false,
-            generalSettingsManager.getConfig().display.isThreadedViewEnabled,
+            generalSettingsManager.getConfig().display.inboxSettings.isThreadedViewEnabled,
         )
         openFolderTransaction.replace(R.id.message_list_container, messageListFragment)
 
@@ -782,9 +790,9 @@ open class MessageList :
             collapseSearchView()
         } else {
             if (isDrawerEnabled && account != null && supportFragmentManager.backStackEntryCount == 0) {
-                if (generalSettingsManager.getConfig().display.isShowUnifiedInbox) {
-                    if (search!!.id != SearchAccount.UNIFIED_INBOX) {
-                        openUnifiedInbox()
+                if (generalSettingsManager.getConfig().display.inboxSettings.isShowUnifiedInbox) {
+                    if (search!!.id != SearchAccount.UNIFIED_FOLDERS) {
+                        openUnifiedFolders()
                     } else {
                         super.onBackPressed()
                     }
@@ -817,7 +825,7 @@ open class MessageList :
             KeyEvent.KEYCODE_VOLUME_UP -> {
                 if (messageViewContainerFragment != null &&
                     displayMode != DisplayMode.MESSAGE_LIST &&
-                    K9.isUseVolumeKeysForNavigation
+                    generalSettingsManager.getConfig().interaction.useVolumeKeysForNavigation
                 ) {
                     showPreviousMessage()
                     return true
@@ -827,7 +835,7 @@ open class MessageList :
             KeyEvent.KEYCODE_VOLUME_DOWN -> {
                 if (messageViewContainerFragment != null &&
                     displayMode != DisplayMode.MESSAGE_LIST &&
-                    K9.isUseVolumeKeysForNavigation
+                    generalSettingsManager.getConfig().interaction.useVolumeKeysForNavigation
                 ) {
                     showNextMessage()
                     return true
@@ -976,7 +984,7 @@ open class MessageList :
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
         // Swallow these events too to avoid the audible notification of a volume change
-        if (K9.isUseVolumeKeysForNavigation) {
+        if (generalSettingsManager.getConfig().interaction.useVolumeKeysForNavigation) {
             if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
                 Log.v("Swallowed key up.")
                 return true
@@ -1098,7 +1106,7 @@ open class MessageList :
         } else {
             val fragment = MessageViewContainerFragment.newInstance(
                 reference = messageReference,
-                showAccountChip = isShowAccountChip,
+                isShowAccountIndicator = isShowAccountIndicator,
             )
             supportFragmentManager.commitNow {
                 replace(R.id.message_view_container, fragment, FRAGMENT_TAG_MESSAGE_VIEW_CONTAINER)
@@ -1141,7 +1149,8 @@ open class MessageList :
     }
 
     override fun onCompose(account: LegacyAccount?) {
-        MessageActions.actionCompose(this, account)
+        val accountDto = account?.let { legacyAccountDataMapper.toDto(account) }
+        MessageActions.actionCompose(this, accountDto)
     }
 
     override fun onBackStackChanged() {
@@ -1441,7 +1450,7 @@ open class MessageList :
         configureDrawer()
     }
 
-    private fun LocalMessageSearch.firstAccount(): LegacyAccount? {
+    private fun LocalMessageSearch.firstAccount(): LegacyAccountDto? {
         return if (searchAllAccounts()) {
             preferences.defaultAccount
         } else {
@@ -1481,18 +1490,18 @@ open class MessageList :
 
                 // Don't select any item in the drawer because the Unified Inbox is displayed,
                 // but not listed in the drawer
-                search.id == SearchAccount.UNIFIED_INBOX &&
-                    !generalSettingsManager.getConfig().display.isShowUnifiedInbox -> drawer.deselect()
+                search.id == SearchAccount.UNIFIED_FOLDERS &&
+                    !generalSettingsManager.getConfig().display.inboxSettings.isShowUnifiedInbox -> drawer.deselect()
 
-                search.id == SearchAccount.UNIFIED_INBOX -> drawer.selectUnifiedInbox()
+                search.id == SearchAccount.UNIFIED_FOLDERS -> drawer.selectUnifiedInbox()
             }
         } ?: logger.warn(TAG) { "Couldn't select folder for $accountUuid as LocalSearch is null." }
     }
 
     private fun createSearchAccount(): SearchAccount {
-        return SearchAccount.createUnifiedInboxAccount(
-            unifiedInboxTitle = coreResourceProvider.searchUnifiedInboxTitle(),
-            unifiedInboxDetail = coreResourceProvider.searchUnifiedInboxDetail(),
+        return SearchAccount.createUnifiedFoldersSearch(
+            title = coreResourceProvider.searchUnifiedFoldersTitle(),
+            detail = coreResourceProvider.searchUnifiedFoldersDetail(),
         )
     }
 
@@ -1504,7 +1513,7 @@ open class MessageList :
 
     private class LaunchData(
         val search: LocalMessageSearch,
-        val account: LegacyAccount? = null,
+        val account: LegacyAccountDto? = null,
         val messageReference: MessageReference? = null,
         val noThreading: Boolean = false,
         val messageViewOnly: Boolean = false,
@@ -1570,14 +1579,15 @@ open class MessageList :
                 if (newTask) addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
         }
+
         fun createUnifiedInboxIntent(
             context: Context,
-            account: LegacyAccount,
+            account: LegacyAccountDto,
         ): Intent {
             return Intent(context, MessageList::class.java).apply {
-                val search = SearchAccount.createUnifiedInboxAccount(
-                    unifiedInboxTitle = coreResourceProvider.searchUnifiedInboxTitle(),
-                    unifiedInboxDetail = coreResourceProvider.searchUnifiedInboxDetail(),
+                val search = SearchAccount.createUnifiedFoldersSearch(
+                    title = coreResourceProvider.searchUnifiedFoldersTitle(),
+                    detail = coreResourceProvider.searchUnifiedFoldersDetail(),
                 ).relatedSearch
 
                 putExtra(EXTRA_ACCOUNT, account.uuid)
@@ -1590,7 +1600,7 @@ open class MessageList :
             }
         }
 
-        fun createNewMessagesIntent(context: Context, account: LegacyAccount): Intent {
+        fun createNewMessagesIntent(context: Context, account: LegacyAccountDto): Intent {
             val search = LocalMessageSearch().apply {
                 id = SearchAccount.NEW_MESSAGES
                 addAccountUuid(account.uuid)
@@ -1642,9 +1652,9 @@ open class MessageList :
         ): Intent {
             return Intent(context, MessageList::class.java).apply {
                 if (openInUnifiedInbox) {
-                    val search = SearchAccount.createUnifiedInboxAccount(
-                        unifiedInboxTitle = coreResourceProvider.searchUnifiedInboxTitle(),
-                        unifiedInboxDetail = coreResourceProvider.searchUnifiedInboxDetail(),
+                    val search = SearchAccount.createUnifiedFoldersSearch(
+                        title = coreResourceProvider.searchUnifiedFoldersTitle(),
+                        detail = coreResourceProvider.searchUnifiedFoldersDetail(),
                     ).relatedSearch
                     putExtra(EXTRA_SEARCH, LocalMessageSearchSerializer.serialize(search))
                 }
@@ -1675,7 +1685,7 @@ open class MessageList :
         }
 
         @JvmStatic
-        fun launch(context: Context, account: LegacyAccount) {
+        fun launch(context: Context, account: LegacyAccountDto) {
             val folderId = defaultFolderProvider.getDefaultFolder(account)
 
             val search = LocalMessageSearch().apply {

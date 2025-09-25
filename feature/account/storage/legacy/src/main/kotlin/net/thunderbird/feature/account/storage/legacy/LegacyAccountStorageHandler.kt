@@ -5,7 +5,7 @@ import net.thunderbird.core.android.account.DeletePolicy
 import net.thunderbird.core.android.account.Expunge
 import net.thunderbird.core.android.account.FolderMode
 import net.thunderbird.core.android.account.Identity
-import net.thunderbird.core.android.account.LegacyAccount
+import net.thunderbird.core.android.account.LegacyAccountDto
 import net.thunderbird.core.android.account.MessageFormat
 import net.thunderbird.core.android.account.QuoteStyle
 import net.thunderbird.core.android.account.ShowPictures
@@ -16,6 +16,7 @@ import net.thunderbird.core.preference.storage.StorageEditor
 import net.thunderbird.core.preference.storage.getEnumOrDefault
 import net.thunderbird.feature.account.AccountId
 import net.thunderbird.feature.account.storage.legacy.serializer.ServerSettingsDtoSerializer
+import net.thunderbird.feature.mail.folder.api.FOLDER_DEFAULT_PATH_DELIMITER
 import net.thunderbird.feature.mail.folder.api.SpecialFolderSelection
 import net.thunderbird.feature.notification.NotificationLight
 import net.thunderbird.feature.notification.NotificationSettings
@@ -30,7 +31,7 @@ class LegacyAccountStorageHandler(
 
     @Suppress("LongMethod", "MagicNumber")
     @Synchronized
-    override fun load(data: LegacyAccount, storage: Storage) {
+    override fun load(data: LegacyAccountDto, storage: Storage) {
         val keyGen = AccountKeyGenerator(data.id)
 
         profileDtoStorageHandler.load(data, storage)
@@ -246,6 +247,10 @@ class LegacyAccountStorageHandler(
             lastFolderListRefreshTime = storage.getLong(keyGen.create("lastFolderListRefreshTime"), 0L)
 
             shouldMigrateToOAuth = storage.getBoolean(keyGen.create("migrateToOAuth"), false)
+            folderPathDelimiter = storage.getStringOrDefault(
+                key = keyGen.create(FOLDER_PATH_DELIMITER_KEY),
+                defValue = FOLDER_DEFAULT_PATH_DELIMITER,
+            )
 
             val isFinishedSetup = storage.getBoolean(keyGen.create("isFinishedSetup"), true)
             if (isFinishedSetup) markSetupFinished()
@@ -304,7 +309,7 @@ class LegacyAccountStorageHandler(
 
     @Suppress("LongMethod")
     @Synchronized
-    override fun save(data: LegacyAccount, storage: Storage, editor: StorageEditor) {
+    override fun save(data: LegacyAccountDto, storage: Storage, editor: StorageEditor) {
         val keyGen = AccountKeyGenerator(data.id)
 
         profileDtoStorageHandler.save(data, storage, editor)
@@ -412,6 +417,7 @@ class LegacyAccountStorageHandler(
             editor.putBoolean(keyGen.create("useCompression"), useCompression)
             editor.putBoolean(keyGen.create("sendClientInfo"), isSendClientInfoEnabled)
             editor.putBoolean(keyGen.create("migrateToOAuth"), shouldMigrateToOAuth)
+            editor.putString(keyGen.create(FOLDER_PATH_DELIMITER_KEY), folderPathDelimiter)
         }
 
         saveIdentities(data, storage, editor)
@@ -419,7 +425,7 @@ class LegacyAccountStorageHandler(
 
     @Suppress("LongMethod")
     @Synchronized
-    override fun delete(data: LegacyAccount, storage: Storage, editor: StorageEditor) {
+    override fun delete(data: LegacyAccountDto, storage: Storage, editor: StorageEditor) {
         val keyGen = AccountKeyGenerator(data.id)
         val accountUuid = data.uuid
 
@@ -534,13 +540,14 @@ class LegacyAccountStorageHandler(
         editor.remove(keyGen.create("useCompression"))
         editor.remove(keyGen.create("sendClientInfo"))
         editor.remove(keyGen.create("migrateToOAuth"))
+        editor.remove(keyGen.create(FOLDER_PATH_DELIMITER_KEY))
 
         deleteIdentities(data, storage, editor)
         // TODO: Remove preference settings that may exist for individual folders in the account.
     }
 
     @Synchronized
-    private fun saveIdentities(data: LegacyAccount, storage: Storage, editor: StorageEditor) {
+    private fun saveIdentities(data: LegacyAccountDto, storage: Storage, editor: StorageEditor) {
         deleteIdentities(data, storage, editor)
         var ident = 0
         val keyGen = AccountKeyGenerator(data.id)
@@ -559,7 +566,7 @@ class LegacyAccountStorageHandler(
     }
 
     @Synchronized
-    private fun deleteIdentities(data: LegacyAccount, storage: Storage, editor: StorageEditor) {
+    private fun deleteIdentities(data: LegacyAccountDto, storage: Storage, editor: StorageEditor) {
         val keyGen = AccountKeyGenerator(data.id)
 
         var identityIndex = 0
@@ -600,5 +607,7 @@ class LegacyAccountStorageHandler(
         const val IDENTITY_NAME_KEY = "name"
         const val IDENTITY_EMAIL_KEY = "email"
         const val IDENTITY_DESCRIPTION_KEY = "description"
+
+        const val FOLDER_PATH_DELIMITER_KEY = "folderPathDelimiter"
     }
 }

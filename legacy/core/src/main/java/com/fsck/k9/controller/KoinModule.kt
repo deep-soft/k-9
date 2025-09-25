@@ -13,7 +13,9 @@ import com.fsck.k9.notification.NotificationController
 import com.fsck.k9.notification.NotificationStrategy
 import net.thunderbird.core.featureflag.FeatureFlagProvider
 import net.thunderbird.core.logging.Logger
+import net.thunderbird.feature.notification.api.sender.NotificationSender
 import org.koin.core.qualifier.named
+import org.koin.dsl.binds
 import org.koin.dsl.module
 
 val controllerModule = module {
@@ -32,6 +34,14 @@ val controllerModule = module {
             get(named("controllerExtensions")),
             get<FeatureFlagProvider>(),
             get<Logger>(named("syncDebug")),
+            get<NotificationSender>(),
+        )
+    } binds arrayOf(MessagingControllerRegistry::class)
+
+    single {
+        MessagingControllerWrapper(
+            messagingController = get(),
+            accountManager = get(),
         )
     }
 
