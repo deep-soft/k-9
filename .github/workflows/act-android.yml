@@ -1,4 +1,4 @@
-#2025-08-20 20:20
+#2025-10-10 16:00
 # act-android.yml
 # full and foss, gradle 4.4.1
 #act-android.yml
@@ -34,17 +34,76 @@ env:
   #  keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}  
 
 jobs:
-  validation:
+  build-common:
+    name: Build common code
     runs-on: ubuntu-latest
+    timeout-minutes: 90
+
     steps:
-      - uses: deep-soft/checkout@v4
-      - uses: deep-soft/wrapper-validation-action@v2
+      - name: Checkout the repo
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 1
+
+      - name: Show disk usage
+        uses: ./.github/actions/disk-usage
+
+      - name: Cleanup disk
+        uses: ./.github/actions/disk-cleanup
+
+      - name: Setup Gradle environment
+        uses: ./.github/actions/setup-gradle
+        with:
+          write-cache: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Prime configuration and dependency cache
+        run: ./gradlew --no-daemon help
+
+      - name: Assemble common
+        run: ./gradlew :app-common:assemble
+
+      - name: Show disk usage
+        uses: ./.github/actions/disk-usage
+
+# 
+#   build-thunderbird:
+#     name: Build Thunderbird application
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 90
+#     needs: [build-common]
+#     steps:
+#       - name: Checkout the repo
+#         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+#         with:
+#           fetch-depth: 1
+# 
+#       - name: Setup Gradle environment
+#         uses: ./.github/actions/setup-gradle
+# 
+#       - name: Build Thunderbird application
+#         run: ./gradlew :app-thunderbird:assemble
+# 
+#       - name: Check Thunderbird Badging
+#         run: |
+#           ./gradlew :app-thunderbird:checkFossBetaBadging \
+#                     :app-thunderbird:checkFossDailyBadging \
+#                     :app-thunderbird:checkFossReleaseBadging \
+#                     :app-thunderbird:checkFullBetaBadging \
+#                     :app-thunderbird:checkFullDailyBadging \
+#                     :app-thunderbird:checkFullReleaseBadging \
+#                     -x assemble \
+#                     -x build
 
   build:
+    name: Build K9 application
     runs-on: ubuntu-latest
+    needs: [build-common]
     steps:
       - name: Checkout source code
-        uses: deep-soft/checkout@v4
+        # uses: deep-soft/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 1
 
       - name: Get ref, set build version
         shell: bash
@@ -96,21 +155,18 @@ jobs:
           files: |
             ${{ env.ASSET_SRC }}
 
-      - name: Setup java v4
-        uses: deep-soft/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
+      - name: Setup Gradle environment
+        uses: ./.github/actions/setup-gradle
 
-#      - name: Gradle Build v3
-#        uses: gradle/gradle-build-action@v3
+      - name: Build K9 application
+        run: ./gradlew :app-k9mail:assemble
 
-      - name: Gradle Build v4
-        uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96 # v4.4.1
-
-      # - run: ./gradlew assembleDebug detekt spotlessCheck testsOnCi
-      - name: gradlew assembleRelease
-        run: ./gradlew assembleRelease
+      - name: Check K9 Badging
+        run: |
+          ./gradlew :app-k9mail:checkFossReleaseBadging \
+                    :app-k9mail:checkFullReleaseBadging \
+                    -x assemble \
+                    -x build
 
       - name: Upload Artifact
         uses: deep-soft/upload-artifact@v4
