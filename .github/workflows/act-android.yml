@@ -51,6 +51,9 @@ jobs:
       - name: Cleanup disk
         uses: ./.github/actions/disk-cleanup
 
+      - name: Show disk usage
+        uses: ./.github/actions/disk-usage
+
       - name: Setup Gradle environment
         uses: ./.github/actions/setup-gradle
         with:
