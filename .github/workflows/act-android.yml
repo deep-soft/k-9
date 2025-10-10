@@ -48,6 +48,12 @@ jobs:
       - name: Show disk usage
         uses: ./.github/actions/disk-usage
 
+# change cleanup disk script (add echo)
+      - name: pre cleanup disk
+        shell: bash
+        run: |
+          cp bins/disk-cleanup-action.yml .github/actions/disk-cleanup/action.yml
+
       - name: Cleanup disk
         uses: ./.github/actions/disk-cleanup
 
