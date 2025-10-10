@@ -85,13 +85,15 @@ import net.thunderbird.core.android.account.DeletePolicy;
 import net.thunderbird.core.android.account.LegacyAccountDto;
 import net.thunderbird.core.common.exception.MessagingException;
 import net.thunderbird.core.featureflag.FeatureFlagProvider;
-import net.thunderbird.core.featureflag.FeatureFlagResult.Enabled;
 import net.thunderbird.core.featureflag.compat.FeatureFlagProviderCompat;
 import net.thunderbird.core.logging.Logger;
 import net.thunderbird.core.logging.legacy.Log;
+import net.thunderbird.feature.mail.folder.api.OutboxFolderManager;
+import net.thunderbird.feature.mail.folder.api.OutboxFolderManagerKt;
+import net.thunderbird.feature.notification.api.NotificationManager;
 import net.thunderbird.feature.notification.api.content.AuthenticationErrorNotification;
 import net.thunderbird.feature.notification.api.content.NotificationFactoryCoroutineCompat;
-import net.thunderbird.feature.notification.api.sender.NotificationSender;
+import net.thunderbird.feature.notification.api.dismisser.compat.NotificationDismisserCompat;
 import net.thunderbird.feature.notification.api.sender.compat.NotificationSenderCompat;
 import net.thunderbird.feature.search.legacy.LocalMessageSearch;
 import org.jetbrains.annotations.NotNull;
@@ -143,8 +145,9 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
     private final ArchiveOperations archiveOperations;
     private final FeatureFlagProvider featureFlagProvider;
     private final Logger syncDebugLogger;
+    private final OutboxFolderManager outboxFolderManager;
     private final NotificationSenderCompat notificationSender;
-
+    private final NotificationDismisserCompat notificationDismisser;
 
     private volatile boolean stopped = false;
 
@@ -168,7 +171,8 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
         List<ControllerExtension> controllerExtensions,
         FeatureFlagProvider featureFlagProvider,
         Logger syncDebugLogger,
-        NotificationSender notificationSender
+        NotificationManager notificationManager,
+        OutboxFolderManager outboxFolderManager
     ) {
         this.context = context;
         this.notificationController = notificationController;
@@ -182,7 +186,9 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
         this.localDeleteOperationDecider = localDeleteOperationDecider;
         this.featureFlagProvider = featureFlagProvider;
         this.syncDebugLogger = syncDebugLogger;
-        this.notificationSender = new NotificationSenderCompat(notificationSender);
+        this.notificationSender = new NotificationSenderCompat(notificationManager);
+        this.notificationDismisser = new NotificationDismisserCompat(notificationManager);
+        this.outboxFolderManager = outboxFolderManager;
 
         controllerThread = new Thread(new Runnable() {
             @Override
@@ -702,19 +708,9 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
             migrateAccountToOAuth(account);
         }
 
-        if (FeatureFlagProviderCompat.provide(featureFlagProvider, "display_in_app_notifications") ==
-            Enabled.INSTANCE) {
+        if (FeatureFlagProviderCompat.provide(featureFlagProvider, "display_in_app_notifications").isEnabled()) {
             Log.d("handleAuthenticationFailure: sending in-app notification");
-            final AuthenticationErrorNotification notification = NotificationFactoryCoroutineCompat.create(
-                continuation ->
-                    AuthenticationErrorNotification.Companion.invoke(
-                        account.getUuid(),
-                        account.getDisplayName(),
-                        account.getAccountNumber(),
-                        incoming,
-                        continuation
-                    )
-            );
+            final AuthenticationErrorNotification notification = createAuthenticationErrorNotification(account, incoming);
 
             notificationSender.send(notification, outcome -> {
                 Log.v("notificationSender outcome = " + outcome);
@@ -722,10 +718,24 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
         }
 
         if (FeatureFlagProviderCompat.provide(featureFlagProvider,
-            "use_notification_sender_for_system_notifications") != Enabled.INSTANCE) {
+            "use_notification_sender_for_system_notifications").isDisabled()) {
             Log.d("handleAuthenticationFailure: sending system notification via old notification controller");
             notificationController.showAuthenticationErrorNotification(account, incoming);
         }
+    }
+
+    private AuthenticationErrorNotification createAuthenticationErrorNotification(
+        LegacyAccountDto account, boolean incoming) {
+        return NotificationFactoryCoroutineCompat.create(
+            continuation ->
+                AuthenticationErrorNotification.Companion.invoke(
+                    account.getUuid(),
+                    account.getDisplayName(),
+                    account.getAccountNumber(),
+                    incoming,
+                    continuation
+                )
+        );
     }
 
     private void migrateAccountToOAuth(LegacyAccountDto account) {
@@ -1441,16 +1451,11 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
      */
     public void sendMessage(LegacyAccountDto account, Message message, String plaintextSubject, MessagingListener listener) {
         try {
-            Long outboxFolderId = account.getOutboxFolderId();
-            if (outboxFolderId == null) {
-                if (BuildConfig.DEBUG) {
-                    throw new AssertionError("Outbox does not exist");
-                }
-
-                Log.w("Outbox does not exist");
-
-                outboxFolderId = specialLocalFoldersCreator.createOutbox(account);
-            }
+            final long outboxFolderId = OutboxFolderManagerKt.getOutboxFolderIdSync(
+                outboxFolderManager,
+                account.getUuid(),
+                true
+            );
 
             message.setFlag(Flag.SEEN, true);
 
@@ -1482,7 +1487,7 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
         putBackground("sendPendingMessages", listener, new Runnable() {
             @Override
             public void run() {
-                if (messagesPendingSend(account)) {
+                if (OutboxFolderManagerKt.hasPendingMessagesSync(outboxFolderManager, account.getUuid())) {
 
                     showSendingNotificationIfNecessary(account);
 
@@ -1509,8 +1514,12 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
     }
 
     private boolean messagesPendingSend(final LegacyAccountDto account) {
-        Long outboxFolderId = account.getOutboxFolderId();
-        if (outboxFolderId == null) {
+        final long outboxFolderId = OutboxFolderManagerKt.getOutboxFolderIdSync(
+            outboxFolderManager,
+            account.getUuid(),
+            true
+        );
+        if (outboxFolderId == -1L) {
             Log.w("Could not get Outbox folder ID from Account");
             return false;
         }
@@ -1532,9 +1541,14 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
                 return;
             }
 
-            LocalStore localStore = localStoreProvider.getInstance(account);
-            OutboxStateRepository outboxStateRepository = localStore.getOutboxStateRepository();
-            LocalFolder localFolder = localStore.getFolder(account.getOutboxFolderId());
+            final LocalStore localStore = localStoreProvider.getInstance(account);
+            final OutboxStateRepository outboxStateRepository = localStore.getOutboxStateRepository();
+            final long outboxFolderId = OutboxFolderManagerKt.getOutboxFolderIdSync(
+                outboxFolderManager,
+                account.getUuid(),
+                true
+            );
+            final LocalFolder localFolder = localStore.getFolder(outboxFolderId);
             if (!localFolder.exists()) {
                 Log.w("Outbox does not exist");
                 return;
@@ -1542,9 +1556,7 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
 
             localFolder.open();
 
-            long outboxFolderId = localFolder.getDatabaseId();
-
-            List<LocalMessage> localMessages = localFolder.getMessages();
+            final List<LocalMessage> localMessages = localFolder.getMessages();
             int progress = 0;
             int todo = localMessages.size();
             for (MessagingListener l : getListeners()) {
@@ -1688,8 +1700,13 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
             }
         }
 
+        final long outboxFolderId = OutboxFolderManagerKt.getOutboxFolderIdSync(
+            outboxFolderManager,
+            account.getUuid(),
+            true
+        );
         for (MessagingListener listener : getListeners()) {
-            listener.folderStatusChanged(account, account.getOutboxFolderId());
+            listener.folderStatusChanged(account, outboxFolderId);
         }
     }
 
@@ -2110,8 +2127,13 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
 
             Log.d("Delete policy for account %s is %s", account, account.getDeletePolicy());
 
-            Long outboxFolderId = account.getOutboxFolderId();
-            if (outboxFolderId != null && folderId == outboxFolderId && supportsUpload(account)) {
+            final long outboxFolderId = OutboxFolderManagerKt.getOutboxFolderIdSync(
+                outboxFolderManager,
+                account.getUuid(),
+                true
+            );
+
+            if (outboxFolderId != -1L && folderId == outboxFolderId && supportsUpload(account)) {
                 for (String destinationUid : uidMap.values()) {
                     // If the message was in the Outbox, then it has been copied to local Trash, and has
                     // to be copied to remote trash
@@ -2582,10 +2604,15 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
         if (isAuthenticationProblem(account, true)) {
             handleAuthenticationFailure(account, true);
             return;
+        } else {
+            clearAuthenticationErrorNotification(account, true);
         }
+
         // checking outgoing server configuration
         if (isAuthenticationProblem(account, false)) {
             handleAuthenticationFailure(account, false);
+        } else {
+            clearAuthenticationErrorNotification(account, false);
         }
     }
 
@@ -2595,6 +2622,16 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
 
         return serverSettings.isMissingCredentials() ||
                 serverSettings.authenticationType == AuthType.XOAUTH2 && account.getOAuthState() == null;
+    }
+
+    private void clearAuthenticationErrorNotification(LegacyAccountDto account, boolean incoming) {
+        if (FeatureFlagProviderCompat.provide(featureFlagProvider, "display_in_app_notifications").isEnabled()) {
+            final AuthenticationErrorNotification notification = createAuthenticationErrorNotification(
+                account, incoming);
+            notificationDismisser.dismiss(notification,outcome -> {
+                Log.v("notificationDismisser outcome = " + outcome);
+            });
+        }
     }
 
     void actOnMessagesGroupedByAccountAndFolder(List<MessageReference> messages, MessageActor actor) {
@@ -2685,6 +2722,7 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
 
         @Override
         public void syncAuthenticationSuccess() {
+            clearAuthenticationErrorNotification(account, true);
             notificationController.clearAuthenticationErrorNotification(account, true);
         }
 
