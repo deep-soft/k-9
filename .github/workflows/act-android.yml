@@ -1,4 +1,4 @@
-#2025-10-10 16:00
+#2026-04-03 20:00
 # act-android.yml
 # full and foss, gradle 4.4.1
 #act-android.yml
@@ -117,18 +117,23 @@ jobs:
       - name: Get ref, set build version
         shell: bash
         run: |
-          _ref_all_=$(git log -1 --format='%H')
-          # _ref_=$(echo ${_ref_all_::7})
-          _ref_org_=${{ env.TAG_REF }}
-          _ref_len_="${#_ref_org_}"
-          _ref_=$(echo ${_ref_all_::$_ref_len_})
-          _prg_version_=$(grep "versionName " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}')
-          _prg_ver_suf_=$(grep "versionNameSuffix " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}')
-          echo "TAG_REF=$_ref_" >> $GITHUB_ENV
-          _build_=${{ env.TAG_BUILD }}.$_ref_
-          echo "TAG_BUILD=$_build_" >> $GITHUB_ENV
-          echo "PRG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV
-          echo "TAG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV
+          _ref_all_=$(git log -1 --format='%H');
+          # _ref_=$(echo ${_ref_all_::7});
+          _ref_org_=${{ env.TAG_REF }};
+          _ref_len_="${#_ref_org_}";
+          _ref_=$(echo ${_ref_all_::$_ref_len_});
+          _prg_version_=$(grep "versionName " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}') || true;
+          _prg_ver_suf_=$(grep "versionNameSuffix " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}') || true;
+          echo "TAG_REF=$_ref_" >> $GITHUB_ENV;
+          _build_=${{ env.TAG_BUILD }}.$_ref_;
+          echo "TAG_BUILD=$_build_" >> $GITHUB_ENV;
+          if [ "$_prg_ver_suf_" != "" ]; then
+            echo "PRG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV;
+            echo "TAG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV;
+          else
+            echo "PRG_VERSION=$_prg_version_" >> $GITHUB_ENV;
+            echo "TAG_VERSION=$_prg_version_" >> $GITHUB_ENV;
+          fi
 
       - name: Print ref, build version
         shell: bash
