@@ -1,4 +1,4 @@
-#2025-10-10 16:00
+#2026-04-03 20:00
 # act-android.yml
 # full and foss, gradle 4.4.1
 #act-android.yml
@@ -53,6 +53,7 @@ jobs:
         shell: bash
         run: |
           cp bins/disk-cleanup-action.yml .github/actions/disk-cleanup/action.yml
+
       - name: Cleanup disk
         uses: ./.github/actions/disk-cleanup
 
@@ -114,22 +115,25 @@ jobs:
           fetch-depth: 1
 
       - name: Get ref, set build version
-        continue-on-error: true
         shell: bash
         run: |
           _ref_all_=$(git log -1 --format='%H');
+          # _ref_=$(echo ${_ref_all_::7});
           _ref_org_=${{ env.TAG_REF }};
-          _ref_len_=${#_ref_org_};
+          _ref_len_="${#_ref_org_}";
           _ref_=$(echo ${_ref_all_::$_ref_len_});
-          echo "app-${{ env.PRG_NAME }}/build.gradle.kts";
-          cat "app-${{ env.PRG_NAME }}/build.gradle.kts" || true;
-          _prg_version_=$(grep "versionName " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}');
-          _prg_ver_suf_=$(grep "versionNameSuffix " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}');
+          _prg_version_=$(grep "versionName " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}') || true;
+          _prg_ver_suf_=$(grep "versionNameSuffix " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}') || true;
           echo "TAG_REF=$_ref_" >> $GITHUB_ENV;
           _build_=${{ env.TAG_BUILD }}.$_ref_;
           echo "TAG_BUILD=$_build_" >> $GITHUB_ENV;
-          echo "PRG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV;
-          echo "TAG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV;
+          if [ "$_prg_ver_suf_" != "" ]; then
+            echo "PRG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV;
+            echo "TAG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV;
+          else
+            echo "PRG_VERSION=$_prg_version_" >> $GITHUB_ENV;
+            echo "TAG_VERSION=$_prg_version_" >> $GITHUB_ENV;
+          fi
 
       - name: Print ref, build version
         shell: bash
@@ -177,17 +181,20 @@ jobs:
                     :app-k9mail:checkFullReleaseBadging \
                     -x assemble \
                     -x build
+
       - name: Upload Artifact
         uses: deep-soft/upload-artifact@v4
         with:
           name: upload-artifact
           path: |
             ./app-${{ env.PRG_NAME }}/build/outputs/apk/
+
 # full begin
       - name: set env.PRG_TYPE full
         shell: bash
         run: |
           echo "PRG_TYPE=$PRG_TYPE_FULL" >> $GITHUB_ENV
+
       - name: Copy apk from outputs/ (${{ env.PRG_TYPE }})
         shell: bash
         run: |
@@ -201,6 +208,7 @@ jobs:
           mv ./signed-apk/app-${{ env.PRG_NAME }}-${{ env.PRG_TYPE }}-release-unsigned.apk ./signed-apk/${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE }}-release.apk
           echo "LIST: " ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE }}-release.apk
           ls -l ./signed-apk/
+
       - uses: deep-soft/sign-android-release@v1
         name: Sign app APK (${{ env.PRG_TYPE }})
         if: env.ANDROID_SIGNING_KEY != null
@@ -232,6 +240,7 @@ jobs:
             ${{steps.sign-k9mail.outputs.signedReleaseFile}}
             ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE }}-release-signed.txt
             _tag_name_.txt
+
       - name: Publish version build - signed apk package (${{ env.PRG_TYPE }})
         if: env.ANDROID_SIGNING_KEY != null
         uses: deep-soft/action-gh-release@v2.1
@@ -242,6 +251,7 @@ jobs:
             ${{steps.sign-k9mail.outputs.signedReleaseFile}}
             ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE }}-release-signed.txt
             _tag_name_.txt
+
       - name: Publish unsigned apk package (${{ env.PRG_TYPE }})
         if: env.ANDROID_SIGNING_KEY == null
         uses: deep-soft/action-gh-release@v2.1
@@ -258,11 +268,13 @@ jobs:
         run: |
           rm -fr ./signed-apk || true;
           mkdir -p signed-apk || true;
+
 # foss begin
       - name: set env.PRG_TYPE foss
         shell: bash
         run: |
           echo "PRG_TYPE=$PRG_TYPE_FOSS" >> $GITHUB_ENV
+
       - name: Copy apk from outputs/ (${{ env.PRG_TYPE }})
         shell: bash
         run: |
@@ -276,6 +288,7 @@ jobs:
           mv ./signed-apk/app-${{ env.PRG_NAME }}-${{ env.PRG_TYPE }}-release-unsigned.apk ./signed-apk/${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE }}-release.apk
           echo "LIST: " ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE }}-release.apk
           ls -l ./signed-apk/
+
       - uses: deep-soft/sign-android-release@v1
         name: Sign app APK (${{ env.PRG_TYPE }})
         if: env.ANDROID_SIGNING_KEY != null
@@ -307,6 +320,7 @@ jobs:
             ${{steps.sign-k9mail-foss.outputs.signedReleaseFile}}
             ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE }}-release-signed.txt
             _tag_name_.txt
+
       - name: Publish version build - signed apk package (${{ env.PRG_TYPE }})
         if: env.ANDROID_SIGNING_KEY != null
         uses: deep-soft/action-gh-release@v2.1
@@ -317,6 +331,7 @@ jobs:
             ${{steps.sign-k9mail-foss.outputs.signedReleaseFile}}
             ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE }}-release-signed.txt
             _tag_name_.txt
+
       - name: Publish unsigned apk package (${{ env.PRG_TYPE }})
         if: env.ANDROID_SIGNING_KEY == null
         uses: deep-soft/action-gh-release@v2.1
