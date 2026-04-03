@@ -25,7 +25,7 @@ import com.fsck.k9.contacts.ContactPictureLoader;
 import com.fsck.k9.helper.ClipboardManager;
 import com.fsck.k9.helper.MessageHelper;
 import com.fsck.k9.mail.Address;
-import com.fsck.k9.mail.Flag;
+import net.thunderbird.core.common.mail.Flag;
 import com.fsck.k9.mail.Message;
 import com.fsck.k9.message.ReplyAction;
 import com.fsck.k9.message.ReplyActionStrategy;
@@ -41,14 +41,16 @@ import com.fsck.k9.ui.messageview.RecipientNamesView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textview.MaterialTextView;
 import net.thunderbird.core.android.account.LegacyAccountDto;
-import net.thunderbird.core.preference.GeneralSettingsManager;
+import net.thunderbird.core.preference.display.visualSettings.message.list.MessageListDateTimeFormat;
+import net.thunderbird.core.preference.display.visualSettings.message.list.MessageListPreferencesManager;
 
 
 public class MessageHeader extends LinearLayout implements OnClickListener, OnLongClickListener {
     private static final int DEFAULT_SUBJECT_LINES = 3;
 
     private final MessageViewRecipientFormatter recipientFormatter = DI.get(MessageViewRecipientFormatter.class);
-    private final GeneralSettingsManager generalSettingsManager = DI.get(GeneralSettingsManager.class);
+    private final MessageListPreferencesManager messageListPreferencesManager =
+        DI.get(MessageListPreferencesManager.class);
     private final ReplyActionStrategy replyActionStrategy = DI.get(ReplyActionStrategy.class);
     private final MessageHelper messageHelper = DI.get(MessageHelper.class);
     private final FontSizes fontSizes = K9.getFontSizes();
@@ -62,6 +64,9 @@ public class MessageHeader extends LinearLayout implements OnClickListener, OnLo
     private RecipientNamesView recipientNamesView;
     private MaterialTextView dateView;
     private ImageView menuPrimaryActionView;
+    private View attachmentSummaryContainer;
+    private MaterialTextView attachmentSummaryText;
+    private MaterialTextView viewAllAttachmentsButton;
 
     private RelativeDateTimeFormatter relativeDateTimeFormatter;
 
@@ -113,6 +118,11 @@ public class MessageHeader extends LinearLayout implements OnClickListener, OnLo
         TooltipCompat.setTooltipText(menuOverflowView, menuOverflowDescription);
 
         findViewById(R.id.participants_container).setOnClickListener(this);
+
+        attachmentSummaryContainer = findViewById(R.id.attachment_summary_container);
+        attachmentSummaryText = findViewById(R.id.attachment_summary_text);
+        viewAllAttachmentsButton = findViewById(R.id.view_all_attachments);
+        viewAllAttachmentsButton.setOnClickListener(this);
     }
 
     @Override
@@ -126,6 +136,8 @@ public class MessageHeader extends LinearLayout implements OnClickListener, OnLo
             showOverflowMenu(view);
         } else if (id == R.id.participants_container) {
             messageHeaderClickListener.onParticipantsContainerClick();
+        } else if (id == R.id.view_all_attachments) {
+            messageHeaderClickListener.onViewAllAttachmentsClick();
         }
     }
 
@@ -210,7 +222,7 @@ public class MessageHeader extends LinearLayout implements OnClickListener, OnLo
             fromAddress = fromAddresses[0];
         }
 
-        if (generalSettingsManager.getConfig().getDisplay().getVisualSettings().isShowContactPicture()) {
+        if (messageListPreferencesManager.getConfig().isShowContactPicture()) {
             contactPictureView.setVisibility(View.VISIBLE);
             if (fromAddress != null) {
                 ContactPictureLoader contactsPictureLoader = ContactPicture.getContactPictureLoader();
@@ -233,7 +245,12 @@ public class MessageHeader extends LinearLayout implements OnClickListener, OnLo
         }
 
         if (message.getSentDate() != null) {
-            dateView.setText(relativeDateTimeFormatter.formatDate(message.getSentDate().getTime()));
+            dateView.setText(
+                relativeDateTimeFormatter.formatDate(
+                    message.getSentDate().getTime(),
+                    MessageListDateTimeFormat.Contextual
+                )
+            );
         } else {
             dateView.setText("");
         }
@@ -347,5 +364,15 @@ public class MessageHeader extends LinearLayout implements OnClickListener, OnLo
 
     public void setMessageHeaderClickListener(MessageHeaderClickListener messageHeaderClickListener) {
         this.messageHeaderClickListener = messageHeaderClickListener;
+    }
+
+    public void setAttachmentSummary(@NonNull String summaryText, @NonNull String viewButtonText) {
+        attachmentSummaryText.setText(summaryText);
+        viewAllAttachmentsButton.setText(viewButtonText);
+        attachmentSummaryContainer.setVisibility(View.VISIBLE);
+    }
+
+    public void hideAttachmentSummary() {
+        attachmentSummaryContainer.setVisibility(View.GONE);
     }
 }

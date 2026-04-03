@@ -268,7 +268,6 @@
     <string name="archive_folder_label">Ordner für archivierte Nachrichten</string>
     <string name="spam_folder_label">Ordner für Spam</string>
     <string name="account_setup_incoming_subscribed_folders_only_label">Nur ausgewählte Ordner anzeigen</string>
-    <string name="account_setup_auto_expand_folder">Startordner</string>
     <string name="account_setup_options_mail_check_frequency_never">Nie (nur manuell)</string>
     <string name="account_setup_options_mail_check_frequency_15min">Alle 15 Minuten</string>
     <string name="account_setup_options_mail_check_frequency_30min">Alle 30 Minuten</string>
@@ -319,8 +318,8 @@
     <string name="account_settings_notification_channels_label">Benachrichtigungskategorien</string>
     <string name="account_settings_open_notification_settings_messages_summary">Konfiguriere die Benachrichtigungen für neue Nachrichten</string>
     <string name="account_settings_open_notification_settings_miscellaneous_summary">Konfiguriere Fehler- und Statusbenachrichtigungen</string>
-    <string name="account_settings_show_pictures_label">Bilder automatisch herunterladen</string>
-    <string name="account_settings_show_pictures_never">Niemals</string>
+    <string name="account_settings_show_pictures_label">Bilder immer anzeigen</string>
+    <string name="account_settings_show_pictures_never">Nein</string>
     <string name="account_settings_show_pictures_only_from_contacts">Nur von Kontakten</string>
     <string name="account_settings_show_pictures_always">Von jedem</string>
     <string name="account_settings_composition">E-Mails versenden</string>
@@ -341,7 +340,7 @@
     <string name="account_settings_quote_style_prefix">Normal (wie in Gmail, Pine)</string>
     <string name="account_settings_quote_style_header">Erweitert (wie in Outlook, Yahoo!, Hotmail)</string>
     <string name="account_settings_upload_sent_messages_label">Gesendete Nachrichten hochladen</string>
-    <string name="account_settings_upload_sent_messages_summary">Nachrichten nach dem Senden in den Ordner Gesendet hochladen</string>
+    <string name="account_settings_upload_sent_messages_summary">Nachrichten nach dem Senden in den Ordner „Gesendet“ hochladen</string>
     <string name="account_settings_general_title">Allgemeine Einstellungen</string>
     <string name="account_settings_reading_mail">E-Mails lesen</string>
     <string name="account_settings_sync">E-Mails abrufen</string>
@@ -353,13 +352,11 @@
     <string name="account_settings_crypto_key">Ende-zu-Ende-Schlüssel konfigurieren</string>
     <string name="account_settings_crypto_summary_off">Keine OpenPGP-App konfiguriert</string>
     <string name="account_settings_crypto_summary_on">Verbunden mit %s</string>
-    <string name="account_settings_crypto_summary_config">Konfigurieren…</string>
+    <string name="account_settings_crypto_summary_config">Wird konfiguriert…</string>
     <string name="account_settings_crypto_encrypt_all_drafts">Alle Entwürfe verschlüsselt speichern</string>
     <string name="account_settings_crypto_encrypt_all_drafts_on">Alle Entwürfe werden verschlüsselt gespeichert</string>
     <string name="account_settings_crypto_encrypt_all_drafts_off">Entwürfe nur verschlüsseln, wenn Verschlüsselung aktiviert ist</string>
     <string name="account_settings_mail_check_frequency_label">Häufigkeit der E-Mail-Abfrage</string>
-    <string name="account_settings_color_label">Kontofarbe</string>
-    <string name="account_settings_color_summary">Farbe, in der das Konto in der Konten- und Ordnerliste dargestellt wird</string>
     <string name="account_settings_mail_display_count_label">Anzahl anzuzeigender Nachrichten</string>
     <string name="account_settings_autodownload_message_size_label">Nachrichten automatisch laden bis</string>
     <string name="account_settings_autodownload_message_size_1">1 KiB</string>
@@ -400,7 +397,6 @@
     <string name="account_settings_incoming_summary">Einstellungen des Posteingangsservers bearbeiten</string>
     <string name="account_settings_outgoing_label">Postausgangsserver</string>
     <string name="account_settings_outgoing_summary">Einstellungen des Postausgangsservers (SMTP) bearbeiten</string>
-    <string name="account_settings_description_label">Kontoname</string>
     <string name="account_settings_name_label">Dein Name</string>
     <string name="notifications_title">Benachrichtigungen</string>
     <string name="account_settings_vibration">Vibration</string>
@@ -471,7 +467,7 @@
     <string name="sort_unread_last">Gelesene Nachrichten zuerst</string>
     <string name="sort_attach_first">Nachrichten mit Anhängen zuerst</string>
     <string name="sort_unattached_first">Nachrichten ohne Anhänge zuerst</string>
-    <string name="sort_by">Sortieren nach…</string>
+    <string name="sort_by">Sortieren nach …</string>
     <string name="sort_by_date">Datum</string>
     <string name="sort_by_arrival">Ankunftsdatum</string>
     <string name="sort_by_subject">Betreff</string>
@@ -521,7 +517,7 @@
     <string name="account_setup_push_limit_500">500 Ordner</string>
     <string name="account_setup_push_limit_1000">1000 Ordner</string>
     <string name="animations_title">Animationen</string>
-    <string name="animations_summary">Aufwendige visuelle Effekte benutzen</string>
+    <string name="animations_summary">Aufwändige visuelle Effekte verwenden</string>
     <string name="show_unified_inbox_title">Gemeinsamen Posteingang anzeigen</string>
     <string name="show_starred_count_title">Anzahl der wichtigen Nachrichten anzeigen</string>
     <string name="integrated_inbox_title">Gemeinsamer Posteingang</string>
@@ -674,8 +670,8 @@
     <string name="address_type_work">Arbeit</string>
     <string name="address_type_other">Anderes</string>
     <string name="address_type_mobile">Mobil</string>
-    <string name="compose_error_no_draft_folder">Kein Ordner für Entwürfe für dieses Konto festgelegt!</string>
-    <string name="compose_error_no_key_configured">Kein Schlüssel für dieses Konto konfiguriert! Überprüfe deine Einstellungen.</string>
+    <string name="compose_error_no_draft_folder">Keinen Ordner für Entwürfe für dieses Konto festgelegt!</string>
+    <string name="compose_error_no_key_configured">Keinen Schlüssel für dieses Konto konfiguriert! Überprüfe deine Einstellungen.</string>
     <string name="error_crypto_provider_incompatible">Verschlüsselungsdienst verwendet inkompatible Version. Bitte überprüfe deine Einstellungen!</string>
     <string name="error_crypto_provider_connect">Verbindung zum Verschlüsselungsdienst fehlgeschlagen. Überprüfe deine Einstellungen oder tippe auf das Verschlüsselungssymbol, um es erneut zu versuchen!</string>
     <string name="error_crypto_provider_ui_required">Ende-zu-Ende Verschlüsselung konnte nicht initialisiert werden, bitte überprüfe deine Einstellungen</string>
@@ -733,7 +729,6 @@
     <string name="crypto_msg_encrypted_insecure">aber die Verschlüsselung wird nicht als sicher angesehen</string>
     <string name="locked_attach_unlock">Entsperren</string>
     <string name="locked_attach_unencrypted">Dieser Teil wurde nicht verschlüsselt und könnte unsicher sein.</string>
-    <string name="locked_attach_title">Ungeschützter Anhang</string>
     <string name="message_progress_text">Ladevorgang…</string>
     <string name="messageview_decrypt_cancelled">Entschlüsselung abgebrochen.</string>
     <string name="messageview_decrypt_retry">Wiederholen</string>
@@ -807,25 +802,15 @@ Du kannst diese Nachricht aufheben und sie als Backup für deinen geheimen Schl�
     <string name="push_info_disable_push_text">Wenn du keine sofortigen Benachrichtigungen über neue Nachrichten benötigst, solltest du Push deaktivieren und die Abfrage verwenden. Die Abfrage prüft in regelmäßigen Abständen auf neue E-Mails und benötigt die Benachrichtigung nicht.</string>
     <string name="push_info_disable_push_action">Push deaktivieren</string>
     <!--Name of the swipe action to select a message. Try to keep it short.-->
-    <string name="swipe_action_select">Auswählen</string>
     <!--Name of the swipe action to deselect a message. Try to keep it short.-->
-    <string name="swipe_action_deselect">Abwählen</string>
     <!--Name of the swipe action to mark a message as read. Try to keep it short.-->
-    <string name="swipe_action_mark_as_read">Als gelesen markieren</string>
     <!--Name of the swipe action to mark a message as unread. Try to keep it short.-->
-    <string name="swipe_action_mark_as_unread">Als ungelesen markieren</string>
     <!--Name of the swipe action to add the star to a message. Try to keep it short.-->
-    <string name="swipe_action_add_star">Als wichtig markieren</string>
     <!--Name of the swipe action to remove the star from a message. Try to keep it short.-->
-    <string name="swipe_action_remove_star">Als unwichtig markieren</string>
     <!--Name of the swipe action to archive a message. Try to keep it short.-->
-    <string name="swipe_action_archive">Archiv</string>
     <!--Name of the swipe action to delete a message. Try to keep it short.-->
-    <string name="swipe_action_delete">Löschen</string>
     <!--Name of the swipe action to move a message to the Spam folder. Try to keep it short.-->
-    <string name="swipe_action_spam">Spam</string>
     <!--Name of the swipe action to move a message. The ellipsis (…) indicates that there is another step (selecting a folder) before the action is performed. Try to keep it short.-->
-    <string name="swipe_action_move">Verschieben…</string>
     <!--Name of setting to configure whether to show a "compose" floating action button on top of the message list-->
     <string name="general_settings_show_compose_button_title">Schwebendes Verfassen anzeigen</string>
     <!--Displayed in the toolbar when there was an error loading the message list, e.g. because the folder no longer exists.-->
@@ -879,7 +864,7 @@ Du kannst diese Nachricht aufheben und sie als Backup für deinen geheimen Schl�
     <string name="account_delete_dlg_instructions_fmt">Das Konto \"<xliff:g id="account">%1$s</xliff:g>\" wird aus <xliff:g id="app_name">%2$s</xliff:g> entfernt.</string>
     <string name="about_title">Über <xliff:g id="app_name">%s</xliff:g></string>
     <string name="push_info_notification_explanation_text">Wenn Push verwendet wird, hält <xliff:g id="app_name">%1$s</xliff:g> eine Verbindung zum Mailserver aufrecht. Bei Android muss eine laufende Benachrichtigung angezeigt werden, während die App im Hintergrund aktiv ist. <xliff:g id="optional_extended_explanation">%2$s</xliff:g></string>
-    <string name="about_app_authors_thunderbird">Thunderbird Mobile Team</string>
+    <string name="about_app_authors_thunderbird">Thunderbird-Mobile-Team</string>
     <string name="folder_settings_notifications_label">Benachrichtigungen</string>
     <string name="settings_ui_telemetry_description">Leistungs-, Nutzungs-, Hardware- und Individualisierungsdaten über diese App mit Mozilla teilen, um uns zu helfen, Thunderbird zu verbessern</string>
     <string name="settings_ui_data_collection">Datenerfassung</string>
@@ -902,8 +887,36 @@ Du kannst diese Nachricht aufheben und sie als Backup für deinen geheimen Schl�
     <string name="debug_sync_export_logs_title">Synchronisationsprotokolle exportieren</string>
     <string name="debug_enable_sync_debug_logging_title">Synchronisation des Fehlerprotokolls aktivieren</string>
     <string name="debug_enable_sync_debug_logging_summary">Diagnoseinformationen zur Synchronisation für 24 Stunden protokollieren</string>
-    <string name="swipe_action_change_swipe_gestures">Ändere \nWischgesten</string>
     <string name="archiving_not_available_for_this_account">Archivierung ist für dieses Konto nicht verfügbar.</string>
-    <string name="swipe_action_archive_folder_not_set">Archivordner einrichten</string>
     <string name="debug_open_secret_debug_screen">Geheime Fehleranalyse-Ansicht öffnen</string>
+    <string name="debug_invalidate_access_token">Test: Zugriffstoken ungültig machen</string>
+    <string name="debug_invalidate_access_token_local">Test: Zugriffstoken ungültig machen (lokal)</string>
+    <string name="debug_invalidate_access_token_server">Test: Zugriffstoken ungültig machen (Server)</string>
+    <string name="debug_invalidate_access_token_done">Zugriffstoken ungültig gemacht. Nächste Anfrage wird aufgefrischt.</string>
+    <string name="debug_invalidate_access_token_unavailable">Für dieses Konto ist kein OAuth-Token verfügbar.</string>
+    <string name="debug_invalidate_access_token_local_done">Lokale Ungültigkeitserklärung angefordert. Nächste Anfrage wird ein neues Token abrufen.</string>
+    <string name="debug_invalidate_access_token_server_done">Gespeichertes Zugriffstoken beschädigt. Nächste Anfrage wird fehlschlagen, dann auffrischen.</string>
+    <string name="debug_force_auth_failure">Test: Autorisierungsfehler jetzt erzwingen</string>
+    <string name="debug_force_auth_failure_done">OAuth-Status gelöscht. Nächste Anfrage wird fehlschlagen.</string>
+    <string name="debug_force_auth_failure_unavailable">Für dieses Konto ist keine OAuth-Konfiguration verfügbar.</string>
+    <string name="debug_invalidate_access_token_cannot_modify">Das gespeicherte Zugriffstoken konnte nicht geändert werden. Versuche eine lokale Ungültigkeitserklärung.</string>
+    <string name="debug_invalidate_access_token_already_modified">Gespeichertes Zugriffstoken bereits geändert.</string>
+    <string name="message_view_menu_action_export_eml">Als EML exportieren</string>
+    <string name="expand_folders">Ordner erweitern</string>
+    <string name="navigation_drawer_preferences">Seitenmenü</string>
+    <string name="set_format_html_action">Originalformatierung verwenden</string>
+    <string name="set_format_html_condensed_action">Formatiert anzeigen</string>
+    <string name="set_format_plain_condensed_action">Unformatiert anzeigen</string>
+    <string name="set_format_plain_action">Unformatierte Nachricht anzeigen</string>
+    <string name="global_settings_messageview_body_content_type_text_html">HTML (Text/HTML)</string>
+    <string name="global_settings_messageview_body_content_type_text_plain">Nur Text (Text/Klartext)</string>
+    <string name="account_setup_auto_select_folder">Ordner automatisch auswählen</string>
+    <string name="global_settings_messageview_body_content_type_title">Inhaltstyp des Textes</string>
+    <string name="print_message_action">Drucken</string>
+    <string name="debug_feature_flags">DEBUG: Feature-Flags</string>
+    <string name="global_settings_splitview_when_unfolded">Wenn das Gerät aufgeklappt ist</string>
+    <string name="general_settings_message_list_date_time_format_title">Datums-/Zeitformat</string>
+    <string name="general_settings_message_list_date_time_format_contextual">Kontextbezogen</string>
+    <string name="general_settings_message_list_date_time_format_full">Vollständig</string>
+    <string name="sort_by_then_by">Dann nach …</string>
 </resources>

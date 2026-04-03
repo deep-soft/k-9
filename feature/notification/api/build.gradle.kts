@@ -4,6 +4,13 @@ plugins {
 }
 
 kotlin {
+    android {
+        namespace = "net.thunderbird.feature.notification.api"
+        androidResources.enable = true
+        withHostTest {
+            isIncludeAndroidResources = true
+        }
+    }
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.common)
@@ -17,7 +24,7 @@ kotlin {
             implementation(projects.core.ui.compose.designsystem)
             implementation(projects.core.ui.compose.theme2.common)
         }
-        androidUnitTest.dependencies {
+        androidHostTest.dependencies {
             implementation(projects.core.ui.compose.testing)
             implementation(libs.bundles.shared.jvm.test.compose)
             implementation(libs.bundles.shared.jvm.android.compose.debug)
@@ -31,28 +38,18 @@ kotlin {
     sourceSets.all {
         compilerOptions {
             freeCompilerArgs.addAll(
-                "-Xexpect-actual-classes",
                 "-Xwhen-guards",
             )
         }
     }
 }
 
-android {
-    namespace = "net.thunderbird.feature.notification.api"
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-        }
-    }
-}
-
-java {
-    sourceCompatibility = ThunderbirdProjectConfig.Compiler.javaVersion
-    targetCompatibility = ThunderbirdProjectConfig.Compiler.javaVersion
-}
-
 compose.resources {
     publicResClass = false
     packageOfResClass = "net.thunderbird.feature.notification.resources.api"
+}
+
+codeCoverage {
+    branchCoverage = 46
+    lineCoverage = 23
 }

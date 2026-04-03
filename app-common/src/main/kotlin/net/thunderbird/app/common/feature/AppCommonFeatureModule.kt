@@ -3,18 +3,24 @@ package net.thunderbird.app.common.feature
 import app.k9mail.feature.launcher.FeatureLauncherExternalContract
 import app.k9mail.feature.launcher.di.featureLauncherModule
 import net.thunderbird.app.common.feature.mail.appCommonFeatureMailModule
+import net.thunderbird.feature.account.avatar.di.featureAccountAvatarModule
+import net.thunderbird.feature.mail.message.composer.inject.featureMessageComposerModule
+import net.thunderbird.feature.mail.message.reader.impl.inject.featureMessageReaderModule
 import net.thunderbird.feature.navigation.drawer.api.NavigationDrawerExternalContract
 import net.thunderbird.feature.notification.impl.inject.featureNotificationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 internal val appCommonFeatureModule = module {
+    includes(appCommonFeatureMailModule)
+    includes(featureAccountAvatarModule)
     includes(featureLauncherModule)
     includes(featureNotificationModule)
-    includes(appCommonFeatureMailModule)
+    includes(featureMessageComposerModule)
+    includes(featureMessageReaderModule)
 
-    factory<FeatureLauncherExternalContract.AccountSetupFinishedLauncher> {
-        AccountSetupFinishedLauncher(
+    factory<FeatureLauncherExternalContract.MessageListLauncher> {
+        MessageListLauncher(
             context = androidContext(),
         )
     }

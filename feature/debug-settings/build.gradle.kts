@@ -11,9 +11,16 @@ android {
 
 dependencies {
     implementation(projects.core.ui.compose.designsystem)
-    implementation(projects.core.ui.compose.navigation)
+    implementation(projects.core.ui.navigation)
     implementation(projects.core.common)
     implementation(projects.core.outcome)
+    implementation(projects.core.featureflag)
     implementation(projects.feature.mail.account.api)
     implementation(projects.feature.notification.api)
+    implementation(projects.core.android.common)
+}
+
+codeCoverage {
+    branchCoverage = 0
+    lineCoverage = 0
 }

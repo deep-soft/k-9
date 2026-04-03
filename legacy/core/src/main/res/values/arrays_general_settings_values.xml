@@ -192,6 +192,7 @@
         <item>ALWAYS</item>
         <item>NEVER</item>
         <item>WHEN_IN_LANDSCAPE</item>
+        <item>WHEN_UNFOLDED</item>
     </string-array>
 
     <string-array name="confirm_action_values" translatable="false">
@@ -231,6 +232,11 @@
     <string-array name="post_mark_as_unread_navigation_values" translatable="false">
         <item>StayOnCurrentMessage</item>
         <item>ReturnToMessageList</item>
+    </string-array>
+
+    <string-array name="messageview_body_content_type_values" translatable="false">
+        <item>TEXT_HTML</item>
+        <item>TEXT_PLAIN</item>
     </string-array>
 
 </resources>

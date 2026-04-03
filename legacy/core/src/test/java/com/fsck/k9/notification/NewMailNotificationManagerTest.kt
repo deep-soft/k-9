@@ -13,6 +13,7 @@ import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
+import com.fsck.k9.mail.Address
 import com.fsck.k9.mailstore.LocalMessage
 import com.fsck.k9.mailstore.LocalStore
 import com.fsck.k9.mailstore.LocalStoreProvider
@@ -21,9 +22,14 @@ import kotlin.test.assertNotNull
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import net.thunderbird.core.android.account.LegacyAccountDto
+import net.thunderbird.core.common.appConfig.PlatformConfigProvider
 import net.thunderbird.core.preference.GeneralSettings
+import net.thunderbird.core.preference.GeneralSettingsManager
 import net.thunderbird.core.preference.display.DisplaySettings
+import net.thunderbird.core.preference.interaction.InteractionSettings
 import net.thunderbird.core.preference.network.NetworkSettings
 import net.thunderbird.core.preference.notification.NotificationPreference
 import net.thunderbird.core.preference.privacy.PrivacySettings
@@ -51,24 +57,37 @@ class NewMailNotificationManagerTest {
     private val account = createAccount()
     private val notificationContentCreator = mock<NotificationContentCreator>()
     private val localStoreProvider = createLocalStoreProvider()
+    private val generalSettingsManager = FakeGeneralSettingManager()
     private val clock = TestClock(Instant.fromEpochMilliseconds(TIMESTAMP))
+    private val generalSettings = GeneralSettings(
+        display = DisplaySettings(),
+        network = NetworkSettings(),
+        notification = NotificationPreference(
+            quietTimeStarts = "23:00",
+            quietTimeEnds = "00:00",
+        ),
+        privacy = PrivacySettings(),
+        platformConfigProvider = FakePlatformConfigProvider(),
+    )
     private val manager = NewMailNotificationManager(
         notificationContentCreator,
         createNotificationRepository(),
         BaseNotificationDataCreator(),
-        SingleMessageNotificationDataCreator(),
+        SingleMessageNotificationDataCreator(
+            interactionPreferences = mock {
+                on { getConfig() } doReturn InteractionSettings()
+            },
+            notificationPreference = mock { on { getConfig() } doReturn generalSettings.notification },
+        ),
         SummaryNotificationDataCreator(
-            singleMessageNotificationDataCreator = SingleMessageNotificationDataCreator(),
+            singleMessageNotificationDataCreator = SingleMessageNotificationDataCreator(
+                interactionPreferences = mock {
+                    on { getConfig() } doReturn InteractionSettings()
+                },
+                notificationPreference = mock { on { getConfig() } doReturn generalSettings.notification },
+            ),
             generalSettingsManager = mock {
-                on { getConfig() } doReturn GeneralSettings(
-                    display = DisplaySettings(),
-                    network = NetworkSettings(),
-                    notification = NotificationPreference(
-                        quietTimeStarts = "23:00",
-                        quietTimeEnds = "00:00",
-                    ),
-                    privacy = PrivacySettings(),
-                )
+                on { getConfig() } doReturn generalSettings
             },
         ),
         clock,
@@ -106,7 +125,7 @@ class NewMailNotificationManagerTest {
         assertThat(result.singleNotificationData.first().content).isEqualTo(
             NotificationContent(
                 messageReference = createMessageReference("msg-1"),
-                sender = "sender",
+                sender = Address("irrelevant", "sender"),
                 subject = "subject",
                 preview = "preview",
                 summary = "summary",
@@ -143,7 +162,7 @@ class NewMailNotificationManagerTest {
         assertThat(result.singleNotificationData.first().content).isEqualTo(
             NotificationContent(
                 messageReference = createMessageReference("msg-2"),
-                sender = "Zoe",
+                sender = Address("irrelevant", "Zoe"),
                 subject = "Meeting",
                 preview = "We need to talk",
                 summary = "Zoe Meeting",
@@ -310,7 +329,7 @@ class NewMailNotificationManagerTest {
             assertThat(singleNotificationData.content).isEqualTo(
                 NotificationContent(
                     messageReference = createMessageReference("msg-restore"),
-                    sender = "Alice",
+                    sender = Address("irrelevant", "Alice"),
                     subject = "Another one",
                     preview = "Are you tired of me yet?",
                     summary = "Alice Another one",
@@ -352,7 +371,7 @@ class NewMailNotificationManagerTest {
             assertThat(singleNotificationData.content).isEqualTo(
                 NotificationContent(
                     messageReference = createMessageReference("uid-1"),
-                    sender = "Sender",
+                    sender = Address("irrelevant", "Sender"),
                     subject = "Subject",
                     preview = "Preview",
                     summary = "Summary",
@@ -365,7 +384,7 @@ class NewMailNotificationManagerTest {
             assertThat(summaryNotificationData.singleNotificationData.content).isEqualTo(
                 NotificationContent(
                     messageReference = createMessageReference("uid-1"),
-                    sender = "Sender",
+                    sender = Address("irrelevant", "Sender"),
                     subject = "Subject",
                     preview = "Preview",
                     summary = "Summary",
@@ -435,7 +454,7 @@ class NewMailNotificationManagerTest {
             on { createFromMessage(account, message) } doReturn
                 NotificationContent(
                     messageReference = createMessageReference(messageUid),
-                    sender,
+                    sender = Address("irrelevant", sender),
                     subject,
                     preview,
                     summary,
@@ -463,7 +482,7 @@ class NewMailNotificationManagerTest {
             on { createFromMessage(account, message) } doReturn
                 NotificationContent(
                     messageReference = createMessageReference(messageUid),
-                    sender,
+                    Address("irrelevant", sender),
                     subject,
                     preview,
                     summary,
@@ -515,6 +534,39 @@ class NewMailNotificationManagerTest {
             localStoreProvider,
             messageStoreManager,
             notificationContentCreator,
+            generalSettingsManager,
         )
+    }
+
+    private class FakeGeneralSettingManager : GeneralSettingsManager {
+        private val platformConfigProvider = object : PlatformConfigProvider {
+            override val isDebug: Boolean = true
+        }
+
+        private var generalSettings = GeneralSettings(platformConfigProvider = platformConfigProvider)
+
+        @Deprecated(
+            "Use PreferenceManager<GeneralSettings>.getConfig() instead",
+            replaceWith = ReplaceWith("getConfig()"),
+        )
+        override fun getSettings() = generalSettings
+
+        @Deprecated(
+            "Use PreferenceManager<GeneralSettings>.getConfigFlow() instead",
+            replaceWith = ReplaceWith("getConfigFlow()"),
+        )
+        override fun getSettingsFlow(): Flow<GeneralSettings> = flow {
+            emit(generalSettings)
+        }
+
+        override fun save(config: GeneralSettings) {
+            generalSettings = config
+        }
+
+        override fun getConfig(): GeneralSettings = generalSettings
+
+        override fun getConfigFlow(): Flow<GeneralSettings> = flow {
+            emit(generalSettings)
+        }
     }
 }

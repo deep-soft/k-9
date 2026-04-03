@@ -3,17 +3,20 @@ package com.fsck.k9.ui.messagelist
 import app.k9mail.legacy.mailstore.MessageDetailsAccessor
 import app.k9mail.legacy.mailstore.MessageMapper
 import app.k9mail.legacy.message.extractors.PreviewResult.PreviewType
+import com.fsck.k9.contacts.ContactLetterBitmapCreator
 import com.fsck.k9.helper.MessageHelper
 import com.fsck.k9.ui.helper.DisplayAddressHelper
 import net.thunderbird.core.android.account.LegacyAccount
-import net.thunderbird.core.preference.GeneralSettingsManager
+import net.thunderbird.core.preference.display.visualSettings.message.list.MessageListPreferencesManager
 import net.thunderbird.feature.mail.folder.api.OutboxFolderManager
 
 class MessageListItemMapper(
     private val messageHelper: MessageHelper,
     private val account: LegacyAccount,
-    private val generalSettingsManager: GeneralSettingsManager,
+    private val messageListPreferencesManager: MessageListPreferencesManager,
     private val outboxFolderManager: OutboxFolderManager,
+    private val formatDate: (Long) -> String,
+    private val contactLetterBitmapCreator: ContactLetterBitmapCreator?,
 ) : MessageMapper<MessageListItem> {
 
     override fun map(message: MessageDetailsAccessor): MessageListItem {
@@ -25,17 +28,18 @@ class MessageListItemMapper(
         val uniqueId = createUniqueId(account, message.id)
         val showRecipients = DisplayAddressHelper.shouldShowRecipients(outboxFolderManager, account, message.folderId)
         val displayAddress = if (showRecipients) toAddresses.firstOrNull() else fromAddresses.firstOrNull()
+        val messageListSettings = messageListPreferencesManager.getConfig()
         val displayName = if (showRecipients) {
             messageHelper.getRecipientDisplayNames(
                 addresses = toAddresses.toTypedArray(),
-                isShowCorrespondentNames = generalSettingsManager
-                    .getConfig().display.visualSettings.isShowCorrespondentNames,
-                isChangeContactNameColor = generalSettingsManager
-                    .getConfig().display.visualSettings.isChangeContactNameColor,
+                isShowCorrespondentNames = messageListSettings.isShowCorrespondentNames,
+                isChangeContactNameColor = messageListSettings.isChangeContactNameColor,
+                contactNameColor = messageListSettings.contactNameColor,
             )
         } else {
             messageHelper.getSenderDisplayName(displayAddress)
         }
+        val displayMessageDateTime = formatDate(message.messageDate)
 
         return MessageListItem(
             account,
@@ -45,6 +49,7 @@ class MessageListItemMapper(
             message.internalDate,
             displayName,
             displayAddress,
+            displayMessageDateTime,
             previewText,
             isMessageEncrypted,
             message.isRead,
@@ -57,6 +62,9 @@ class MessageListItemMapper(
             message.messageServerId,
             message.id,
             message.threadRoot,
+            contactColor = displayAddress?.let { displayAddress ->
+                contactLetterBitmapCreator?.calcUnknownContactColor(displayAddress)
+            } ?: -1,
         )
     }
 

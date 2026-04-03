@@ -15,8 +15,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import app.k9mail.core.ui.compose.designsystem.atom.card.CardElevated
 import app.k9mail.core.ui.compose.designsystem.atom.text.TextBodyLarge
 import app.k9mail.core.ui.compose.designsystem.atom.text.TextHeadlineSmall
-import app.k9mail.core.ui.compose.theme2.MainTheme
-import net.thunderbird.feature.account.avatar.ui.AvatarOutlined
+import net.thunderbird.core.ui.compose.theme2.MainTheme
+import net.thunderbird.feature.account.avatar.Avatar
+import net.thunderbird.feature.account.avatar.ui.Avatar
 import net.thunderbird.feature.account.avatar.ui.AvatarSize
 
 @Composable
@@ -24,6 +25,7 @@ internal fun GeneralSettingsProfileView(
     name: String,
     email: String?,
     color: Color,
+    avatar: Avatar,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -38,9 +40,9 @@ internal fun GeneralSettingsProfileView(
                 .padding(top = MainTheme.spacings.quadruple)
                 .fillMaxWidth(),
         )
-        AvatarOutlined(
+        Avatar(
+            avatar = avatar,
             color = color,
-            name = name,
             size = AvatarSize.LARGE,
         )
     }

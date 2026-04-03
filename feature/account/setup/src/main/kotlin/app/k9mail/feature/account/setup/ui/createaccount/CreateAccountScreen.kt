@@ -1,10 +1,16 @@
 package app.k9mail.feature.account.setup.ui.createaccount
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import app.k9mail.core.ui.compose.common.mvi.observe
 import app.k9mail.core.ui.compose.designsystem.template.Scaffold
 import app.k9mail.feature.account.common.ui.AppTitleTopHeader
 import app.k9mail.feature.account.common.ui.WizardNavigationBar
@@ -14,6 +20,7 @@ import app.k9mail.feature.account.setup.ui.createaccount.CreateAccountContract.E
 import app.k9mail.feature.account.setup.ui.createaccount.CreateAccountContract.Event
 import app.k9mail.feature.account.setup.ui.createaccount.CreateAccountContract.ViewModel
 import net.thunderbird.core.common.provider.BrandNameProvider
+import net.thunderbird.core.ui.contract.mvi.observe
 
 @Composable
 internal fun CreateAccountScreen(
@@ -42,6 +49,9 @@ internal fun CreateAccountScreen(
         topBar = {
             AppTitleTopHeader(
                 title = brandNameProvider.brandName,
+                modifier = Modifier.windowInsetsPadding(
+                    WindowInsets.statusBars.union(WindowInsets.displayCutout),
+                ),
             )
         },
         bottomBar = {
@@ -54,9 +64,10 @@ internal fun CreateAccountScreen(
                     showNext = false,
                     isBackEnabled = state.value.error != null,
                 ),
+                modifier = Modifier.imePadding(),
             )
         },
-        modifier = modifier,
+        modifier = modifier.windowInsetsPadding(WindowInsets.navigationBars),
     ) { innerPadding ->
         CreateAccountContent(
             state = state.value,

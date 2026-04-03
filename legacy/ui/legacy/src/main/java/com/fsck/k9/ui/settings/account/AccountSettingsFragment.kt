@@ -1,21 +1,27 @@
 package com.fsck.k9.ui.settings.account
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.SwitchPreference
 import app.k9mail.feature.launcher.FeatureLauncherActivity
 import app.k9mail.feature.launcher.FeatureLauncherTarget
-import com.fsck.k9.account.BackgroundAccountRemover
 import com.fsck.k9.activity.ManageIdentities
 import com.fsck.k9.activity.setup.AccountSetupComposition
 import com.fsck.k9.controller.MessagingController
@@ -37,8 +43,7 @@ import net.thunderbird.core.android.account.AccountDefaultsProvider.Companion.NO
 import net.thunderbird.core.android.account.LegacyAccountDto
 import net.thunderbird.core.android.account.QuoteStyle
 import net.thunderbird.core.common.provider.AppNameProvider
-import net.thunderbird.core.featureflag.FeatureFlagKey
-import net.thunderbird.core.featureflag.FeatureFlagProvider
+import net.thunderbird.feature.account.settings.api.BackgroundAccountRemover
 import net.thunderbird.feature.mail.folder.api.FolderType
 import net.thunderbird.feature.mail.folder.api.RemoteFolder
 import org.koin.android.ext.android.inject
@@ -59,13 +64,21 @@ class AccountSettingsFragment : PreferenceFragmentCompat(), ConfirmationDialogFr
     private val notificationSettingsUpdater: NotificationSettingsUpdater by inject()
     private val vibrator: Vibrator by inject()
     private val appNameProvider: AppNameProvider by inject()
-    private val featureFlagProvider: FeatureFlagProvider by inject()
 
     private lateinit var dataStore: AccountSettingsDataStore
 
     private var notificationSoundPreference: NotificationSoundPreference? = null
     private var notificationLightPreference: ListPreference? = null
     private var notificationVibrationPreference: VibrationPreference? = null
+
+    private val launcherForActivityResult: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            closeAccountSettings()
+            accountRemover.removeAccountAsync(accountUuid)
+        }
+    }
 
     private val accountUuid: String by lazy {
         checkNotNull(arguments?.getString(ARG_ACCOUNT_UUID)) { "$ARG_ACCOUNT_UUID == null" }
@@ -79,9 +92,10 @@ class AccountSettingsFragment : PreferenceFragmentCompat(), ConfirmationDialogFr
         preferenceManager.preferenceDataStore = dataStore
         setPreferencesFromResource(R.xml.account_settings, rootKey)
         title = preferenceScreen.title
-        setHasOptionsMenu(true)
 
         initializeGeneralSettings()
+        initializeReadingMail()
+        initializeSearch()
         initializeIncomingServer()
         initializeComposition()
         initializeManageIdentities()
@@ -103,9 +117,33 @@ class AccountSettingsFragment : PreferenceFragmentCompat(), ConfirmationDialogFr
         requireActivity().title = title
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.account_settings_option, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    return when (menuItem.itemId) {
+                        R.id.delete_account -> {
+                            onDeleteAccount()
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            },
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED,
+        )
+    }
+
     override fun onResume() {
         super.onResume()
-
         // we might be returning from OpenPgpAppSelectDialog, make sure settings are up to date
         val account = getAccount()
         initializeCryptoSettings(account)
@@ -122,38 +160,33 @@ class AccountSettingsFragment : PreferenceFragmentCompat(), ConfirmationDialogFr
         }
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.account_settings_option, menu)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.delete_account -> {
-                onDeleteAccount()
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
+    private fun initializeGeneralSettings() {
+        findPreference<Preference>(PREFERENCE_GENERAL)?.onClick {
+            FeatureLauncherActivity.launch(
+                context = requireActivity(),
+                target = FeatureLauncherTarget.AccountSettings(accountUuid),
+            )
         }
     }
 
-    private fun initializeGeneralSettings() {
-        featureFlagProvider.provide(FeatureFlagKey("new_account_settings"))
-            .onEnabled {
-                findPreference<Preference>(PREFERENCE_GENERAL_LEGACY)?.remove()
+    private fun initializeReadingMail() {
+        findPreference<Preference>(PREFERENCE_READING_MAIL)?.onClick {
+            FeatureLauncherActivity.launch(
+                context = requireActivity(),
+                target = FeatureLauncherTarget.AccountReadingMailSettings(accountUuid),
+                launcher = launcherForActivityResult,
+            )
+        }
+    }
 
-                findPreference<Preference>(PREFERENCE_GENERAL)?.onClick {
-                    FeatureLauncherActivity.launch(
-                        context = requireActivity(),
-                        target = FeatureLauncherTarget.AccountSettings(accountUuid),
-                    )
-                }
-            }.onDisabledOrUnavailable {
-                findPreference<Preference>(PREFERENCE_GENERAL)?.remove()
-            }
+    private fun initializeSearch() {
+        findPreference<Preference>(PREFERENCE_SEARCH)?.onClick {
+            FeatureLauncherActivity.launch(
+                context = requireActivity(),
+                target = FeatureLauncherTarget.AccountSearchSettings(accountUuid),
+                launcher = launcherForActivityResult,
+            )
+        }
     }
 
     private fun initializeIncomingServer() {
@@ -402,7 +435,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat(), ConfirmationDialogFr
     private fun loadFolders(account: LegacyAccountDto) {
         viewModel.getFolders(account).observe(this@AccountSettingsFragment) { remoteFolderInfo ->
             if (remoteFolderInfo != null) {
-                setFolders(PREFERENCE_AUTO_EXPAND_FOLDER, remoteFolderInfo.folders)
+                setFolders(PREFERENCE_AUTO_SELECT_FOLDER, remoteFolderInfo.folders)
                 setFolders(PREFERENCE_ARCHIVE_FOLDER, remoteFolderInfo, FolderType.ARCHIVE)
                 setFolders(PREFERENCE_DRAFTS_FOLDER, remoteFolderInfo, FolderType.DRAFTS)
                 setFolders(PREFERENCE_SENT_FOLDER, remoteFolderInfo, FolderType.SENT)
@@ -476,7 +509,9 @@ class AccountSettingsFragment : PreferenceFragmentCompat(), ConfirmationDialogFr
         internal const val PREFERENCE_OPENPGP = "openpgp"
         private const val ARG_ACCOUNT_UUID = "accountUuid"
         private const val PREFERENCE_GENERAL = "general"
-        private const val PREFERENCE_GENERAL_LEGACY = "account_settings"
+
+        private const val PREFERENCE_READING_MAIL = "reading_mail"
+        private const val PREFERENCE_SEARCH = "search"
         private const val PREFERENCE_INCOMING_SERVER = "incoming"
         private const val PREFERENCE_COMPOSITION = "composition"
         private const val PREFERENCE_MANAGE_IDENTITIES = "manage_identities"
@@ -490,8 +525,8 @@ class AccountSettingsFragment : PreferenceFragmentCompat(), ConfirmationDialogFr
         private const val PREFERENCE_OPENPGP_ENABLE = "openpgp_provider"
         private const val PREFERENCE_OPENPGP_KEY = "openpgp_key"
         private const val PREFERENCE_AUTOCRYPT_TRANSFER = "autocrypt_transfer"
-        private const val PREFERENCE_FOLDERS = "folders"
-        private const val PREFERENCE_AUTO_EXPAND_FOLDER = "account_setup_auto_expand_folder"
+        internal const val PREFERENCE_FOLDERS = "folders"
+        private const val PREFERENCE_AUTO_SELECT_FOLDER = "auto_select_folder"
         private const val PREFERENCE_SUBSCRIBED_FOLDERS_ONLY = "subscribed_folders_only"
         private const val PREFERENCE_ARCHIVE_FOLDER = "archive_folder"
         private const val PREFERENCE_DRAFTS_FOLDER = "drafts_folder"

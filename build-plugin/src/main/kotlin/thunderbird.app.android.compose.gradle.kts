@@ -2,12 +2,11 @@ plugins {
     id("thunderbird.app.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("thunderbird.quality.detekt.typed")
+    id("net.thunderbird.gradle.plugin.quality.coverage")
     id("thunderbird.quality.spotless")
 }
 
 android {
-    configureSharedComposeConfig(libs)
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -17,10 +16,31 @@ android {
             )
         }
     }
+
+    packaging {
+        jniLibs {
+            keepDebugSymbols += listOf(
+                "**/libandroidx.graphics.path.so",
+                "**/libdatastore_shared_counter.so",
+                "**/libimage_processing_util_jni.so",
+                "**/libsurface_util_jni.so",
+            )
+        }
+    }
 }
 
 dependencies {
-    configureSharedComposeDependencies(libs)
+    val composeBom = platform(libs.androidx.compose.bom)
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+
+    implementation(libs.bundles.shared.jvm.android.compose)
+
+    debugImplementation(libs.bundles.shared.jvm.android.compose.debug)
+
+    testImplementation(libs.bundles.shared.jvm.test.compose)
+
+    androidTestImplementation(libs.bundles.shared.jvm.androidtest.compose)
 
     implementation(libs.androidx.activity.compose)
 }

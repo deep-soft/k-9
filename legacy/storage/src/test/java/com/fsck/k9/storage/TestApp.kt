@@ -1,6 +1,7 @@
 package com.fsck.k9.storage
 
 import android.app.Application
+import app.k9mail.core.android.common.provider.NotificationIconResourceProvider
 import app.k9mail.feature.telemetry.telemetryModule
 import app.k9mail.legacy.di.DI
 import com.fsck.k9.AppConfig
@@ -12,9 +13,10 @@ import com.fsck.k9.backend.BackendManager
 import com.fsck.k9.crypto.EncryptionExtractor
 import com.fsck.k9.legacyCoreModules
 import com.fsck.k9.preferences.K9StoragePersister
+import kotlinx.coroutines.flow.emptyFlow
 import net.thunderbird.core.android.account.AccountDefaultsProvider
 import net.thunderbird.core.android.account.LegacyAccountManager
-import net.thunderbird.core.featureflag.FeatureFlag
+import net.thunderbird.core.common.appConfig.PlatformConfigProvider
 import net.thunderbird.core.featureflag.FeatureFlagProvider
 import net.thunderbird.core.featureflag.InMemoryFeatureFlagProvider
 import net.thunderbird.core.logging.LogLevel
@@ -31,6 +33,7 @@ import net.thunderbird.core.preference.storage.StoragePersister
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 
 class TestApp : Application() {
@@ -77,10 +80,22 @@ val testModule = module {
     single<AccountDefaultsProvider> { mock<AccountDefaultsProvider>() }
     single<FeatureFlagProvider> {
         InMemoryFeatureFlagProvider(
-            featureFlagFactory = {
-                emptyList<FeatureFlag>()
+            featureFlagFactory = mock {
+                on { getCatalog() } doReturn emptyFlow()
             },
+            featureFlagOverrides = mock(),
         )
     }
     single<LegacyAccountManager> { mock() }
+    single<NotificationIconResourceProvider> {
+        object : NotificationIconResourceProvider {
+            override val pushNotificationIcon: Int = 0
+        }
+    }
+    single<PlatformConfigProvider> { FakePlatformConfigProvider() }
+}
+
+class FakePlatformConfigProvider : PlatformConfigProvider {
+    override val isDebug: Boolean
+        get() = true
 }

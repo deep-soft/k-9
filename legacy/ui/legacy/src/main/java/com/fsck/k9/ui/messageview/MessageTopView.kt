@@ -20,6 +20,7 @@ import com.fsck.k9.mail.Message
 import com.fsck.k9.mailstore.AttachmentViewInfo
 import com.fsck.k9.mailstore.MessageViewInfo
 import com.fsck.k9.ui.R
+import com.fsck.k9.ui.helper.SizeFormatter
 import com.fsck.k9.ui.messageview.MessageContainerView.OnRenderingFinishedListener
 import com.fsck.k9.view.MessageHeader
 import com.fsck.k9.view.ThemeUtils
@@ -30,6 +31,8 @@ import net.thunderbird.core.android.account.LegacyAccountDto
 import net.thunderbird.core.android.account.ShowPictures
 import net.thunderbird.core.common.mail.EmailAddress
 import net.thunderbird.core.common.mail.toEmailAddressOrNull
+import net.thunderbird.core.preference.BodyContentType
+import net.thunderbird.core.preference.display.visualSettings.DisplayVisualSettingsPreferenceManager
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -39,6 +42,7 @@ class MessageTopView(
 ) : LinearLayout(context, attrs), KoinComponent {
 
     private val contactRepository: ContactRepository by inject()
+    private val visualSettingsPrefManager: DisplayVisualSettingsPreferenceManager by inject()
 
     private lateinit var layoutInflater: LayoutInflater
 
@@ -56,6 +60,7 @@ class MessageTopView(
 
     private var isShowingProgress = false
     private var showPicturesButtonClicked = false
+    var renderPlainFormat = false
 
     private var showAccountIndicator = false
 
@@ -79,6 +84,8 @@ class MessageTopView(
         setShowPicturesButtonListener()
 
         containerView = findViewById(R.id.message_container)
+
+        renderPlainFormat = visualSettingsPrefManager.getConfig().bodyContentType == BodyContentType.TEXT_PLAIN
 
         hideHeaderView()
     }
@@ -125,6 +132,7 @@ class MessageTopView(
         val hideUnsignedTextDivider = account.isOpenPgpHideSignOnly
         view.displayMessageViewContainer(
             messageViewInfo,
+            renderPlainFormat,
             object : OnRenderingFinishedListener {
                 override fun onLoadFinished() {
                     displayViewOnLoadFinished(true)
@@ -137,7 +145,52 @@ class MessageTopView(
 
         if (view.hasHiddenExternalImages && !showPicturesButtonClicked) {
             showShowPicturesButton()
+        } else {
+            hideShowPicturesButton()
         }
+
+        updateAttachmentSummary(messageViewInfo)
+    }
+
+    private fun updateAttachmentSummary(messageViewInfo: MessageViewInfo) {
+        val nonInlineAttachments = messageViewInfo.attachments
+            ?.filter { !it.inlineAttachment }
+            .orEmpty()
+
+        val extraNonInlineAttachments = messageViewInfo.extraAttachments
+            ?.filter { !it.inlineAttachment }
+            .orEmpty()
+
+        val allAttachments = nonInlineAttachments + extraNonInlineAttachments
+
+        if (allAttachments.isEmpty()) {
+            messageHeaderView.hideAttachmentSummary()
+            return
+        }
+
+        val count = allAttachments.size
+        val totalSize = allAttachments.sumOf { it.size.coerceAtLeast(0) }
+        val sizeFormatter = SizeFormatter(context.resources)
+        val sizeText = sizeFormatter.formatSize(totalSize)
+
+        val summaryText: String
+        val viewButtonText: String
+
+        if (count == 1) {
+            val fileName = allAttachments[0].displayName
+            summaryText = context.getString(R.string.message_view_single_attachment_summary, fileName, sizeText)
+            viewButtonText = context.getString(R.string.message_view_attachments_view)
+        } else {
+            summaryText = context.resources.getQuantityString(
+                R.plurals.message_view_attachment_summary,
+                count,
+                count,
+                sizeText,
+            )
+            viewButtonText = context.getString(R.string.message_view_attachments_view_all)
+        }
+
+        messageHeaderView.setAttachmentSummary(summaryText, viewButtonText)
     }
 
     fun showMessageEncryptedButIncomplete(messageViewInfo: MessageViewInfo, providerIcon: Drawable?) {

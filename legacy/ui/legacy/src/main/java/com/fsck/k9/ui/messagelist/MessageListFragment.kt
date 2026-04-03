@@ -1,27 +1,63 @@
 package com.fsck.k9.ui.messagelist
 
+import android.annotation.SuppressLint
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.ActionMode
+import androidx.appcompat.widget.SearchView
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.platform.compositionContext
+import androidx.compose.ui.platform.createLifecycleAwareWindowRecomposer
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.bundleOf
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat.Type.navigationBars
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsCompat.Type.systemBars
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -29,11 +65,25 @@ import androidx.core.view.setPadding
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import androidx.savedstate.SavedStateRegistryOwner
+import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import app.k9mail.core.android.common.contact.ContactRepository
+import app.k9mail.core.ui.compose.designsystem.atom.DividerHorizontal
+import app.k9mail.core.ui.compose.designsystem.atom.Surface
+import app.k9mail.core.ui.compose.designsystem.atom.text.TextBodyLarge
+import app.k9mail.core.ui.compose.designsystem.atom.text.TextLabelMedium
+import app.k9mail.feature.launcher.FeatureLauncherActivity
+import app.k9mail.feature.launcher.FeatureLauncherTarget
 import app.k9mail.legacy.message.controller.MessageReference
 import app.k9mail.legacy.message.controller.MessagingControllerRegistry
 import app.k9mail.legacy.message.controller.SimpleMessagingListener
@@ -41,61 +91,102 @@ import app.k9mail.legacy.ui.folder.FolderNameFormatter
 import app.k9mail.ui.utils.itemtouchhelper.ItemTouchHelper
 import app.k9mail.ui.utils.linearlayoutmanager.LinearLayoutManager
 import com.fsck.k9.K9
-import com.fsck.k9.Preferences
 import com.fsck.k9.activity.FolderInfoHolder
-import com.fsck.k9.activity.Search
+import com.fsck.k9.activity.MessageSearchActivity
 import com.fsck.k9.activity.misc.ContactPicture
 import com.fsck.k9.controller.MessagingControllerWrapper
 import com.fsck.k9.fragment.ConfirmationDialogFragment
 import com.fsck.k9.fragment.ConfirmationDialogFragment.ConfirmationDialogFragmentListener
 import com.fsck.k9.helper.Utility
 import com.fsck.k9.helper.mapToSet
-import com.fsck.k9.mail.Flag
+import com.fsck.k9.mail.AuthType
 import com.fsck.k9.mailstore.LocalStoreProvider
 import com.fsck.k9.search.getLegacyAccounts
+import com.fsck.k9.ui.BuildConfig
 import com.fsck.k9.ui.R
 import com.fsck.k9.ui.changelog.RecentChangesActivity
 import com.fsck.k9.ui.changelog.RecentChangesViewModel
 import com.fsck.k9.ui.choosefolder.ChooseFolderActivity
 import com.fsck.k9.ui.choosefolder.ChooseFolderResultContract
-import com.fsck.k9.ui.helper.RelativeDateTimeFormatter
-import com.fsck.k9.ui.messagelist.MessageListFragment.MessageListFragmentListener.Companion.MAX_PROGRESS
+import com.fsck.k9.ui.messagelist.MessageListFragmentBridgeContract.Companion.ARG_IS_THREAD_DISPLAY
+import com.fsck.k9.ui.messagelist.MessageListFragmentBridgeContract.Companion.ARG_SEARCH
+import com.fsck.k9.ui.messagelist.MessageListFragmentBridgeContract.Companion.ARG_THREADED_LIST
+import com.fsck.k9.ui.messagelist.MessageListFragmentBridgeContract.Companion.STATE_ACTIVE_MESSAGE
+import com.fsck.k9.ui.messagelist.MessageListFragmentBridgeContract.Companion.STATE_ACTIVE_MESSAGES
+import com.fsck.k9.ui.messagelist.MessageListFragmentBridgeContract.Companion.STATE_MESSAGE_LIST_APPEARANCE
+import com.fsck.k9.ui.messagelist.MessageListFragmentBridgeContract.Companion.STATE_REMOTE_SEARCH_PERFORMED
+import com.fsck.k9.ui.messagelist.MessageListFragmentBridgeContract.Companion.STATE_SEARCH_VIEW_ICONIFIED
+import com.fsck.k9.ui.messagelist.MessageListFragmentBridgeContract.Companion.STATE_SEARCH_VIEW_QUERY
+import com.fsck.k9.ui.messagelist.MessageListFragmentBridgeContract.Companion.STATE_SELECTED_MESSAGES
+import com.fsck.k9.ui.messagelist.MessageListFragmentBridgeContract.MessageListFragmentListener
+import com.fsck.k9.ui.messagelist.MessageListFragmentBridgeContract.MessageListFragmentListener.Companion.MAX_PROGRESS
+import com.fsck.k9.ui.messagelist.debug.AuthDebugActions
 import com.fsck.k9.ui.messagelist.item.MessageViewHolder
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import java.util.concurrent.Future
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import net.jcip.annotations.GuardedBy
 import net.thunderbird.core.android.account.Expunge
 import net.thunderbird.core.android.account.LegacyAccount
 import net.thunderbird.core.android.account.LegacyAccountDto
 import net.thunderbird.core.android.account.LegacyAccountManager
-import net.thunderbird.core.android.account.SortType
 import net.thunderbird.core.android.network.ConnectivityManager
 import net.thunderbird.core.common.action.SwipeAction
+import net.thunderbird.core.common.action.SwipeActions
 import net.thunderbird.core.common.exception.MessagingException
+import net.thunderbird.core.common.mail.Flag
 import net.thunderbird.core.featureflag.FeatureFlagKey
 import net.thunderbird.core.featureflag.FeatureFlagProvider
 import net.thunderbird.core.featureflag.FeatureFlagResult
 import net.thunderbird.core.logging.Logger
-import net.thunderbird.core.logging.legacy.Log
+import net.thunderbird.core.outcome.Outcome
 import net.thunderbird.core.preference.GeneralSettingsManager
+import net.thunderbird.core.preference.display.visualSettings.message.list.DisplayMessageListSettings
+import net.thunderbird.core.preference.interaction.InteractionSettings
+import net.thunderbird.core.ui.compose.designsystem.atom.ClickableSurface
+import net.thunderbird.core.ui.compose.designsystem.atom.icon.Icon
+import net.thunderbird.core.ui.compose.designsystem.atom.icon.Icons
+import net.thunderbird.core.ui.compose.theme2.MainTheme
+import net.thunderbird.core.ui.contract.mvi.observeWithoutEffect
 import net.thunderbird.core.ui.theme.api.FeatureThemeProvider
+import net.thunderbird.feature.account.AccountId
+import net.thunderbird.feature.account.AccountIdFactory
+import net.thunderbird.feature.account.avatar.AvatarMonogramCreator
 import net.thunderbird.feature.mail.folder.api.OutboxFolderManager
-import net.thunderbird.feature.mail.message.list.domain.DomainContract
+import net.thunderbird.feature.mail.message.list.domain.model.SortCriteria
+import net.thunderbird.feature.mail.message.list.domain.model.SortType
+import net.thunderbird.feature.mail.message.list.extension.toDomainSortType
+import net.thunderbird.feature.mail.message.list.preferences.MessageListPreferences
+import net.thunderbird.feature.mail.message.list.ui.MessageListContract
 import net.thunderbird.feature.mail.message.list.ui.dialog.SetupArchiveFolderDialogFragmentFactory
+import net.thunderbird.feature.mail.message.list.ui.effect.MessageListEffect
+import net.thunderbird.feature.mail.message.list.ui.event.MessageListEvent
+import net.thunderbird.feature.mail.message.list.ui.state.MessageListMetadata
+import net.thunderbird.feature.notification.api.content.InAppNotification
+import net.thunderbird.feature.notification.api.content.SentFolderNotFoundNotification
 import net.thunderbird.feature.notification.api.ui.InAppNotificationHost
+import net.thunderbird.feature.notification.api.ui.action.NotificationAction
+import net.thunderbird.feature.notification.api.ui.dialog.ErrorNotificationsDialogFragmentActionListener
+import net.thunderbird.feature.notification.api.ui.dialog.ErrorNotificationsDialogFragmentFactory
 import net.thunderbird.feature.notification.api.ui.host.DisplayInAppNotificationFlag
 import net.thunderbird.feature.notification.api.ui.host.visual.SnackbarVisual
 import net.thunderbird.feature.notification.api.ui.style.SnackbarDuration
@@ -105,19 +196,37 @@ import net.thunderbird.feature.search.legacy.serialization.LocalMessageSearchSer
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-
-private const val MAXIMUM_MESSAGE_SORT_OVERRIDES = 3
-private const val MINIMUM_CLICK_INTERVAL = 200L
-private const val RECENT_CHANGES_SNACKBAR_DURATION = 10 * 1000
+import app.k9mail.core.ui.legacy.designsystem.R as DesignSystemR
+import com.google.android.material.R as MaterialR
+import net.thunderbird.core.android.account.SortType as LegacySortType
 
 private const val TAG = "MessageListFragment"
 
+// TODO(#10322): Move this fragment to :feature:mail:message:list once all migration to the new
+//              MessageListFragment to MVI is done.
+@Suppress(
+    "LargeClass",
+    "TooManyFunctions",
+    "CyclomaticComplexMethod",
+    "TooGenericExceptionCaught",
+    "TooGenericExceptionThrown",
+    "SwallowedException",
+    "ReturnCount",
+    "ForbiddenComment",
+)
+@SuppressLint("DiscouragedApi")
 class MessageListFragment :
     Fragment(),
+    MessageListFragmentBridgeContract,
     ConfirmationDialogFragmentListener,
-    MessageListItemActionListener {
+    MessageListItemActionListener,
+    ErrorNotificationsDialogFragmentActionListener {
 
-    val viewModel: MessageListViewModel by viewModel()
+    val logTag: String = TAG
+    override val fragmentActivity: FragmentActivity? get() = activity
+
+    // region [ LegacyMessageListFragment properties ]
+    override val legacyViewModel: MessageListViewModel by viewModel()
     private val recentChangesViewModel: RecentChangesViewModel by viewModel()
 
     private val generalSettingsManager: GeneralSettingsManager by inject()
@@ -129,21 +238,20 @@ class MessageListFragment :
     private val connectivityManager: ConnectivityManager by inject()
     private val localStoreProvider: LocalStoreProvider by inject()
 
-    @OptIn(ExperimentalTime::class)
-    private val clock: Clock by inject()
     private val setupArchiveFolderDialogFragmentFactory: SetupArchiveFolderDialogFragmentFactory by inject()
-    private val preferences: Preferences by inject()
-    private val buildSwipeActions: DomainContract.UseCase.BuildSwipeActions<LegacyAccount> by inject {
-        parametersOf(preferences.storage)
-    }
     private val featureFlagProvider: FeatureFlagProvider by inject()
     private val featureThemeProvider: FeatureThemeProvider by inject()
     private val logger: Logger by inject()
     private val outboxFolderManager: OutboxFolderManager by inject()
+    private val authDebugActions: AuthDebugActions by inject()
+    private val errorNotificationsDialogFragmentFactory: ErrorNotificationsDialogFragmentFactory by inject()
 
     private val handler = MessageListHandler(this)
     private val activityListener = MessageListActivityListener()
     private val actionModeCallback = ActionModeCallback()
+
+    private val contactRepository: ContactRepository by inject()
+    private val avatarMonogramCreator: AvatarMonogramCreator by inject()
 
     private val chooseFolderForMoveLauncher: ActivityResultLauncher<ChooseFolderResultContract.Input> =
         registerForActivityResult(ChooseFolderResultContract(ChooseFolderActivity.Action.MOVE)) { result ->
@@ -169,6 +277,10 @@ class MessageListFragment :
 
     private lateinit var adapter: MessageListAdapter
 
+    private var searchView: SearchView? = null
+    private var initialSearchViewQuery: String? = null
+    private var initialSearchViewIconified = true
+
     private lateinit var accountUuids: Array<String>
     private var accounts: List<LegacyAccount> = emptyList()
 
@@ -179,7 +291,7 @@ class MessageListFragment :
     private var extraSearchResults: List<String>? = null
     private var threadTitle: String? = null
     private var allAccounts = false
-    private var sortType = SortType.SORT_DATE
+    private var sortType = LegacySortType.SORT_DATE
     private var sortAscending = true
     private var sortDateAscending = false
     private var actionMode: ActionMode? = null
@@ -197,7 +309,7 @@ class MessageListFragment :
     private var rememberedSelected: Set<Long>? = null
     private var lastMessageClick = 0L
 
-    lateinit var localSearch: LocalMessageSearch
+    override lateinit var localSearch: LocalMessageSearch
         private set
     var isSingleAccountMode = false
         private set
@@ -220,13 +332,17 @@ class MessageListFragment :
     private var error: Error? = null
 
     private var messageListSwipeCallback: MessageListSwipeCallback? = null
+    private val interactionSettings: InteractionSettings
+        get() = generalSettingsManager.getConfig().interaction
+    private val messageListSettings: DisplayMessageListSettings
+        get() = generalSettingsManager.getConfig().display.visualSettings.messageListSettings
 
     /**
      * Set this to `true` when the fragment should be considered active. When active, the fragment adds its actions to
      * the toolbar. When inactive, the fragment won't add its actions to the toolbar, even it is still visible, e.g. as
      * part of an animation.
      */
-    var isActive: Boolean = false
+    override var isActive: Boolean = false
         set(value) {
             field = value
             resetActionMode()
@@ -234,7 +350,21 @@ class MessageListFragment :
             maybeHideFloatingActionButton()
         }
 
-    val isShowAccountIndicator: Boolean
+    private lateinit var messageListAppearance: MessageListAppearance
+    private var pendingMessageListInfo: MessageListInfo? = null
+    private var pendingAdapterDependentFunctionExecution = mutableListOf<() -> Unit>()
+    // endregion [ LegacyMessageListFragment properties ]
+
+    // region [ LegacyMessageListFragment methods]
+    override fun isSearchViewCollapsed(): Boolean {
+        return searchView?.isIconified != false
+    }
+
+    override fun expandSearchView() {
+        searchView?.isIconified = false
+    }
+
+    override val isShowAccountIndicator: Boolean
         get() = isUnifiedFolders || !isSingleAccountMode
 
     override fun onAttach(context: Context) {
@@ -242,14 +372,15 @@ class MessageListFragment :
 
         fragmentListener = try {
             context as MessageListFragmentListener
-        } catch (e: ClassCastException) {
+        } catch (_: ClassCastException) {
             error("${context.javaClass} must implement MessageListFragmentListener")
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // hack to force the view model to be created earlier.
+        viewModel
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
 
         restoreInstanceState(savedInstanceState)
         val error = decodeArguments()
@@ -257,12 +388,6 @@ class MessageListFragment :
             this.error = error
             return
         }
-
-        viewModel.getMessageListLiveData().observe(this) { messageListInfo: MessageListInfo ->
-            setMessageList(messageListInfo)
-        }
-
-        adapter = createMessageListAdapter()
 
         generalSettingsManager.getSettingsFlow()
             /**
@@ -289,8 +414,22 @@ class MessageListFragment :
             ?.map { MessageReference.parse(it)!! }
         restoreSelectedMessages(savedInstanceState)
         isRemoteSearch = savedInstanceState.getBoolean(STATE_REMOTE_SEARCH_PERFORMED)
+        initialSearchViewQuery = savedInstanceState.getString(STATE_SEARCH_VIEW_QUERY)
+        initialSearchViewIconified = savedInstanceState.getBoolean(STATE_SEARCH_VIEW_ICONIFIED, true)
         val messageReferenceString = savedInstanceState.getString(STATE_ACTIVE_MESSAGE)
         activeMessage = MessageReference.parse(messageReferenceString)
+
+        messageListAppearance = requireNotNull(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                savedInstanceState.getParcelable(STATE_MESSAGE_LIST_APPEARANCE, MessageListAppearance::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                savedInstanceState.getParcelable(STATE_MESSAGE_LIST_APPEARANCE)
+            },
+        ) {
+            "Could not restore MessageListAppearance. Missing parcelable extra '$STATE_MESSAGE_LIST_APPEARANCE'. " +
+                "Extras: $savedInstanceState"
+        }
     }
 
     private fun restoreSelectedMessages(savedInstanceState: Bundle) {
@@ -328,7 +467,7 @@ class MessageListFragment :
                 val folderId = localSearch.folderIds[0]
                 currentFolder = getFolderInfoHolder(account, folderId)
                 isSingleFolderMode = true
-            } catch (e: MessagingException) {
+            } catch (_: MessagingException) {
                 return Error.FolderNotFound
             }
         }
@@ -344,10 +483,11 @@ class MessageListFragment :
             layoutInflater = layoutInflater,
             contactsPictureLoader = ContactPicture.getContactPictureLoader(),
             listItemListener = this,
-            appearance = messageListAppearance,
-            relativeDateTimeFormatter = RelativeDateTimeFormatter(requireContext(), clock),
+            appearance = ::messageListAppearance,
             themeProvider = featureThemeProvider,
             featureFlagProvider = featureFlagProvider,
+            contactRepository = contactRepository,
+            avatarMonogramCreator = avatarMonogramCreator,
         ).apply {
             activeMessage = this@MessageListFragment.activeMessage
         }
@@ -359,12 +499,11 @@ class MessageListFragment :
                 setFragmentResultListener(
                     SetupArchiveFolderDialogFragmentFactory.RESULT_CODE_DISMISS_REQUEST_KEY,
                 ) { key, bundle ->
-                    Log.d(
+                    logger.debug(logTag) {
                         "SetupArchiveFolderDialogFragment fragment listener triggered with " +
-                            "key: $key and bundle: $bundle",
-                    )
+                            "key: $key and bundle: $bundle"
+                    }
                     loadMessageList(forceUpdate = true)
-                    messageListSwipeCallback?.invalidateSwipeActions(accounts)
                 }
             }
         } else {
@@ -373,10 +512,86 @@ class MessageListFragment :
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(state = Lifecycle.State.CREATED) {
+                viewModel
+                    .state
+                    .mapNotNull { state -> state.preferences?.toMessageListAppearance() }
+                    .distinctUntilChanged()
+                    .collectLatest { appearance ->
+                        messageListAppearance = appearance
+                        if (recyclerView == null) {
+                            initializeRecyclerView(requireView())
+                        }
+                    }
+            }
+        }
+
+        legacyViewModel.getMessageListLiveData().observe(viewLifecycleOwner) { messageListInfo: MessageListInfo ->
+            if (::adapter.isInitialized) {
+                setMessageList(messageListInfo)
+            } else {
+                pendingMessageListInfo = messageListInfo
+            }
+        }
+
+        val menuHost: MenuHost = requireActivity()
+
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    if (!isActive) return
+                    menuInflater.inflate(R.menu.new_message_list_option_menu, menu)
+                }
+
+                override fun onPrepareMenu(menu: Menu) {
+                    if (!isActive) return
+                    prepareSearchMenu(menu)
+                    prepareMenu(menu)
+                    prepareDebugMenu(menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    if (!isActive) return false
+                    return selectMenuItem(menuItem)
+                }
+            },
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED,
+        )
+
         if (error == null) {
             initializeMessageListLayout(view)
         } else {
             initializeErrorLayout(view)
+        }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.effect.collect { effect ->
+                    when (effect) {
+                        // TODO(#10251): Required as the current implementation of sortType and sortAscending
+                        //  returns null before we load the sort type. That should be removed when
+                        //  the message list item's load is switched to the new state.
+                        is MessageListEffect.RefreshMessageList -> {
+                            val (primarySortType, secondarySortType) = effect.currentState.metadata.currentSortCriteria
+                            val (sortType, sortAscending) = primarySortType.toDomainSortType()
+                            updateCurrentSortCriteria(
+                                sortType = sortType,
+                                sortAscending = sortAscending,
+                                sortDateAscending = when (primarySortType) {
+                                    SortType.DateAsc -> true
+                                    SortType.DateDesc -> false
+                                    else -> secondarySortType == SortType.DateAsc
+                                },
+                            )
+                            loadMessageList()
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
         }
     }
 
@@ -388,26 +603,12 @@ class MessageListFragment :
     private fun initializeMessageListLayout(view: View) {
         initializeSwipeRefreshLayout(view)
         initializeFloatingActionButton(view)
-        initializeRecyclerView(view)
         initializeRecentChangesSnackbar()
 
         // This needs to be done before loading the message list below
         initializeSortSettings()
 
         loadMessageList()
-
-        initializeInsets(view)
-    }
-
-    private fun initializeInsets(view: View) {
-        val messageList = view.findViewById<View>(R.id.message_list)
-
-        ViewCompat.setOnApplyWindowInsetsListener(messageList) { v, windowsInsets ->
-            val insets = windowsInsets.getInsets(navigationBars())
-            v.setPadding(0, 0, 0, insets.bottom)
-
-            windowsInsets
-        }
     }
 
     private fun initializeSwipeRefreshLayout(view: View) {
@@ -460,6 +661,19 @@ class MessageListFragment :
     private fun enableFloatingActionButton(view: View) {
         val floatingActionButton = view.findViewById<FloatingActionButton>(R.id.floating_action_button)
 
+        ViewCompat.setOnApplyWindowInsetsListener(floatingActionButton) { view, windowInsets ->
+            val insets = windowInsets.getInsets(systemBars())
+            val margin = resources.getDimensionPixelSize(R.dimen.floatingActionButtonMargin)
+
+            view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                leftMargin = margin + insets.left
+                bottomMargin = margin + insets.bottom
+                rightMargin = margin + insets.right
+            }
+
+            WindowInsetsCompat.CONSUMED
+        }
+
         floatingActionButton.setOnClickListener {
             onCompose()
         }
@@ -473,21 +687,28 @@ class MessageListFragment :
     }
 
     private fun initializeRecyclerView(view: View) {
+        adapter = createMessageListAdapter()
+        pendingMessageListInfo?.let { messageListInfo ->
+            setMessageList(messageListInfo)
+            pendingMessageListInfo = null
+        }
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.message_list)
 
         if (!isShowFloatingActionButton) {
             recyclerView.setPadding(0)
         }
 
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = LinearLayoutManager()
         recyclerView.itemAnimator = MessageListItemAnimator()
 
         val itemTouchHelper = ItemTouchHelper(
             MessageListSwipeCallback(
                 context = requireContext(),
+                scope = lifecycleScope,
                 resourceProvider = SwipeResourceProvider(requireContext()),
                 swipeActionSupportProvider = swipeActionSupportProvider,
-                buildSwipeActions = buildSwipeActions,
+                swipeActions = swipeActions,
                 adapter = adapter,
                 listener = swipeListener,
                 accounts = accounts,
@@ -508,10 +729,7 @@ class MessageListFragment :
                                 DisplayInAppNotificationFlag.SnackbarNotifications,
                             ),
                             onSnackbarNotificationEvent = ::onSnackbarInAppNotificationEvent,
-                            eventFilter = { event ->
-                                val accountUuid = event.notification.accountUuid
-                                accountUuid != null && accountUuid in accountUuids
-                            },
+                            eventFilter = ::filterInAppNotificationEvents,
                             modifier = Modifier
                                 .animateContentSize()
                                 .onSizeChanged { size ->
@@ -525,6 +743,11 @@ class MessageListFragment :
 
         this.recyclerView = recyclerView
         this.itemTouchHelper = itemTouchHelper
+        if (pendingAdapterDependentFunctionExecution.isNotEmpty()) {
+            logger.debug(logTag) { "Executing pending adapter dependent functions" }
+            pendingAdapterDependentFunctionExecution.forEach { it() }
+            pendingAdapterDependentFunctionExecution.clear()
+        }
     }
 
     private fun requireCoordinatorLayout(): CoordinatorLayout {
@@ -595,14 +818,29 @@ class MessageListFragment :
     private fun initializeSortSettings() {
         if (isSingleAccountMode) {
             val account = checkNotNull(this.account)
-            sortType = account.sortType
-            sortAscending = account.sortAscending[sortType] ?: sortType.isDefaultAscending
-            sortDateAscending = account.sortAscending[SortType.SORT_DATE] ?: SortType.SORT_DATE.isDefaultAscending
+            updateCurrentSortCriteria(
+                sortType = account.sortType,
+                sortAscending = account.sortAscending[sortType] ?: sortType.isDefaultAscending,
+                sortDateAscending = account.sortAscending[LegacySortType.SORT_DATE]
+                    ?: LegacySortType.SORT_DATE.isDefaultAscending,
+            )
         } else {
-            sortType = K9.sortType
-            sortAscending = K9.isSortAscending(sortType)
-            sortDateAscending = K9.isSortAscending(SortType.SORT_DATE)
+            updateCurrentSortCriteria(
+                sortType = K9.sortType,
+                sortAscending = K9.isSortAscending(sortType),
+                sortDateAscending = K9.isSortAscending(LegacySortType.SORT_DATE),
+            )
         }
+    }
+
+    private fun updateCurrentSortCriteria(
+        sortType: LegacySortType,
+        sortAscending: Boolean,
+        sortDateAscending: Boolean,
+    ) {
+        this.sortType = sortType
+        this.sortAscending = sortAscending
+        this.sortDateAscending = sortDateAscending
     }
 
     private fun loadMessageList(forceUpdate: Boolean = false) {
@@ -613,17 +851,27 @@ class MessageListFragment :
             sortAscending,
             sortDateAscending,
             activeMessage,
-            viewModel.messageSortOverrides.toMap(),
+            legacyViewModel.messageSortOverrides.toMap(),
         )
 
         if (forceUpdate) {
             accounts = config.search.getLegacyAccounts(accountManager)
         }
 
-        viewModel.loadMessageList(config, forceUpdate)
+        legacyViewModel.loadMessageList(config, forceUpdate)
     }
 
-    fun folderLoading(folderId: Long, loading: Boolean) {
+    private fun executeOnlyAfterAdapterIsReady(function: () -> Unit) {
+        if (::adapter.isInitialized.not()) {
+            pendingAdapterDependentFunctionExecution.add {
+                function()
+            }
+        } else {
+            function()
+        }
+    }
+
+    override fun folderLoading(folderId: Long, loading: Boolean) = executeOnlyAfterAdapterIsReady {
         currentFolder?.let {
             if (it.databaseId == folderId) {
                 it.loading = loading
@@ -632,7 +880,7 @@ class MessageListFragment :
         }
     }
 
-    fun updateTitle() {
+    override fun updateTitle() {
         if (error != null) {
             fragmentListener.setMessageListTitle(getString(R.string.message_list_error_title))
             return
@@ -680,7 +928,7 @@ class MessageListFragment :
         fragmentListener.setMessageListTitle(title, subtitle)
     }
 
-    fun progress(progress: Boolean) {
+    override fun progress(progress: Boolean) {
         if (!progress) {
             swipeRefreshLayout?.isRefreshing = false
         }
@@ -749,6 +997,7 @@ class MessageListFragment :
         itemTouchHelper = null
         swipeRefreshLayout = null
         floatingActionButton = null
+        pendingAdapterDependentFunctionExecution.clear()
 
         if (isNewMessagesView && !requireActivity().isChangingConfigurations) {
             account?.id?.let { messagingController.clearNewMessages(it) }
@@ -762,8 +1011,14 @@ class MessageListFragment :
 
         if (error != null) return
 
-        outState.putLongArray(STATE_SELECTED_MESSAGES, adapter.selected.toLongArray())
+        if (::adapter.isInitialized) {
+            outState.putLongArray(STATE_SELECTED_MESSAGES, adapter.selected.toLongArray())
+        }
         outState.putBoolean(STATE_REMOTE_SEARCH_PERFORMED, isRemoteSearch)
+        searchView?.let { searchView ->
+            outState.putString(STATE_SEARCH_VIEW_QUERY, searchView.query.toString())
+            outState.putBoolean(STATE_SEARCH_VIEW_ICONIFIED, searchView.isIconified)
+        }
         outState.putStringArray(
             STATE_ACTIVE_MESSAGES,
             activeMessages?.map(MessageReference::toIdentityString)?.toTypedArray(),
@@ -771,25 +1026,10 @@ class MessageListFragment :
         if (activeMessage != null) {
             outState.putString(STATE_ACTIVE_MESSAGE, activeMessage!!.toIdentityString())
         }
+        if (::messageListAppearance.isInitialized) {
+            outState.putParcelable(STATE_MESSAGE_LIST_APPEARANCE, messageListAppearance)
+        }
     }
-
-    private val messageListAppearance: MessageListAppearance
-        get() = MessageListAppearance(
-            fontSizes = K9.fontSizes,
-            previewLines = K9.messageListPreviewLines,
-            stars = !isOutbox && generalSettingsManager.getConfig().display.inboxSettings.isShowMessageListStars,
-            senderAboveSubject = generalSettingsManager
-                .getConfig()
-                .display
-                .inboxSettings
-                .isMessageListSenderAboveSubject,
-            showContactPicture = generalSettingsManager.getConfig().display.visualSettings.isShowContactPicture,
-            showingThreadedList = showingThreadedList,
-            backGroundAsReadIndicator = generalSettingsManager
-                .getConfig().display.visualSettings.isUseBackgroundAsUnreadIndicator,
-            showAccountIndicator = isShowAccountIndicator,
-            density = K9.messageListDensity,
-        )
 
     private fun getFolderInfoHolder(account: LegacyAccount, folderId: Long): FolderInfoHolder {
         val localStore = localStoreProvider.getInstanceByLegacyAccount(account)
@@ -820,7 +1060,7 @@ class MessageListFragment :
         fragmentListener.goBack()
     }
 
-    fun onCompose() {
+    override fun onCompose() {
         if (!isSingleAccountMode) {
             fragmentListener.onCompose(null)
         } else {
@@ -828,7 +1068,7 @@ class MessageListFragment :
         }
     }
 
-    private fun changeSort(sortType: SortType) {
+    private fun changeSort(sortType: LegacySortType) {
         val sortAscending = if (this.sortType == sortType) !sortAscending else null
         changeSort(sortType, sortAscending)
     }
@@ -862,7 +1102,7 @@ class MessageListFragment :
      *   sort type is used.
      */
     // FIXME: Don't save the changes in the UI thread
-    private fun changeSort(sortType: SortType, sortAscending: Boolean?) {
+    private fun changeSort(sortType: LegacySortType, sortAscending: Boolean?) {
         this.sortType = sortType
         val account = this.account
         if (account != null) {
@@ -873,7 +1113,8 @@ class MessageListFragment :
                 this[sortType] = resolvedAscending
             }
 
-            this.sortDateAscending = newSortAscendingMap[SortType.SORT_DATE] ?: SortType.SORT_DATE.isDefaultAscending
+            this.sortDateAscending =
+                newSortAscendingMap[LegacySortType.SORT_DATE] ?: LegacySortType.SORT_DATE.isDefaultAscending
 
             val updatedAccount = account.copy(
                 sortType = sortType,
@@ -891,7 +1132,7 @@ class MessageListFragment :
                 this.sortAscending = sortAscending
             }
             K9.setSortAscending(this.sortType, this.sortAscending)
-            sortDateAscending = K9.isSortAscending(SortType.SORT_DATE)
+            sortDateAscending = K9.isSortAscending(LegacySortType.SORT_DATE)
 
             K9.saveSettingsAsync()
         }
@@ -905,8 +1146,8 @@ class MessageListFragment :
         loadMessageList()
     }
 
-    fun onCycleSort() {
-        val sortTypes = SortType.entries
+    override fun onCycleSort() {
+        val sortTypes = LegacySortType.entries
         val currentIndex = sortTypes.indexOf(sortType)
         val newIndex = if (currentIndex == sortTypes.lastIndex) 0 else currentIndex + 1
         val nextSortType = sortTypes[newIndex]
@@ -914,7 +1155,7 @@ class MessageListFragment :
     }
 
     private fun onDelete(messages: List<MessageReference>) {
-        if (K9.isConfirmDelete) {
+        if (interactionSettings.isConfirmDelete) {
             // remember the message selection for #onCreateDialog(int)
             activeMessages = messages
             showDialog(R.id.dialog_confirm_delete)
@@ -1026,17 +1267,43 @@ class MessageListFragment :
         return "dialog-$dialogId"
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        if (isActive && error == null) {
-            prepareMenu(menu)
-        } else {
-            hideMenu(menu)
+    private fun prepareSearchMenu(menu: Menu) {
+        val searchItem = menu.findItem(R.id.search)
+        searchItem.isVisible = !isManualSearch
+
+        if (!searchItem.isVisible) return
+
+        searchView?.let { searchView ->
+            searchItem.actionView = searchView
+            return
         }
+
+        val searchView = searchItem.actionView as SearchView
+        searchView.maxWidth = Int.MAX_VALUE
+        searchView.queryHint = resources.getString(R.string.search_action)
+        searchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    onSearchRequested(query)
+                    collapseSearchView()
+                    return true
+                }
+
+                override fun onQueryTextChange(s: String): Boolean {
+                    return false
+                }
+            },
+        )
+
+        searchView.setQuery(initialSearchViewQuery, false)
+        searchView.isIconified = initialSearchViewIconified
+
+        this.searchView = searchView
     }
 
     private fun prepareMenu(menu: Menu) {
         menu.findItem(R.id.compose).isVisible = !isShowFloatingActionButton
-        menu.findItem(R.id.set_sort).isVisible = true
+        prepareSortMenu(menu)
         menu.findItem(R.id.select_all).isVisible = true
         menu.findItem(R.id.mark_all_as_read).isVisible = isMarkAllAsReadSupported
         menu.findItem(R.id.empty_spam).isVisible = isShowingSpamFolder
@@ -1050,36 +1317,54 @@ class MessageListFragment :
             menu.findItem(R.id.expunge).isVisible = false
         }
 
-        menu.findItem(R.id.search).isVisible = !isManualSearch
         menu.findItem(R.id.search_remote).isVisible = !isRemoteSearch && isRemoteSearchAllowed
         menu.findItem(R.id.search_everywhere).isVisible = isManualSearch && !localSearch.searchAllAccounts()
     }
 
-    private fun hideMenu(menu: Menu) {
-        menu.findItem(R.id.compose).isVisible = false
-        menu.findItem(R.id.search).isVisible = false
-        menu.findItem(R.id.search_remote).isVisible = false
-        menu.findItem(R.id.set_sort).isVisible = false
-        menu.findItem(R.id.select_all).isVisible = false
-        menu.findItem(R.id.mark_all_as_read).isVisible = false
-        menu.findItem(R.id.send_messages).isVisible = false
-        menu.findItem(R.id.empty_spam).isVisible = false
-        menu.findItem(R.id.empty_trash).isVisible = false
-        menu.findItem(R.id.expunge).isVisible = false
-        menu.findItem(R.id.search_everywhere).isVisible = false
+    private fun prepareSortMenu(menu: Menu) {
+        menu.findItem(R.id.select_sort_criteria).apply {
+            isVisible = true
+            actionView = MaterialButton(
+                requireContext(),
+                null,
+                MaterialR.attr.materialIconButtonStyle,
+            ).apply {
+                val color = MaterialColors.getColor(this, MaterialR.attr.colorOnSurface)
+                iconTint = ColorStateList.valueOf(color)
+                icon = AppCompatResources.getDrawable(context, DesignSystemR.drawable.ic_sort)
+                setOnClickListener {
+                    showComposeDropdown(
+                        anchor = it,
+                        lifecycleOwner = viewLifecycleOwner,
+                        stateOwner = this@MessageListFragment,
+                    )
+                }
+            }
+        }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    private fun prepareDebugMenu(menu: Menu) {
+        val isOAuthAccount = account?.incomingServerSettings?.authenticationType == AuthType.XOAUTH2
+        val isDebug = BuildConfig.DEBUG
+        val showOAuthDebug = isDebug && isOAuthAccount
+
+        menu.findItem(R.id.debug_invalidate_access_token_local).isVisible = showOAuthDebug
+        menu.findItem(R.id.debug_invalidate_access_token_server).isVisible = showOAuthDebug
+        menu.findItem(R.id.debug_force_auth_failure).isVisible = showOAuthDebug
+        menu.findItem(R.id.debug_feature_flags).isVisible = isDebug
+    }
+
+    override fun collapseSearchView() {
+        searchView?.let { searchView ->
+            searchView.setQuery(null, false)
+            searchView.isIconified = true
+        }
+    }
+
+    private fun selectMenuItem(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.search_remote -> onRemoteSearch()
             R.id.compose -> onCompose()
-            R.id.set_sort_date -> changeSort(SortType.SORT_DATE)
-            R.id.set_sort_arrival -> changeSort(SortType.SORT_ARRIVAL)
-            R.id.set_sort_subject -> changeSort(SortType.SORT_SUBJECT)
-            R.id.set_sort_sender -> changeSort(SortType.SORT_SENDER)
-            R.id.set_sort_flag -> changeSort(SortType.SORT_FLAGGED)
-            R.id.set_sort_unread -> changeSort(SortType.SORT_UNREAD)
-            R.id.set_sort_attach -> changeSort(SortType.SORT_ATTACHMENT)
             R.id.select_all -> selectAll()
             R.id.mark_all_as_read -> confirmMarkAllAsRead()
             R.id.send_messages -> onSendPendingMessages()
@@ -1087,6 +1372,14 @@ class MessageListFragment :
             R.id.empty_trash -> onEmptyTrash()
             R.id.expunge -> onExpunge()
             R.id.search_everywhere -> onSearchEverywhere()
+            R.id.debug_invalidate_access_token_local -> onDebugInvalidateAccessTokenLocal()
+            R.id.debug_invalidate_access_token_server -> onDebugInvalidateAccessTokenServer()
+            R.id.debug_force_auth_failure -> onDebugForceAuthFailure()
+            R.id.debug_feature_flags -> FeatureLauncherActivity.launch(
+                context = requireContext(),
+                target = FeatureLauncherTarget.SecretDebugSettingsFeatureFlag,
+            )
+
             else -> return super.onOptionsItemSelected(item)
         }
 
@@ -1096,7 +1389,7 @@ class MessageListFragment :
     private fun onSearchEverywhere() {
         val searchQuery = requireActivity().intent.getStringExtra(SearchManager.QUERY)
 
-        val searchIntent = Intent(requireContext(), Search::class.java).apply {
+        val searchIntent = Intent(requireContext(), MessageSearchActivity::class.java).apply {
             action = Intent.ACTION_SEARCH
             putExtra(SearchManager.QUERY, searchQuery)
 
@@ -1109,6 +1402,137 @@ class MessageListFragment :
 
     private fun onSendPendingMessages() {
         account?.id?.let { messagingController.sendPendingMessages(it, null) }
+    }
+
+    private fun onDebugInvalidateAccessTokenServer() {
+        val uuid = account?.uuid
+        if (!BuildConfig.DEBUG || uuid == null) {
+            Toast.makeText(
+                requireContext(),
+                R.string.debug_invalidate_access_token_unavailable,
+                Toast.LENGTH_SHORT,
+            ).show()
+            return
+        }
+        when (val outcome = authDebugActions.invalidateAccessTokenServer(uuid)) {
+            is Outcome.Success -> {
+                Toast.makeText(
+                    requireContext(),
+                    R.string.debug_invalidate_access_token_server_done,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+
+            is Outcome.Failure -> {
+                when (outcome.error) {
+                    is AuthDebugActions.Error.AccountNotFound,
+                    is AuthDebugActions.Error.NoOAuthState,
+                    -> {
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.debug_invalidate_access_token_unavailable,
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+
+                    is AuthDebugActions.Error.CannotModifyAccessToken -> {
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.debug_invalidate_access_token_cannot_modify,
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+
+                    is AuthDebugActions.Error.AlreadyModified -> {
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.debug_invalidate_access_token_already_modified,
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onDebugInvalidateAccessTokenLocal() {
+        val uuid = account?.uuid
+        if (!BuildConfig.DEBUG || uuid == null) {
+            Toast.makeText(
+                requireContext(),
+                R.string.debug_invalidate_access_token_unavailable,
+                Toast.LENGTH_SHORT,
+            ).show()
+            return
+        }
+        when (val outcome = authDebugActions.invalidateAccessTokenLocal(uuid)) {
+            is Outcome.Success -> {
+                Toast.makeText(
+                    requireContext(),
+                    R.string.debug_invalidate_access_token_local_done,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+
+            is Outcome.Failure -> {
+                when (outcome.error) {
+                    is AuthDebugActions.Error.AccountNotFound,
+                    is AuthDebugActions.Error.NoOAuthState,
+                    is AuthDebugActions.Error.CannotModifyAccessToken,
+                    is AuthDebugActions.Error.AlreadyModified,
+                    -> {
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.debug_invalidate_access_token_unavailable,
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onDebugForceAuthFailure() {
+        val uuid = account?.uuid
+        if (!BuildConfig.DEBUG || uuid == null) {
+            Toast.makeText(requireContext(), R.string.debug_force_auth_failure_unavailable, Toast.LENGTH_SHORT).show()
+            return
+        }
+        when (val outcome = authDebugActions.forceAuthFailure(uuid)) {
+            is Outcome.Success -> {
+                Toast.makeText(requireContext(), R.string.debug_force_auth_failure_done, Toast.LENGTH_SHORT).show()
+            }
+
+            is Outcome.Failure -> {
+                when (outcome.error) {
+                    is AuthDebugActions.Error.AccountNotFound -> Toast.makeText(
+                        requireContext(),
+                        R.string.debug_force_auth_failure_unavailable,
+                        Toast.LENGTH_SHORT,
+                    ).show()
+
+                    is AuthDebugActions.Error.NoOAuthState -> {
+                        // Clearing is already the desired state; still report done so user knows it's in effect
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.debug_force_auth_failure_done,
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+
+                    is AuthDebugActions.Error.CannotModifyAccessToken,
+                    is AuthDebugActions.Error.AlreadyModified,
+                    -> {
+                        // Not relevant to this action, but keep exhaustive when; show generic unavailable
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.debug_invalidate_access_token_unavailable,
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                }
+            }
+        }
     }
 
     private fun updateFooterText() {
@@ -1132,7 +1556,7 @@ class MessageListFragment :
         updateFooterText(footerText)
     }
 
-    fun updateFooterText(text: String?) {
+    override fun updateFooterText(text: String?) {
         val currentItems = adapter
             .viewItems
             .filter { it !is MessageListViewItem.Footer }
@@ -1382,7 +1806,7 @@ class MessageListFragment :
     }
 
     private fun onSpam(messages: List<MessageReference>) {
-        if (K9.isConfirmSpam) {
+        if (interactionSettings.isConfirmSpam) {
             // remember the message selection for #onCreateDialog(int)
             activeMessages = messages
             showDialog(R.id.dialog_confirm_spam)
@@ -1448,7 +1872,7 @@ class MessageListFragment :
         for ((folderId, messagesInFolder) in folderMap) {
             val account = accountManager.getAccount(messagesInFolder.first().accountUuid)
             if (account == null) {
-                logger.debug(TAG) {
+                logger.debug(logTag) {
                     "Account for message ${messagesInFolder.first()} not found, skipping copy/move operation"
                 }
                 continue
@@ -1573,12 +1997,12 @@ class MessageListFragment :
         // If we represent a remote search, then kill that before going back.
         if (isRemoteSearch && remoteSearchFuture != null) {
             try {
-                Log.i("Remote search in progress, attempting to abort...")
+                logger.info(logTag) { "Remote search in progress, attempting to abort..." }
 
                 // Canceling the future stops any message fetches in progress.
                 val cancelSuccess = remoteSearchFuture!!.cancel(true) // mayInterruptIfRunning = true
                 if (!cancelSuccess) {
-                    Log.e("Could not cancel remote search future.")
+                    logger.error(logTag) { "Could not cancel remote search future." }
                 }
 
                 // Closing the folder will kill off the connection if we're mid-search.
@@ -1593,7 +2017,7 @@ class MessageListFragment :
                 )
             } catch (e: Exception) {
                 // Since the user is going back, log and squash any exceptions.
-                Log.e(e, "Could not abort remote search before going back")
+                logger.error(logTag, e) { "Could not abort remote search before going back" }
             }
         }
 
@@ -1604,7 +2028,7 @@ class MessageListFragment :
         fragmentListener.openMessage(messageReference)
     }
 
-    fun onReverseSort() {
+    override fun onReverseSort() {
         changeSort(sortType)
     }
 
@@ -1622,43 +2046,43 @@ class MessageListFragment :
     private val selectedMessages: List<MessageReference>
         get() = adapter.selectedMessages.map { it.messageReference }
 
-    fun onDelete() {
+    override fun onDelete() {
         selectedMessage?.let { message ->
             onDelete(listOf(message))
         }
     }
 
-    fun toggleMessageSelect() {
+    override fun toggleMessageSelect() {
         selectedMessageListItem?.let { messageListItem ->
             toggleMessageSelect(messageListItem)
         }
     }
 
-    fun onToggleFlagged() {
+    override fun onToggleFlagged() {
         selectedMessageListItem?.let { messageListItem ->
             setFlag(messageListItem, Flag.FLAGGED, !messageListItem.isStarred)
         }
     }
 
-    fun onToggleRead() {
+    override fun onToggleRead() {
         selectedMessageListItem?.let { messageListItem ->
             setFlag(messageListItem, Flag.SEEN, !messageListItem.isRead)
         }
     }
 
-    fun onMove() {
+    override fun onMove() {
         selectedMessage?.let { message ->
             onMove(message)
         }
     }
 
-    fun onArchive() {
+    override fun onArchive() {
         selectedMessage?.let { message ->
             onArchive(message)
         }
     }
 
-    fun onCopy() {
+    override fun onCopy() {
         selectedMessage?.let { message ->
             onCopy(message)
         }
@@ -1800,15 +2224,15 @@ class MessageListFragment :
         actionMode?.invalidate()
     }
 
-    fun finishActionMode() {
+    override fun finishActionMode() {
         actionMode?.finish()
     }
 
-    fun remoteSearchFinished() {
+    override fun remoteSearchFinished() {
         remoteSearchFuture = null
     }
 
-    fun setActiveMessage(messageReference: MessageReference?) {
+    override fun setActiveMessage(messageReference: MessageReference?) {
         activeMessage = messageReference
 
         rememberSortOverride(messageReference)
@@ -1828,7 +2252,7 @@ class MessageListFragment :
         }
     }
 
-    fun onFullyActive() {
+    override fun onFullyActive() {
         maybeShowFloatingActionButton()
     }
 
@@ -1846,14 +2270,14 @@ class MessageListFragment :
     // won't immediately change position in the message list if the list is sorted by these fields.
     // The main benefit is that the swipe to next/previous message feature will work in a less surprising way.
     private fun rememberSortOverride(messageReference: MessageReference?) {
-        val messageSortOverrides = viewModel.messageSortOverrides
+        val messageSortOverrides = legacyViewModel.messageSortOverrides
 
         if (messageReference == null) {
             messageSortOverrides.clear()
             return
         }
 
-        if (sortType != SortType.SORT_UNREAD && sortType != SortType.SORT_FLAGGED) return
+        if (sortType != LegacySortType.SORT_UNREAD && sortType != LegacySortType.SORT_FLAGGED) return
 
         val messageListItem = adapter.getItem(messageReference) ?: return
 
@@ -1888,7 +2312,7 @@ class MessageListFragment :
         get() = isSingleAccountMode && isSingleFolderMode && !isOutbox
 
     private fun confirmMarkAllAsRead() {
-        if (K9.isConfirmMarkAllRead) {
+        if (interactionSettings.isConfirmMarkAllRead) {
             showDialog(R.id.dialog_confirm_mark_all_as_read)
         } else {
             markAllAsRead()
@@ -2014,6 +2438,36 @@ class MessageListFragment :
             SwipeAction.Delete -> true
             SwipeAction.Move -> !isOutbox && messagingController.isMoveCapable(item.account.id)
             SwipeAction.Spam -> !isOutbox && item.account.hasSpamFolder() && item.folderId != item.account.spamFolderId
+        }
+    }
+
+    override fun filterInAppNotificationEvents(notification: InAppNotification): Boolean {
+        val accountUuid = notification.accountUuid
+        return notification !is SentFolderNotFoundNotification &&
+            accountUuid != null &&
+            accountUuid in accountUuids
+    }
+
+    override fun onNotificationActionClicked(action: NotificationAction) = onNotificationActionClick(action)
+
+    override fun onNotificationActionClick(action: NotificationAction) {
+        when (action) {
+            is NotificationAction.UpdateIncomingServerSettings ->
+                FeatureLauncherActivity.launch(
+                    context = requireContext(),
+                    target = FeatureLauncherTarget.AccountEditIncomingSettings(action.accountUuid),
+                )
+
+            is NotificationAction.UpdateOutgoingServerSettings ->
+                FeatureLauncherActivity.launch(
+                    context = requireContext(),
+                    target = FeatureLauncherTarget.AccountEditOutgoingSettings(action.accountUuid),
+                )
+
+            is NotificationAction.OpenNotificationCentre ->
+                errorNotificationsDialogFragmentFactory.show(fragmentManager = childFragmentManager)
+
+            else -> Unit
         }
     }
 
@@ -2376,38 +2830,132 @@ class MessageListFragment :
     }
 
     @Suppress("detekt.UnnecessaryAnnotationUseSiteTarget") // https://github.com/detekt/detekt/issues/8212
-    private enum class Error(@param:StringRes val errorText: Int) {
+    enum class Error(@param:StringRes val errorText: Int) {
         FolderNotFound(R.string.message_list_error_folder_not_found),
     }
+    // endregion [ LegacyMessageListFragment methods]
 
-    interface MessageListFragmentListener {
-        fun setMessageListProgressEnabled(enable: Boolean)
-        fun setMessageListProgress(level: Int)
-        fun showThread(account: LegacyAccount, threadRootId: Long)
-        fun openMessage(messageReference: MessageReference)
-        fun setMessageListTitle(title: String, subtitle: String? = null)
-        fun onCompose(account: LegacyAccount?)
-        fun startSearch(query: String, account: LegacyAccount?, folderId: Long?): Boolean
-        fun startSupportActionMode(callback: ActionMode.Callback): ActionMode?
-        fun goBack()
+    private val viewModel: MessageListContract.ViewModel by inject {
+        decodeArguments()
+        val accounts = accountUuids.map { AccountIdFactory.of(it) }.toSet()
 
-        companion object {
-            const val MAX_PROGRESS = 10000
+        var args = MessageListContract.ViewModel.Args(
+            accountIds = accounts,
+            folderId = if (accounts.size == 1) currentFolder?.databaseId else null,
+        )
+        parametersOf(args)
+    }
+
+    internal val MessageListMetadata.currentSortCriteria: SortCriteria
+        get() =
+            sortCriteriaPerAccount.getValue(folder?.account?.id)
+
+    val swipeActions: StateFlow<Map<AccountId, SwipeActions>> by lazy {
+        viewModel
+            .state
+            .map { it.metadata.swipeActions }
+            .stateIn(lifecycleScope, SharingStarted.Lazily, emptyMap())
+    }
+
+    private fun showComposeDropdown(anchor: View, lifecycleOwner: LifecycleOwner, stateOwner: SavedStateRegistryOwner) {
+        val context = anchor.context
+        val composeView = ComposeView(context).apply {
+            setViewTreeLifecycleOwner(lifecycleOwner)
+            setViewTreeSavedStateRegistryOwner(stateOwner)
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                featureThemeProvider.WithTheme {
+                    SortCriteriaMenuList()
+                }
+            }
+        }
+        val parent = FrameLayout(context).apply {
+            id = android.R.id.content
+            compositionContext = createLifecycleAwareWindowRecomposer(lifecycle = lifecycle)
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+            )
+            addView(composeView)
+        }
+        val popup = PopupWindow(
+            parent,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true,
+        )
+        popup.showAsDropDown(anchor)
+    }
+
+    /**
+     * Ideally, this should be landed on :feature:mail:message:list:impl, but until we don't complete
+     * a full rewrite of the Message List on compose, it wouldn't bring much benefits.
+     *
+     * For now, leaving this here.
+     */
+    @Composable
+    private fun SortCriteriaMenuList() {
+        val (state, dispatch) = viewModel.observeWithoutEffect()
+        val metadata = state.value.metadata
+        val primarySortTypes = metadata.availablePrimarySortTypes
+        val secondarySortTypes = metadata.availableSecondarySortTypes
+        val currentSortCriteria = remember(metadata) {
+            val folder = metadata.folder
+            val accountId = folder?.account?.id
+            metadata.sortCriteriaPerAccount.getValue(accountId)
+        }
+
+        Surface(
+            modifier = Modifier.padding(MainTheme.spacings.default),
+            color = MainTheme.colors.surfaceContainer,
+            tonalElevation = MainTheme.elevations.level2,
+            shape = MainTheme.shapes.medium,
+        ) {
+            SortTypeList(
+                currentSortCriteria = currentSortCriteria,
+                primarySortTypes = primarySortTypes,
+                secondarySortTypes = secondarySortTypes,
+                isSelected = { sortType -> currentSortCriteria.primary == sortType },
+                onSortTypeClick = { sortType ->
+                    dispatch(
+                        MessageListEvent.ChangeSortCriteria(
+                            accountId = null,
+                            sortCriteria = currentSortCriteria.copy(
+                                primary = sortType,
+                                secondary = when {
+                                    sortType in SortCriteria.SecondaryNotRequiredForSortTypes -> null
+                                    else -> SortType.DateDesc
+                                },
+                            ),
+                        ),
+                    )
+                },
+                onSecondarySortTypeClick = { sortType ->
+                    dispatch(
+                        MessageListEvent.ChangeSortCriteria(
+                            accountId = null,
+                            sortCriteria = currentSortCriteria.copy(secondary = sortType),
+                        ),
+                    )
+                },
+            )
         }
     }
 
-    companion object {
+    private fun MessageListPreferences.toMessageListAppearance(): MessageListAppearance = MessageListAppearance(
+        previewLines = excerptLines,
+        stars = showFavouriteButton,
+        senderAboveSubject = senderAboveSubject,
+        showContactPicture = showMessageAvatar,
+        showingThreadedList = groupConversations,
+        backGroundAsReadIndicator = colorizeBackgroundWhenRead,
+        showAccountIndicator = isShowAccountIndicator,
+        density = density,
+        dateTimeFormat = dateTimeFormat,
+    )
 
-        private const val ARG_SEARCH = "searchObject"
-        private const val ARG_THREADED_LIST = "showingThreadedList"
-        private const val ARG_IS_THREAD_DISPLAY = "isThreadedDisplay"
-
-        private const val STATE_SELECTED_MESSAGES = "selectedMessages"
-        private const val STATE_ACTIVE_MESSAGES = "activeMessages"
-        private const val STATE_ACTIVE_MESSAGE = "activeMessage"
-        private const val STATE_REMOTE_SEARCH_PERFORMED = "remoteSearchPerformed"
-
-        fun newInstance(
+    companion object Factory : MessageListFragmentBridgeContract.Factory {
+        override fun newInstance(
             search: LocalMessageSearch,
             isThreadDisplay: Boolean,
             threadedList: Boolean,
@@ -2420,6 +2968,125 @@ class MessageListFragment :
                     ARG_IS_THREAD_DISPLAY to isThreadDisplay,
                     ARG_THREADED_LIST to threadedList,
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SecondarySortOptions(
+    visible: Boolean,
+    secondarySortTypes: ImmutableSet<SortType>,
+    isSelected: (SortType) -> Boolean,
+    onSortTypeClick: (SortType) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    if (visible) {
+        Column(modifier = modifier) {
+            SortTypeDivider(
+                label = stringResource(R.string.sort_by_then_by),
+                modifier = Modifier.padding(start = MainTheme.spacings.default),
+            )
+            Column {
+                secondarySortTypes.forEach { sortType ->
+                    SortTypeMenuItem(
+                        sortType = sortType,
+                        selected = isSelected(sortType),
+                        onClick = { onSortTypeClick(sortType) },
+                        contentPadding = PaddingValues(
+                            top = MainTheme.spacings.default,
+                            bottom = MainTheme.spacings.default,
+                            start = MainTheme.spacings.triple,
+                            end = MainTheme.spacings.double,
+                        ),
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SortTypeList(
+    currentSortCriteria: SortCriteria,
+    primarySortTypes: ImmutableSet<SortType>,
+    isSelected: (SortType) -> Boolean,
+    onSortTypeClick: (SortType) -> Unit,
+    modifier: Modifier = Modifier,
+    secondarySortTypes: ImmutableSet<SortType> = persistentSetOf(),
+    onSecondarySortTypeClick: (SortType) -> Unit = {},
+) {
+    Column(
+        modifier = modifier
+            .width(IntrinsicSize.Min)
+            .widthIn(min = 200.dp)
+            .verticalScroll(state = rememberScrollState()),
+    ) {
+        SortTypeDivider(label = stringResource(R.string.sort_by))
+        primarySortTypes.forEach { sortType ->
+            SortTypeMenuItem(
+                sortType = sortType,
+                selected = isSelected(sortType),
+                onClick = { onSortTypeClick(sortType) },
+            )
+            val visible = currentSortCriteria.isSecondarySortRequired && isSelected(sortType)
+            AnimatedVisibility(
+                visible = visible,
+                enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+                exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.Top),
+            ) {
+                SecondarySortOptions(
+                    visible = visible,
+                    secondarySortTypes = secondarySortTypes,
+                    isSelected = { sortType -> currentSortCriteria.secondary == sortType },
+                    onSortTypeClick = onSecondarySortTypeClick,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SortTypeDivider(label: String, modifier: Modifier = Modifier) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MainTheme.spacings.half),
+        modifier = modifier.padding(horizontal = MainTheme.spacings.default),
+    ) {
+        TextLabelMedium(label)
+        DividerHorizontal()
+    }
+}
+
+@Composable
+private fun SortTypeMenuItem(
+    sortType: SortType,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(
+        vertical = MainTheme.spacings.default,
+        horizontal = MainTheme.spacings.double,
+    ),
+) {
+    ClickableSurface(
+        onClick = onClick,
+        color = MainTheme.colors.surfaceContainer,
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(MainTheme.spacings.half),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(contentPadding),
+        ) {
+            TextBodyLarge(
+                text = stringResource(sortType.labelResId),
+                modifier = Modifier.weight(1f),
+            )
+            Crossfade(targetState = selected, modifier = Modifier.size(16.dp)) { selected ->
+                if (selected) {
+                    Icon(imageVector = Icons.Outlined.CheckCircle)
+                }
             }
         }
     }

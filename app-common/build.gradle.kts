@@ -1,5 +1,5 @@
 plugins {
-    id(ThunderbirdPlugins.Library.android)
+    id(ThunderbirdPlugins.Library.androidCompose)
 }
 
 android {
@@ -19,7 +19,9 @@ dependencies {
     api(projects.feature.navigation.drawer.api)
 
     implementation(projects.legacy.core)
+    implementation(projects.legacy.ui.base)
     implementation(projects.core.android.account)
+    implementation(projects.core.android.common)
 
     implementation(projects.core.logging.api)
     implementation(projects.core.logging.implComposite)
@@ -31,22 +33,43 @@ dependencies {
     implementation(projects.core.configstore.implBackend)
 
     implementation(projects.core.featureflag)
+    implementation(projects.core.file)
+
+    implementation(projects.core.ui.setting.api)
+    implementation(projects.core.ui.setting.implDialog)
     implementation(projects.core.ui.legacy.theme2.common)
 
     implementation(projects.feature.account.avatar.api)
     implementation(projects.feature.account.avatar.impl)
+    implementation(projects.feature.account.settings.api)
     implementation(projects.feature.account.setup)
     implementation(projects.feature.mail.account.api)
+    implementation(projects.feature.mail.message.composer)
     implementation(projects.feature.migration.provider)
     implementation(projects.feature.notification.api)
     implementation(projects.feature.notification.impl)
     implementation(projects.feature.widget.messageList)
+
+    implementation(projects.feature.mail.message.export.api)
+    implementation(projects.feature.mail.message.export.implEml)
+    implementation(projects.feature.mail.message.list.api)
+    implementation(projects.feature.mail.message.reader.api)
+    implementation(projects.feature.mail.message.reader.impl)
 
     implementation(projects.mail.protocols.imap)
     implementation(projects.backend.imap)
 
     implementation(libs.androidx.work.runtime)
     implementation(libs.androidx.lifecycle.process)
+    implementation(libs.kotlinx.collections.immutable)
 
     testImplementation(projects.feature.account.fake)
+    testImplementation(projects.core.testing)
+    testImplementation(projects.core.android.testing)
+    testImplementation(projects.core.logging.testing)
+}
+
+codeCoverage {
+    branchCoverage = 0
+    lineCoverage = 0
 }

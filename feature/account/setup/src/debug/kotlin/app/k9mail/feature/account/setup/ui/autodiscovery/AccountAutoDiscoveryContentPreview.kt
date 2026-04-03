@@ -1,11 +1,13 @@
 package app.k9mail.feature.account.setup.ui.autodiscovery
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import app.k9mail.core.ui.compose.designsystem.PreviewWithTheme
-import app.k9mail.feature.account.common.domain.input.StringInputField
 import app.k9mail.feature.account.server.validation.ui.fake.FakeAccountOAuthViewModel
 import app.k9mail.feature.account.setup.ui.autodiscovery.fake.fakeAutoDiscoveryResultSettings
+import net.thunderbird.core.validation.input.StringInputField
 
 @Composable
 @Preview(showBackground = true)
@@ -14,8 +16,9 @@ internal fun AccountAutoDiscoveryContentPreview() {
         AccountAutoDiscoveryContent(
             state = AccountAutoDiscoveryContract.State(),
             onEvent = {},
-            oAuthViewModel = FakeAccountOAuthViewModel(),
+            oAuthViewModel = viewModel { FakeAccountOAuthViewModel() },
             brandName = "BrandName",
+            contentPadding = PaddingValues(),
         )
     }
 }
@@ -29,8 +32,9 @@ internal fun AccountAutoDiscoveryContentEmailPreview() {
                 emailAddress = StringInputField(value = "test@example.com"),
             ),
             onEvent = {},
-            oAuthViewModel = FakeAccountOAuthViewModel(),
+            oAuthViewModel = viewModel { FakeAccountOAuthViewModel() },
             brandName = "BrandName",
+            contentPadding = PaddingValues(),
         )
     }
 }
@@ -46,8 +50,9 @@ internal fun AccountAutoDiscoveryContentPasswordPreview() {
                 autoDiscoverySettings = fakeAutoDiscoveryResultSettings(isTrusted = true),
             ),
             onEvent = {},
-            oAuthViewModel = FakeAccountOAuthViewModel(),
+            oAuthViewModel = viewModel { FakeAccountOAuthViewModel() },
             brandName = "BrandName",
+            contentPadding = PaddingValues(),
         )
     }
 }
@@ -63,8 +68,9 @@ internal fun AccountAutoDiscoveryContentPasswordUntrustedSettingsPreview() {
                 autoDiscoverySettings = fakeAutoDiscoveryResultSettings(isTrusted = false),
             ),
             onEvent = {},
-            oAuthViewModel = FakeAccountOAuthViewModel(),
+            oAuthViewModel = viewModel { FakeAccountOAuthViewModel() },
             brandName = "BrandName",
+            contentPadding = PaddingValues(),
         )
     }
 }
@@ -79,8 +85,9 @@ internal fun AccountAutoDiscoveryContentPasswordNoSettingsPreview() {
                 emailAddress = StringInputField(value = "test@example.com"),
             ),
             onEvent = {},
-            oAuthViewModel = FakeAccountOAuthViewModel(),
+            oAuthViewModel = viewModel { FakeAccountOAuthViewModel() },
             brandName = "BrandName",
+            contentPadding = PaddingValues(),
         )
     }
 }
@@ -96,8 +103,9 @@ internal fun AccountAutoDiscoveryContentOAuthPreview() {
                 autoDiscoverySettings = fakeAutoDiscoveryResultSettings(isTrusted = true),
             ),
             onEvent = {},
-            oAuthViewModel = FakeAccountOAuthViewModel(),
+            oAuthViewModel = viewModel { FakeAccountOAuthViewModel() },
             brandName = "BrandName",
+            contentPadding = PaddingValues(),
         )
     }
 }

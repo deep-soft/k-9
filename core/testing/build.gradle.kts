@@ -2,11 +2,11 @@ plugins {
     id(ThunderbirdPlugins.Library.kmp)
 }
 
-android {
-    namespace = "net.thunderbird.core.testing"
-}
-
 kotlin {
+    android {
+        namespace = "net.thunderbird.core.testing"
+        withHostTest {}
+    }
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlin.test)
@@ -16,4 +16,8 @@ kotlin {
             implementation(libs.turbine)
         }
     }
+}
+
+codeCoverage {
+    lineCoverage = 68
 }

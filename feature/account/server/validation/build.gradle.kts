@@ -5,6 +5,12 @@ plugins {
 android {
     namespace = "app.k9mail.feature.account.server.validation"
     resourcePrefix = "account_server_validation_"
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -21,4 +27,9 @@ dependencies {
     implementation(projects.feature.account.server.certificate)
 
     testImplementation(projects.core.ui.compose.testing)
+}
+
+codeCoverage {
+    branchCoverage = 13
+    lineCoverage = 6
 }

@@ -10,14 +10,14 @@ import com.fsck.k9.controller.MessageReferenceHelper
 import com.fsck.k9.controller.MessagingController
 import com.fsck.k9.fragment.ConfirmationDialogFragment
 import com.fsck.k9.fragment.ConfirmationDialogFragment.ConfirmationDialogFragmentListener
-import com.fsck.k9.notification.NotificationActionService
+import com.fsck.k9.notification.NotificationActionIntents
 import com.fsck.k9.ui.R
-import com.fsck.k9.ui.base.K9Activity
+import com.fsck.k9.ui.base.BaseActivity
 import com.fsck.k9.ui.base.ThemeType
 import net.thunderbird.core.android.account.LegacyAccountDto
 import org.koin.android.ext.android.inject
 
-class DeleteConfirmationActivity : K9Activity(ThemeType.DIALOG), ConfirmationDialogFragmentListener {
+class DeleteConfirmationActivity : BaseActivity(ThemeType.DIALOG), ConfirmationDialogFragmentListener {
     private val preferences: Preferences by inject()
     private val messagingController: MessagingController by inject()
 
@@ -89,7 +89,7 @@ class DeleteConfirmationActivity : K9Activity(ThemeType.DIALOG), ConfirmationDia
     }
 
     private fun triggerDelete() {
-        val intent = NotificationActionService.createDeleteAllMessagesIntent(this, account.uuid, messagesToDelete)
+        val intent = NotificationActionIntents.createDeleteAllMessagesIntent(this, account.uuid, messagesToDelete)
         startService(intent)
     }
 

@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.ui.compose.navigation)
+    implementation(projects.core.ui.navigation)
 
     implementation(projects.core.ui.compose.designsystem)
     implementation(projects.core.ui.legacy.designsystem)
@@ -37,5 +37,11 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
 
+    implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.datetime)
+}
+
+codeCoverage {
+    branchCoverage = 0
+    lineCoverage = 0
 }

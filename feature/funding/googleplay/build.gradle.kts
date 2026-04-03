@@ -3,14 +3,21 @@ plugins {
 }
 
 android {
-    namespace = "app.k9mail.feature.funding.googleplay"
+    namespace = "net.thunderbird.feature.funding.googleplay"
     resourcePrefix = "funding_googleplay_"
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
     api(projects.feature.funding.api)
 
     implementation(projects.core.common)
+    implementation(projects.core.android.common)
     implementation(projects.core.outcome)
     implementation(projects.core.logging.api)
     implementation(projects.core.ui.compose.designsystem)
@@ -20,8 +27,14 @@ dependencies {
     implementation(libs.android.material)
 
     testImplementation(projects.core.testing)
+    testImplementation(projects.core.logging.testing)
     testImplementation(projects.core.ui.compose.testing)
 
     testImplementation(libs.androidx.lifecycle.runtime.testing)
     testImplementation(libs.androidx.fragment.testing)
+}
+
+codeCoverage {
+    branchCoverage = 0
+    lineCoverage = 5
 }

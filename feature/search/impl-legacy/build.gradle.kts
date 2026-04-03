@@ -3,11 +3,11 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "net.thunderbird.feature.search.legacy"
-}
-
 kotlin {
+    android {
+        namespace = "net.thunderbird.feature.search.legacy"
+        withHostTest {}
+    }
     sourceSets {
         commonMain.dependencies {
             implementation(projects.feature.mail.account.api)
@@ -15,4 +15,9 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
         }
     }
+}
+
+codeCoverage {
+    branchCoverage = 0
+    lineCoverage = 0
 }

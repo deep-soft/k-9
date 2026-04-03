@@ -369,7 +369,7 @@ class MessageContainerView(context: Context, attrs: AttributeSet?) :
 
     private fun downloadImage(uri: Uri) {
         val request = DownloadManager.Request(uri).apply {
-            if (Build.VERSION.SDK_INT >= 29) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val filename = uri.lastPathSegment
                 setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename)
             }
@@ -412,6 +412,7 @@ class MessageContainerView(context: Context, attrs: AttributeSet?) :
 
     fun displayMessageViewContainer(
         messageViewInfo: MessageViewInfo,
+        renderPlainFormat: Boolean,
         onRenderingFinishedListener: OnRenderingFinishedListener,
         loadPictures: Boolean,
         hideUnsignedTextDivider: Boolean,
@@ -420,10 +421,18 @@ class MessageContainerView(context: Context, attrs: AttributeSet?) :
         this.attachmentCallback = attachmentCallback
 
         resetView()
-        renderAttachments(messageViewInfo)
 
-        val messageText = messageViewInfo.text
-        if (messageText != null && !isShowingPictures) {
+        val messageText = if (!renderPlainFormat) {
+            messageViewInfo.text
+        } else {
+            displayHtml.wrapMessageContent(messageViewInfo.textPlainFormatted)
+        }
+
+        // Register attachments so inline images (CIDs) can be resolved
+        messageViewInfo.attachments?.forEach { attachments[it.internalUri] = it }
+        messageViewInfo.extraAttachments?.forEach { attachments[it.internalUri] = it }
+
+        if (messageText != null && !isShowingPictures && !renderPlainFormat) {
             if (Utility.hasExternalImages(messageText)) {
                 if (loadPictures) {
                     setLoadPictures(true)
@@ -478,49 +487,6 @@ class MessageContainerView(context: Context, attrs: AttributeSet?) :
 
         unsignedTextContainer.isVisible = false
         unsignedText.text = ""
-    }
-
-    private fun renderAttachments(messageViewInfo: MessageViewInfo) {
-        if (messageViewInfo.attachments != null) {
-            for (attachment in messageViewInfo.attachments) {
-                attachments[attachment.internalUri] = attachment
-                if (attachment.inlineAttachment) {
-                    continue
-                }
-
-                val attachmentView = layoutInflater.inflate(
-                    R.layout.message_view_attachment,
-                    attachmentsContainer,
-                    false,
-                ) as AttachmentView
-
-                attachmentView.setCallback(attachmentCallback)
-                attachmentView.setAttachment(attachment)
-
-                attachmentViewMap[attachment] = attachmentView
-                attachmentsContainer.addView(attachmentView)
-            }
-        }
-
-        if (messageViewInfo.extraAttachments != null) {
-            for (attachment in messageViewInfo.extraAttachments) {
-                attachments[attachment.internalUri] = attachment
-                if (attachment.inlineAttachment) {
-                    continue
-                }
-
-                val lockedAttachmentView = layoutInflater.inflate(
-                    R.layout.message_view_attachment_locked,
-                    attachmentsContainer,
-                    false,
-                ) as LockedAttachmentView
-
-                lockedAttachmentView.setCallback(attachmentCallback)
-                lockedAttachmentView.setAttachment(attachment)
-
-                attachmentsContainer.addView(lockedAttachmentView)
-            }
-        }
     }
 
     private fun resetView() {

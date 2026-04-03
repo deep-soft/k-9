@@ -4,10 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
 import app.k9mail.feature.launcher.ui.FeatureLauncherApp
-import com.fsck.k9.ui.base.K9Activity
+import com.fsck.k9.ui.base.BaseActivity
 
-class FeatureLauncherActivity : K9Activity() {
+class FeatureLauncherActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +22,12 @@ class FeatureLauncherActivity : K9Activity() {
         fun launch(context: Context, target: FeatureLauncherTarget) {
             val intent = getIntent(context, target)
             context.startActivity(intent)
+        }
+
+        @JvmStatic
+        fun launch(context: Context, target: FeatureLauncherTarget, launcher: ActivityResultLauncher<Intent>) {
+            val intent = getIntent(context, target)
+            launcher.launch(intent)
         }
 
         @JvmStatic

@@ -215,7 +215,7 @@
     <!--Name of the setting to configure the left swipe action-->
     <string name="general_settings_left_swipe_title">Vasakule viipamine</string>
     <!--The list item users select to not use a swipe action for a particular direction-->
-    <string name="general_settings_swipe_action_none">Mitte ükski</string>
+    <string name="general_settings_swipe_action_none">Mitte midagi</string>
     <!--Name of the swipe action to select/deselect a message-->
     <string name="general_settings_swipe_action_toggle_selection">Kirja valimine või valiku eemaldamine</string>
     <!--Name of the swipe action to mark as message as read/unread-->
@@ -270,7 +270,6 @@
     <string name="archive_folder_label">Arhiivi kaust</string>
     <string name="spam_folder_label">Rämpsposti kaust</string>
     <string name="account_setup_incoming_subscribed_folders_only_label">Näita üksnes tellitud kaustu</string>
-    <string name="account_setup_auto_expand_folder">Kaustade automaatne laiendamine</string>
     <string name="account_setup_options_mail_check_frequency_never">Mitte kunagi</string>
     <string name="account_setup_options_mail_check_frequency_15min">Iga 15 minuti tagant</string>
     <string name="account_setup_options_mail_check_frequency_30min">Iga 30 minuti tagant</string>
@@ -314,7 +313,7 @@
     <string name="account_notify_contacts_mail_only_summary">Näita teateid ainult tuntud kontaktidelt saabunud kirjade kohta</string>
     <string name="account_settings_ignore_chat_messages_label">Eira vestlusega seotud kirju</string>
     <string name="account_settings_ignore_chat_messages_summary">Ära näita teavitusi kirjade puhul, mis on vestluse osa</string>
-    <string name="account_settings_mark_message_as_read_on_view_label">Pärast avamist märgi loetuks</string>
+    <string name="account_settings_mark_message_as_read_on_view_label">Avamisel märgi loetuks</string>
     <string name="account_settings_mark_message_as_read_on_view_summary">Vaatamiseks avamisel märgi kiri loetuks</string>
     <string name="account_settings_mark_message_as_read_on_delete_label">Pärast kustutamist märgi loetuks</string>
     <string name="account_settings_mark_message_as_read_on_delete_summary">Kustutamisel märgi kiri loetuks</string>
@@ -344,8 +343,8 @@
     <string name="account_settings_quote_style_header">Päis (nagu Outlook)</string>
     <string name="account_settings_upload_sent_messages_label">Laadi üles saadetud kirjad</string>
     <string name="account_settings_upload_sent_messages_summary">Pärast saatmist tõsta kirjad saadetud kirjade kausta </string>
-    <string name="account_settings_general_title">Üldised seadistused</string>
-    <string name="account_settings_reading_mail">Meili lugemine</string>
+    <string name="account_settings_general_title">Üldseadistused</string>
+    <string name="account_settings_reading_mail">E-kirjade lugemine</string>
     <string name="account_settings_sync">Meili toomine</string>
     <string name="account_settings_folders">Kaustad</string>
     <string name="account_settings_quote_prefix_label">Tsiteeritud teksti eesliide</string>
@@ -360,24 +359,22 @@
     <string name="account_settings_crypto_encrypt_all_drafts_on">Kõik mustandid salvestatakse krüpteeritult</string>
     <string name="account_settings_crypto_encrypt_all_drafts_off">Krüpteeri mustandid vaid siis, kui krüpteerimine on lubatud</string>
     <string name="account_settings_mail_check_frequency_label">Kausta pollimise sagedus</string>
-    <string name="account_settings_color_label">Konto värv</string>
-    <string name="account_settings_color_summary">Konto rõhutamise värvi kasutatakse selle konto kaustades ja nimekirjades</string>
     <string name="account_settings_mail_display_count_label">Lokaalse kausta suurus</string>
     <string name="account_settings_autodownload_message_size_label">Laadi kirju kuni</string>
-    <string name="account_settings_autodownload_message_size_1">1 KB</string>
-    <string name="account_settings_autodownload_message_size_2">2 KB</string>
-    <string name="account_settings_autodownload_message_size_4">4 KB</string>
-    <string name="account_settings_autodownload_message_size_8">8 KB</string>
-    <string name="account_settings_autodownload_message_size_16">16 KB</string>
-    <string name="account_settings_autodownload_message_size_32">32 KB</string>
-    <string name="account_settings_autodownload_message_size_64">64 KB</string>
-    <string name="account_settings_autodownload_message_size_128">128 KB</string>
-    <string name="account_settings_autodownload_message_size_256">256 KB</string>
-    <string name="account_settings_autodownload_message_size_512">512 KB</string>
-    <string name="account_settings_autodownload_message_size_1024">1 MB</string>
-    <string name="account_settings_autodownload_message_size_2048">2 MB</string>
-    <string name="account_settings_autodownload_message_size_5120">5 MB</string>
-    <string name="account_settings_autodownload_message_size_10240">10 MB</string>
+    <string name="account_settings_autodownload_message_size_1">1 KiB</string>
+    <string name="account_settings_autodownload_message_size_2">2 KiB</string>
+    <string name="account_settings_autodownload_message_size_4">4 KiB</string>
+    <string name="account_settings_autodownload_message_size_8">8 KiB</string>
+    <string name="account_settings_autodownload_message_size_16">16 KiB</string>
+    <string name="account_settings_autodownload_message_size_32">32 KiB</string>
+    <string name="account_settings_autodownload_message_size_64">64 KiB</string>
+    <string name="account_settings_autodownload_message_size_128">128 KiB</string>
+    <string name="account_settings_autodownload_message_size_256">256 KiB</string>
+    <string name="account_settings_autodownload_message_size_512">512 KiB</string>
+    <string name="account_settings_autodownload_message_size_1024">1 MiB</string>
+    <string name="account_settings_autodownload_message_size_2048">2 MiB</string>
+    <string name="account_settings_autodownload_message_size_5120">5 MiB</string>
+    <string name="account_settings_autodownload_message_size_10240">10 MiB</string>
     <string name="account_settings_autodownload_message_size_any">suvaline maht (piiranguid pole)</string>
     <string name="account_settings_message_age_label">Sünkroniseeri kirjad</string>
     <string name="account_settings_message_age_any">suvalisest ajast (piirangud pole)</string>
@@ -402,7 +399,6 @@
     <string name="account_settings_incoming_summary">Konfigureeri sisse tuleva meili server</string>
     <string name="account_settings_outgoing_label">Väljuva meili server</string>
     <string name="account_settings_outgoing_summary">Konfigureeri väljuva meili server (SMTP)</string>
-    <string name="account_settings_description_label">Konto nimi</string>
     <string name="account_settings_name_label">Sinu nimi</string>
     <string name="notifications_title">Teated</string>
     <string name="account_settings_vibration">Värinaalarm</string>
@@ -430,7 +426,7 @@
     <string name="account_settings_notification_light_magenta">fuksia</string>
     <string name="account_settings_composition_title">Kirja koostamise valikud</string>
     <string name="account_settings_composition_label">Sõnumi koostamise vaikeseadistused</string>
-    <string name="account_settings_composition_summary">Määra oma vaikimisi Kellelt, BCC ja allkiri</string>
+    <string name="account_settings_composition_summary">Määra vaikimisi kasutatavad saatja, pimekoopia ja allkiri</string>
     <string name="account_settings_identities_label">Halda identiteete</string>
     <string name="account_settings_identities_summary">Seadista alternatiivsed \'Kellelt\'-aadressid ja allkirjad</string>
     <string name="manage_identities_title">Halda indentiteete</string>
@@ -473,7 +469,7 @@
     <string name="sort_unread_last">Loetud kirjad esimesena</string>
     <string name="sort_attach_first">Manustega kirjad esimestena</string>
     <string name="sort_unattached_first">Manusteta kirjad esimestena</string>
-    <string name="sort_by">Sorteeri kasutades…</string>
+    <string name="sort_by">Järjesta kasutades…</string>
     <string name="sort_by_date">Kuupäev</string>
     <string name="sort_by_arrival">Saabumine</string>
     <string name="sort_by_subject">Teema</string>
@@ -735,7 +731,6 @@
     <string name="crypto_msg_encrypted_insecure">aga krüptimise meetodeid ei loeta turvaliseks</string>
     <string name="locked_attach_unlock">Ava</string>
     <string name="locked_attach_unencrypted">See osa on krüptimata ja võib olla ebaturvaline.</string>
-    <string name="locked_attach_title">Krüptimata manus</string>
     <string name="message_progress_text">Laeb…</string>
     <string name="messageview_decrypt_cancelled">Dekrüptimine katkestati.</string>
     <string name="messageview_decrypt_retry">Korduskatse</string>
@@ -769,7 +764,7 @@
     <string name="dialog_autocrypt_mutual_description_1">Tavapäraselt krüptitakse kiri, kui sa sellise valiku teed või vastad krüptitud kirjale.</string>
     <string name="dialog_autocrypt_mutual_description_2">Kui kirja saatja ning saaja kasutavad Autocrypt-standardi kahepoolset režiimi, siis krüptimine on vaikimisi kasutusel.</string>
     <string name="dialog_autocrypt_mutual_learn_more">Lisateavet <a href="https://k9mail.app/2018/02/26/OpenPGP-Considerations-Part-III-Autocrypt.html">leiad siit</a>.</string>
-    <string name="general_settings_title">Üldised seadistused</string>
+    <string name="general_settings_title">Üldseadistused</string>
     <string name="dialog_openkeychain_info_title">OpenPGP rakendus paigaldamata</string>
     <string name="dialog_openkeychain_info_install">Paigalda</string>
     <string name="account_settings_crypto_encrypt_subject">Krüpti ka kirja pealkiri</string>
@@ -809,25 +804,15 @@ Palun jäta see kiri alles ning kasuta seda muu hulgas oma krüptovõtme varunda
     <string name="push_info_disable_push_text">Kui sul pole vaja ülikiiret infot saabunud kirjade kohta, siis lülita tõuketeenused välja ning lase K-9 Mail\'il kasutada tavapärast uute kirjade kontrollimist. Sellisel juhul vaatab K-9 Mail seadistatud ajavahemiku järel serverist uusi kirju ja mainitud püsiteavitust pole vaja.</string>
     <string name="push_info_disable_push_action">Ära kasuta tõuketeenuseid</string>
     <!--Name of the swipe action to select a message. Try to keep it short.-->
-    <string name="swipe_action_select">Vali</string>
     <!--Name of the swipe action to deselect a message. Try to keep it short.-->
-    <string name="swipe_action_deselect">Tühista valik</string>
     <!--Name of the swipe action to mark a message as read. Try to keep it short.-->
-    <string name="swipe_action_mark_as_read">Märgi loetuks</string>
     <!--Name of the swipe action to mark a message as unread. Try to keep it short.-->
-    <string name="swipe_action_mark_as_unread">Märgi mitteloetuks</string>
     <!--Name of the swipe action to add the star to a message. Try to keep it short.-->
-    <string name="swipe_action_add_star">Lisa tärn</string>
     <!--Name of the swipe action to remove the star from a message. Try to keep it short.-->
-    <string name="swipe_action_remove_star">Eemalda tärn</string>
     <!--Name of the swipe action to archive a message. Try to keep it short.-->
-    <string name="swipe_action_archive">Arhiveeri</string>
     <!--Name of the swipe action to delete a message. Try to keep it short.-->
-    <string name="swipe_action_delete">Kustuta</string>
     <!--Name of the swipe action to move a message to the Spam folder. Try to keep it short.-->
-    <string name="swipe_action_spam">Rämps</string>
     <!--Name of the swipe action to move a message. The ellipsis (…) indicates that there is another step (selecting a folder) before the action is performed. Try to keep it short.-->
-    <string name="swipe_action_move">Teisalda…</string>
     <!--Name of setting to configure whether to show a "compose" floating action button on top of the message list-->
     <string name="general_settings_show_compose_button_title">Näita kirja koostamise nuppu ujuvana kirjade loendi kohal</string>
     <!--Displayed in the toolbar when there was an error loading the message list, e.g. because the folder no longer exists.-->
@@ -904,8 +889,36 @@ Palun jäta see kiri alles ning kasuta seda muu hulgas oma krüptovõtme varunda
     <string name="debug_enable_sync_debug_logging_title">Luba sünkroniseerimisandmete logimine</string>
     <string name="debug_sync_export_logs_title">Ekspordi sünkroniseerimislogid</string>
     <string name="debug_enable_sync_debug_logging_summary">Logi diagnostilised sünkroniseerimisandmed viimase 24 tunni kohta</string>
-    <string name="swipe_action_archive_folder_not_set">Määra arhiivikaust</string>
-    <string name="swipe_action_change_swipe_gestures">Muuda \nViiped</string>
     <string name="archiving_not_available_for_this_account">Selle kasutajakonto jaoks pole arhiveerimine saadaval.</string>
     <string name="debug_open_secret_debug_screen">Ava salajane veaotsingu vaade</string>
+    <string name="debug_invalidate_access_token">Katse: tühista ligipääsu tunnusluba</string>
+    <string name="debug_invalidate_access_token_done">Ligipääsu tunnusluba on muudetud kehtetuks. Järgmise päringuga värskendatakse andmed uuesti.</string>
+    <string name="debug_invalidate_access_token_unavailable">Selle kasutajakonto jaoks pole ühtegi OAuthi tunnusluba saadaval.</string>
+    <string name="debug_invalidate_access_token_local">Katse: tühista ligipääsu tunnusluba (kohalikus seadmes)</string>
+    <string name="debug_invalidate_access_token_local_done">Oled tunnusloa kohalikus seadmes tühistanud. Järgmine päring laadib uue tunnusloa.</string>
+    <string name="debug_invalidate_access_token_server">Katse: tühista ligipääsu tunnusluba (serveris)</string>
+    <string name="debug_invalidate_access_token_server_done">Salvestatud tunnusluba on muudetud kasutamatuks. Järgmine päring ei õnnestu ja siis laaditakse uus tunnusluba.</string>
+    <string name="debug_invalidate_access_token_already_modified">Salvestatud tunnusluba on juba muudetud.</string>
+    <string name="debug_invalidate_access_token_cannot_modify">Salvestatud tunnusluba ei õnnestunud muuta. Proovi kehtetuks tunnistamist kohalikus seadmes.</string>
+    <string name="debug_force_auth_failure_unavailable">Selle kasutajakonto jaoks pole saadaval OAuth seadistust.</string>
+    <string name="debug_force_auth_failure_done">OAuthi olek on kustutatud. Järgmine päring ei õnnestu.</string>
+    <string name="debug_force_auth_failure">Katse: käivita autentimise ebaõnnestumine</string>
+    <string name="message_view_menu_action_export_eml">Ekspordi EML-failina</string>
+    <string name="account_setup_auto_select_folder">Vali kaust automaatselt</string>
+    <string name="navigation_drawer_preferences">Külgmenüü</string>
+    <string name="expand_folders">Laienda kaustad</string>
+    <string name="set_format_html_action">Kasuta algset vormindust</string>
+    <string name="set_format_html_condensed_action">Näita vormindatuna</string>
+    <string name="set_format_plain_action">Näita vormindamata kirja</string>
+    <string name="set_format_plain_condensed_action">Näita vormindamata kujul</string>
+    <string name="global_settings_messageview_body_content_type_title">Kirja sisu „Content-Type“</string>
+    <string name="global_settings_messageview_body_content_type_text_html">HTML (text/html)</string>
+    <string name="global_settings_messageview_body_content_type_text_plain">Vormindamata tekst (text/plain)</string>
+    <string name="debug_feature_flags">VEAOTSING: funktsionaalsuste võtmed</string>
+    <string name="print_message_action">Prindi</string>
+    <string name="global_settings_splitview_when_unfolded">Kui seade on lahtivolditud</string>
+    <string name="general_settings_message_list_date_time_format_title">Kuupäeva ja kellaaja vorming</string>
+    <string name="general_settings_message_list_date_time_format_contextual">Kontekstuaalne</string>
+    <string name="general_settings_message_list_date_time_format_full">Täisvaates</string>
+    <string name="sort_by_then_by">Ja siis järjesta…</string>
 </resources>

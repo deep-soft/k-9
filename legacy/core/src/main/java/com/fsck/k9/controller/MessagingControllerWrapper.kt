@@ -2,10 +2,10 @@ package com.fsck.k9.controller
 
 import app.k9mail.legacy.message.controller.MessageReference
 import app.k9mail.legacy.message.controller.MessagingListener
-import com.fsck.k9.mail.Flag
 import java.util.concurrent.Future
 import net.thunderbird.core.android.account.LegacyAccountDto
 import net.thunderbird.core.android.account.LegacyAccountDtoManager
+import net.thunderbird.core.common.mail.Flag
 import net.thunderbird.feature.account.AccountId
 
 /**
@@ -19,7 +19,11 @@ class MessagingControllerWrapper(
 ) {
 
     private fun getAccountDtoOrThrow(id: AccountId): LegacyAccountDto {
-        return accountManager.getAccount(id.asRaw()) ?: error("Account not found: $id")
+        return accountManager.getAccount(id.toString()) ?: error("Account not found: $id")
+    }
+
+    private fun getAccountDtoOrNull(id: AccountId): LegacyAccountDto? {
+        return accountManager.getAccount(id.toString())
     }
 
     fun loadMoreMessages(id: AccountId, folderId: Long) {
@@ -50,7 +54,7 @@ class MessagingControllerWrapper(
         forbiddenFlags: Set<Flag>?,
         listener: MessagingListener,
     ): Future<*>? = messagingController.searchRemoteMessages(
-        id.asRaw(),
+        id.toString(),
         folderId,
         query,
         requiredFlags,
@@ -79,12 +83,12 @@ class MessagingControllerWrapper(
     }
 
     fun isMoveCapable(id: AccountId): Boolean {
-        val account = getAccountDtoOrThrow(id)
+        val account = getAccountDtoOrNull(id) ?: return false
         return messagingController.isMoveCapable(account)
     }
 
     fun isCopyCapable(id: AccountId): Boolean {
-        val account = getAccountDtoOrThrow(id)
+        val account = getAccountDtoOrNull(id) ?: return false
         return messagingController.isCopyCapable(account)
     }
 
@@ -175,7 +179,7 @@ class MessagingControllerWrapper(
         notify: Boolean,
         listener: MessagingListener?,
     ) {
-        val account = id?.let { getAccountDtoOrThrow(it) }
+        val account = id?.let { getAccountDtoOrNull(it) }
 
         messagingController.checkMail(
             account,
@@ -187,12 +191,12 @@ class MessagingControllerWrapper(
     }
 
     fun supportsExpunge(id: AccountId): Boolean {
-        val account = getAccountDtoOrThrow(id)
+        val account = getAccountDtoOrNull(id) ?: return false
         return messagingController.supportsExpunge(account)
     }
 
     fun isPushCapable(id: AccountId): Boolean {
-        val account = getAccountDtoOrThrow(id)
+        val account = getAccountDtoOrNull(id) ?: return false
         return messagingController.isPushCapable(account)
     }
 

@@ -11,12 +11,9 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import app.k9mail.feature.launcher.FeatureLauncherActivity
-import app.k9mail.feature.launcher.FeatureLauncherTarget
+import app.k9mail.core.android.common.contact.ContactRepository
 import app.k9mail.legacy.message.controller.MessageReference
 import com.fsck.k9.contacts.ContactPictureLoader
-import com.fsck.k9.ui.helper.RelativeDateTimeFormatter
-import com.fsck.k9.ui.messagelist.MessageListFeatureFlags.UseComposeForMessageListItems
 import com.fsck.k9.ui.messagelist.item.BannerInlineListInAppNotificationViewHolder
 import com.fsck.k9.ui.messagelist.item.ComposableMessageViewHolder
 import com.fsck.k9.ui.messagelist.item.FooterViewHolder
@@ -27,6 +24,9 @@ import net.thunderbird.core.featureflag.FeatureFlagKey
 import net.thunderbird.core.featureflag.FeatureFlagProvider
 import net.thunderbird.core.featureflag.FeatureFlagResult
 import net.thunderbird.core.ui.theme.api.FeatureThemeProvider
+import net.thunderbird.feature.account.avatar.AvatarMonogramCreator
+import net.thunderbird.feature.mail.message.list.MessageListFeatureFlags.UseComposeForMessageListItems
+import net.thunderbird.feature.notification.api.content.InAppNotification
 import net.thunderbird.feature.notification.api.ui.action.NotificationAction
 
 private const val FOOTER_ID = 1L
@@ -43,10 +43,11 @@ class MessageListAdapter internal constructor(
     private val layoutInflater: LayoutInflater,
     private val contactsPictureLoader: ContactPictureLoader,
     private val listItemListener: MessageListItemActionListener,
-    private val appearance: MessageListAppearance,
-    private val relativeDateTimeFormatter: RelativeDateTimeFormatter,
+    private val appearance: () -> MessageListAppearance,
     private val themeProvider: FeatureThemeProvider,
     private val featureFlagProvider: FeatureFlagProvider,
+    private val contactRepository: ContactRepository,
+    private val avatarMonogramCreator: AvatarMonogramCreator,
 ) : RecyclerView.Adapter<MessageListViewHolder>() {
 
     val colors: MessageViewHolderColors = MessageViewHolderColors.resolveColors(theme)
@@ -219,27 +220,8 @@ class MessageListAdapter internal constructor(
             TYPE_IN_APP_NOTIFICATION_BANNER_INLINE_LIST if isInAppNotificationEnabled ->
                 BannerInlineListInAppNotificationViewHolder(
                     view = ComposeView(context = parent.context),
-                    eventFilter = { event ->
-                        val accountUuid = event.notification.accountUuid
-                        accountUuid != null && accountUuid in accountUuids
-                    },
-                    onNotificationActionClick = { action ->
-                        when (action) {
-                            is NotificationAction.UpdateIncomingServerSettings ->
-                                FeatureLauncherActivity.launch(
-                                    context = parent.context,
-                                    target = FeatureLauncherTarget.AccountEditIncomingSettings(action.accountUuid),
-                                )
-
-                            is NotificationAction.UpdateOutgoingServerSettings ->
-                                FeatureLauncherActivity.launch(
-                                    context = parent.context,
-                                    target = FeatureLauncherTarget.AccountEditOutgoingSettings(action.accountUuid),
-                                )
-
-                            else -> Unit
-                        }
-                    },
+                    eventFilter = listItemListener::filterInAppNotificationEvents,
+                    onNotificationActionClick = listItemListener::onNotificationActionClicked,
                 )
 
             else -> error("Unsupported type: $viewType")
@@ -253,7 +235,6 @@ class MessageListAdapter internal constructor(
             appearance = appearance,
             res = res,
             contactsPictureLoader = contactsPictureLoader,
-            relativeDateTimeFormatter = relativeDateTimeFormatter,
             colors = colors,
             theme = theme,
             onClickListener = messageClickedListener,
@@ -266,6 +247,8 @@ class MessageListAdapter internal constructor(
         ComposableMessageViewHolder.create(
             context = parent.context,
             themeProvider = themeProvider,
+            contactRepository = contactRepository,
+            avatarMonogramCreator = avatarMonogramCreator,
             onClick = { listItemListener.onMessageClicked(it) },
             onLongClick = { listItemListener.onToggleMessageSelection(it) },
             onFavouriteClick = { listItemListener.onToggleMessageFlag(it) },
@@ -364,7 +347,7 @@ class MessageListAdapter internal constructor(
     private fun calculateSelectionCount(): Int {
         return when {
             selected.isEmpty() -> 0
-            !appearance.showingThreadedList -> selected.size
+            !appearance().showingThreadedList -> selected.size
             else ->
                 viewItems
                     .asSequence()
@@ -423,6 +406,8 @@ interface MessageListItemActionListener {
     fun onToggleMessageSelection(item: MessageListItem)
     fun onToggleMessageFlag(item: MessageListItem)
     fun onFooterClicked()
+    fun filterInAppNotificationEvents(notification: InAppNotification): Boolean
+    fun onNotificationActionClicked(action: NotificationAction)
 }
 
 sealed interface MessageListViewItem {

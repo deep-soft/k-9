@@ -6,9 +6,16 @@ plugins {
 android {
     namespace = "app.k9mail.core.ui.compose.designsystem"
     resourcePrefix = "designsystem_"
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
+    api(projects.core.ui.compose.common)
     api(projects.core.ui.compose.theme2.common)
 
     debugApi(projects.core.ui.compose.theme2.k9mail)
@@ -30,4 +37,9 @@ dependencies {
     }
 
     testImplementation(projects.core.ui.compose.testing)
+}
+
+codeCoverage {
+    branchCoverage = 0
+    lineCoverage = 0
 }

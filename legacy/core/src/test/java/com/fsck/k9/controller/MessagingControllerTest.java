@@ -21,7 +21,7 @@ import com.fsck.k9.mail.AuthenticationFailedException;
 import com.fsck.k9.mail.CertificateChainException;
 import com.fsck.k9.mail.CertificateValidationException;
 import com.fsck.k9.mail.ConnectionSecurity;
-import com.fsck.k9.mail.Flag;
+import net.thunderbird.core.common.mail.Flag;
 import net.thunderbird.core.common.exception.MessagingException;
 import com.fsck.k9.mail.ServerSettings;
 import com.fsck.k9.mailstore.LocalFolder;
@@ -39,11 +39,12 @@ import com.fsck.k9.notification.NotificationStrategy;
 import net.thunderbird.core.common.mail.Protocols;
 import net.thunderbird.core.logging.Logger;
 import net.thunderbird.core.outcome.Outcome;
+import net.thunderbird.feature.mail.message.list.LocalDeleteOperationDecider;
 import net.thunderbird.feature.mail.folder.api.OutboxFolderManager;
 import net.thunderbird.feature.notification.api.NotificationManager;
-import net.thunderbird.feature.notification.api.sender.NotificationSender;
 import net.thunderbird.feature.notification.testing.fake.FakeInAppOnlyNotification;
 import net.thunderbird.feature.notification.testing.fake.FakeNotificationManager;
+import net.thunderbird.legacy.core.StubLocalDeleteOperationDecider;
 import net.thunderbird.legacy.core.mailstore.folder.FakeOutboxFolderManager;
 import org.junit.After;
 import org.junit.Before;
@@ -132,6 +133,7 @@ public class MessagingControllerTest extends K9RobolectricTest {
         appContext = RuntimeEnvironment.getApplication();
 
         preferences = Preferences.getPreferences();
+        final LocalDeleteOperationDecider noOpLocalDeleteOperationDecider = new StubLocalDeleteOperationDecider();
         featureFlagProvider = key -> Disabled.INSTANCE;
 
         final NotificationManager notificationManager = new FakeNotificationManager(
@@ -152,7 +154,7 @@ public class MessagingControllerTest extends K9RobolectricTest {
             messageStoreManager,
             saveMessageDataCreator,
             specialLocalFoldersCreator,
-            new LocalDeleteOperationDecider(),
+            noOpLocalDeleteOperationDecider,
             Collections.<ControllerExtension>emptyList(),
             featureFlagProvider,
             syncLogger,
@@ -419,7 +421,7 @@ public class MessagingControllerTest extends K9RobolectricTest {
     }
 
     private void configureBackendManager() {
-        when(backendManager.getBackend(account)).thenReturn(backend);
+        when(backendManager.getBackend(account.getUuid())).thenReturn(backend);
     }
 
     private void configureAccount() {

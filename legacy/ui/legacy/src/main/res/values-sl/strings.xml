@@ -269,7 +269,6 @@
     <string name="archive_folder_label">Mapa za arhivirano pošto</string>
     <string name="spam_folder_label">Mapa neželene pošte</string>
     <string name="account_setup_incoming_subscribed_folders_only_label">Pokaži samo naročene mape</string>
-    <string name="account_setup_auto_expand_folder">Samodejno razširi mape</string>
     <string name="account_setup_options_mail_check_frequency_never">Ročno preverjanje</string>
     <string name="account_setup_options_mail_check_frequency_15min">Vsakih 15 minut</string>
     <string name="account_setup_options_mail_check_frequency_30min">Vsakih 30 minut</string>
@@ -304,7 +303,7 @@
     <string name="account_settings_title_fmt">Nastavitve računa</string>
     <string name="account_settings_notify_label">Obvestila za prejem nove pošte</string>
     <string name="account_settings_notify_sync_label">Obvestila usklajevanja</string>
-    <string name="account_settings_email_label">Elektronski naslov</string>
+    <string name="account_settings_email_label">Vaš e-poštni naslov</string>
     <string name="account_settings_notify_summary">Pokaže obvestilo v vrstici stanja ob prihodu novega sporočila</string>
     <string name="account_settings_notify_sync_summary">Pokaži obvestilo med pregledom za novo pošto</string>
     <string name="account_settings_notify_self_label">Obveščaj ob pošiljanju sporočil</string>
@@ -359,8 +358,6 @@
     <string name="account_settings_crypto_encrypt_all_drafts_on">Vsi osnutki bodo shranjeni šifrirano</string>
     <string name="account_settings_crypto_encrypt_all_drafts_off">Šifriraj osnutke samo, če je omogočeno šifriranje</string>
     <string name="account_settings_mail_check_frequency_label">Pogostost izpraševanja map</string>
-    <string name="account_settings_color_label">Barvna shema računa</string>
-    <string name="account_settings_color_summary">Barva, ki je uporabljena na seznamu map in seznamu računov</string>
     <string name="account_settings_mail_display_count_label">Velikost mape sporočil</string>
     <string name="account_settings_autodownload_message_size_label">V celoti prejmi sporočila do velikosti</string>
     <string name="account_settings_autodownload_message_size_1">1 KiB</string>
@@ -401,7 +398,6 @@
     <string name="account_settings_incoming_summary">Nastavitev strežnika dohodne pošte</string>
     <string name="account_settings_outgoing_label">Odhodni strežnik</string>
     <string name="account_settings_outgoing_summary">Nastavitev strežnika odhodne pošte (SMTP)</string>
-    <string name="account_settings_description_label">Ime računa</string>
     <string name="account_settings_name_label">Ime in Priimek</string>
     <string name="notifications_title">Obvestila</string>
     <string name="account_settings_vibration">Tresenje</string>
@@ -447,7 +443,7 @@
     <string name="edit_identity_description_hint">(izbirno)</string>
     <string name="edit_identity_name_label">Ime</string>
     <string name="edit_identity_name_hint">(izbirno)</string>
-    <string name="edit_identity_email_label">Elektronski naslov</string>
+    <string name="edit_identity_email_label">E-poštni naslov</string>
     <string name="edit_identity_email_hint">(zahtevano)</string>
     <string name="edit_identity_reply_to_label">Naslov za odgovor</string>
     <string name="edit_identity_reply_to_hint">(izbirno)</string>
@@ -583,10 +579,10 @@
     <string name="dialog_confirm_mark_all_as_read_cancel_button">Ne</string>
     <string name="dialog_confirm_spam_title">Potrditev premikanja v mapo neželene pošte</string>
     <plurals name="dialog_confirm_spam_message">
-        <item quantity="one">Ali zares želiš premakniti to sporočilo v mapo neželene pošte\?</item>
-        <item quantity="two">Ali zares želiš premakniti <xliff:g id="message_count">%1$d</xliff:g> sporočili v mapo neželene pošte\?</item>
-        <item quantity="few">Ali zares želiš premakniti <xliff:g id="message_count">%1$d</xliff:g> sporočila v mapo neželene pošte\?</item>
-        <item quantity="other">Ali zares želiš premakniti <xliff:g id="message_count">%1$d</xliff:g> sporočil v mapo neželene pošte\?</item>
+        <item quantity="one">Ali zares želiš premakniti <xliff:g id="message_count">%1$d</xliff:g> sporočilo v mapo neželene pošte?</item>
+        <item quantity="two">Ali zares želiš premakniti <xliff:g id="message_count">%1$d</xliff:g> sporočili v mapo neželene pošte?</item>
+        <item quantity="few">Ali zares želiš premakniti <xliff:g id="message_count">%1$d</xliff:g> sporočila v mapo neželene pošte?</item>
+        <item quantity="other">Ali zares želiš premakniti <xliff:g id="message_count">%1$d</xliff:g> sporočil v mapo neželene pošte?</item>
     </plurals>
     <string name="dialog_confirm_spam_confirm_button">Da</string>
     <string name="dialog_confirm_spam_cancel_button">Ne</string>
@@ -742,7 +738,6 @@
     <string name="crypto_msg_encrypted_insecure">vendar se šifriranje ne obravnava kot varno</string>
     <string name="locked_attach_unlock">Odkleni</string>
     <string name="locked_attach_unencrypted">Ta del sporočila ni bil ustrezno šifriran, zato je lahko nezanesljiv.</string>
-    <string name="locked_attach_title">Nezaščitena priloga</string>
     <string name="message_progress_text">Poteka nalaganje …</string>
     <string name="messageview_decrypt_cancelled">Odšifriranje je bilo preklicano.</string>
     <string name="messageview_decrypt_retry">Znova poskusi</string>
@@ -816,25 +811,15 @@ Sporočilo lahko shranite in ga uporabite kot varno kopijo šifrirnega ključa. 
     <string name="push_info_disable_push_text">Če ne potrebuješ takojšnjih obvestil o novih sporočilih, moraš onemogočiti potiskanje in uporabiti navadno izpraševanje. Izpraševanje išče novo pošto v rednih časovnih presledkih in ne potrebuje obvestila.</string>
     <string name="push_info_disable_push_action">Onemogoči potisne storitve</string>
     <!--Name of the swipe action to select a message. Try to keep it short.-->
-    <string name="swipe_action_select">Izberi</string>
     <!--Name of the swipe action to deselect a message. Try to keep it short.-->
-    <string name="swipe_action_deselect">Odstrani izbor</string>
     <!--Name of the swipe action to mark a message as read. Try to keep it short.-->
-    <string name="swipe_action_mark_as_read">Označi kot prebrano</string>
     <!--Name of the swipe action to mark a message as unread. Try to keep it short.-->
-    <string name="swipe_action_mark_as_unread">Označi kot neprebrano</string>
     <!--Name of the swipe action to add the star to a message. Try to keep it short.-->
-    <string name="swipe_action_add_star">Označi z zvezdico</string>
     <!--Name of the swipe action to remove the star from a message. Try to keep it short.-->
-    <string name="swipe_action_remove_star">Odstrani zvezdico</string>
     <!--Name of the swipe action to archive a message. Try to keep it short.-->
-    <string name="swipe_action_archive">Arhiviraj</string>
     <!--Name of the swipe action to delete a message. Try to keep it short.-->
-    <string name="swipe_action_delete">Izbriši</string>
     <!--Name of the swipe action to move a message to the Spam folder. Try to keep it short.-->
-    <string name="swipe_action_spam">Neželeno sporočilo</string>
     <!--Name of the swipe action to move a message. The ellipsis (…) indicates that there is another step (selecting a folder) before the action is performed. Try to keep it short.-->
-    <string name="swipe_action_move">Premakni …</string>
     <!--Name of setting to configure whether to show a "compose" floating action button on top of the message list-->
     <string name="general_settings_show_compose_button_title">Prikaži lebdeči gumb za novo sporočilo</string>
     <!--Displayed in the toolbar when there was an error loading the message list, e.g. because the folder no longer exists.-->
@@ -917,6 +902,28 @@ Sporočilo lahko shranite in ga uporabite kot varno kopijo šifrirnega ključa. 
     <string name="archiving_not_available_for_this_account">Za ta račun arhiviranje ni na voljo.</string>
     <string name="open_camera">Odpri fotoaparat</string>
     <string name="attach_file">Priloži datoteko</string>
-    <string name="swipe_action_archive_folder_not_set">Nastavi mapo za arhiviranje</string>
-    <string name="swipe_action_change_swipe_gestures">Spremeni\ndejanja potega</string>
+    <string name="debug_invalidate_access_token">Preizkus: razveljavi žeton za dostop</string>
+    <string name="debug_invalidate_access_token_done">Žeton za dostop je bil razveljavljen. Naslednja zahteva bo pridobila novega.</string>
+    <string name="debug_invalidate_access_token_unavailable">Za ta račun žeton OAuth ni na voljo.</string>
+    <string name="debug_invalidate_access_token_local">Preizkus: razveljavi žeton za dostop (krajevno)</string>
+    <string name="debug_invalidate_access_token_local_done">Zahtevana je bila krajevna razveljavitev. Naslednja bo pridobila nov žeton.</string>
+    <string name="debug_invalidate_access_token_server">Preizkus: razveljavi žeton za dostop (strežnik)</string>
+    <string name="debug_invalidate_access_token_server_done">Shranjen žeton za dostop je poškodovan. Naslednja zahteva ne bo pridobila novega.</string>
+    <string name="debug_force_auth_failure">Preizkus: vsili spodletelo overitev zdaj</string>
+    <string name="debug_force_auth_failure_done">Stanje OAuth je počiščeno. Naslednja zahteva bo spodletela.</string>
+    <string name="debug_force_auth_failure_unavailable">Za ta račun nastavitev OAuth ni na voljo.</string>
+    <string name="debug_invalidate_access_token_cannot_modify">Shranjenega žeton za dostop ni bilo mogoče spremeniti. Poizkusite s krajevno razveljavitvijo.</string>
+    <string name="debug_invalidate_access_token_already_modified">Shranjen žeton za dostop je bil že spremenjen.</string>
+    <string name="message_view_menu_action_export_eml">Izvozi kot EML</string>
+    <string name="set_format_html_action">Uporabi izvirno obliko</string>
+    <string name="set_format_html_condensed_action">Prikaži oblikovano</string>
+    <string name="set_format_plain_action">Prikaži neoblikovano sporočilo</string>
+    <string name="set_format_plain_condensed_action">Prikaži neoblikovano</string>
+    <string name="global_settings_messageview_body_content_type_text_html">HTML (text/html)</string>
+    <string name="global_settings_messageview_body_content_type_text_plain">Golo besedilo (text/plain)</string>
+    <string name="navigation_drawer_preferences">Stranski meni</string>
+    <string name="expand_folders">Razširi mape</string>
+    <string name="print_message_action">Natisni</string>
+    <string name="account_setup_auto_select_folder">Samodejno izberi mapo</string>
+    <string name="debug_feature_flags">RAZHROŠČ.: zastavice značilnosti</string>
 </resources>

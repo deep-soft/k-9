@@ -27,4 +27,15 @@ dependencies {
 
 android {
     namespace = "com.fsck.k9.storage"
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+}
+
+codeCoverage {
+    branchCoverage = 45
+    lineCoverage = 67
 }

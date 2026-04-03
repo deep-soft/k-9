@@ -5,6 +5,12 @@ plugins {
 android {
     namespace = "app.k9mail.feature.account.oauth"
     resourcePrefix = "account_oauth_"
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -19,4 +25,9 @@ dependencies {
     implementation(libs.androidx.compose.material3)
 
     testImplementation(projects.core.ui.compose.testing)
+}
+
+codeCoverage {
+    branchCoverage = 7
+    lineCoverage = 5
 }

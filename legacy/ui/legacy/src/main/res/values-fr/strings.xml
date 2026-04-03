@@ -87,7 +87,7 @@
     <string name="read_receipt_disabled">Un accusé de lecture ne sera pas demandé</string>
     <string name="add_attachment_action">Ajouter un fichier joint</string>
     <string name="empty_trash_action">Vider la corbeille</string>
-    <string name="expunge_action">Supprimer</string>
+    <string name="expunge_action">Supprimer irrémédiablement</string>
     <string name="about_action">À propos</string>
     <string name="prefs_title">Paramètres</string>
     <!--Shown in place of the subject when a message has no subject. Showing this in parentheses is customary.-->
@@ -271,7 +271,6 @@
     <string name="archive_folder_label">Dossier des archives</string>
     <string name="spam_folder_label">Dossier des pourriels (indésirables)</string>
     <string name="account_setup_incoming_subscribed_folders_only_label">Afficher seulement les dossiers auxquels je suis abonné</string>
-    <string name="account_setup_auto_expand_folder">Ouvrir automatiquement le dossier</string>
     <string name="account_setup_options_mail_check_frequency_never">Jamais</string>
     <string name="account_setup_options_mail_check_frequency_15min">Toutes les 15 minutes</string>
     <string name="account_setup_options_mail_check_frequency_30min">Toutes les 30 minutes</string>
@@ -316,7 +315,7 @@
     <string name="account_settings_ignore_chat_messages_label">Ignorer les messages de conversation</string>
     <string name="account_settings_ignore_chat_messages_summary">Ne pas afficher de notification pour les messages qui appartiennent à une conversation de courriel</string>
     <string name="account_settings_mark_message_as_read_on_view_label">Marquer comme lu à l’ouverture</string>
-    <string name="account_settings_mark_message_as_read_on_view_summary">Marquer un courriel comme lu quand il est ouvert pour être visualisé</string>
+    <string name="account_settings_mark_message_as_read_on_view_summary">Marquer un courriel comme lu après ouverture pour consultation</string>
     <string name="account_settings_mark_message_as_read_on_delete_label">Marquer comme lu lors de la suppression</string>
     <string name="account_settings_mark_message_as_read_on_delete_summary">Marquer un courriel comme lu lors de la suppression</string>
     <string name="account_settings_notification_channels_label">Catégories de notification</string>
@@ -324,8 +323,8 @@
     <string name="account_settings_open_notification_settings_miscellaneous_summary">Configurer les notifications d’erreur et d’état</string>
     <string name="account_settings_show_pictures_label">Toujours afficher les images</string>
     <string name="account_settings_show_pictures_never">Non</string>
-    <string name="account_settings_show_pictures_only_from_contacts">Pour les contacts</string>
-    <string name="account_settings_show_pictures_always">Pour tout le monde</string>
+    <string name="account_settings_show_pictures_only_from_contacts">Des contacts</string>
+    <string name="account_settings_show_pictures_always">De n’importe qui</string>
     <string name="account_settings_composition">Envoi de courriels</string>
     <string name="account_settings_default_quoted_text_shown_label">Citer le courriel lors de la réponse</string>
     <string name="account_settings_default_quoted_text_shown_summary">Le courriel initial est compris dans votre réponse.</string>
@@ -346,7 +345,7 @@
     <string name="account_settings_upload_sent_messages_label">Téléverser les courriels envoyés</string>
     <string name="account_settings_upload_sent_messages_summary">Téléverser les courriels vers le dossier Envoyés après l’envoi</string>
     <string name="account_settings_general_title">Paramètres généraux</string>
-    <string name="account_settings_reading_mail">Lecture des courriels</string>
+    <string name="account_settings_reading_mail">Lecture du courriel</string>
     <string name="account_settings_sync">Relève des courriels</string>
     <string name="account_settings_folders">Dossiers</string>
     <string name="account_settings_quote_prefix_label">Préfixe de citation</string>
@@ -361,8 +360,6 @@
     <string name="account_settings_crypto_encrypt_all_drafts_on">Les brouillons seront enregistrés chiffrés</string>
     <string name="account_settings_crypto_encrypt_all_drafts_off">Ne chiffrer les brouillons que si le chiffrement est activé</string>
     <string name="account_settings_mail_check_frequency_label">Fréquence de synchronisation des dossiers</string>
-    <string name="account_settings_color_label">Couleur du compte</string>
-    <string name="account_settings_color_summary">La note de couleur du compte utilisée dans la liste des dossiers et des comptes</string>
     <string name="account_settings_mail_display_count_label">Taille du dossier local</string>
     <string name="account_settings_autodownload_message_size_label">Récupérer les courriels jusqu’à</string>
     <string name="account_settings_autodownload_message_size_1">1 Kio</string>
@@ -403,7 +400,6 @@
     <string name="account_settings_incoming_summary">Configurer le serveur de courriel entrant</string>
     <string name="account_settings_outgoing_label">Serveur sortant</string>
     <string name="account_settings_outgoing_summary">Configurer le serveur de courriel sortant (SMTP)</string>
-    <string name="account_settings_description_label">Nom du compte</string>
     <string name="account_settings_name_label">Votre nom</string>
     <string name="notifications_title">Notifications</string>
     <string name="account_settings_vibration">Vibration</string>
@@ -570,7 +566,7 @@
     <string name="dialog_confirm_delete_title">Confirmer la suppression</string>
     <string name="dialog_confirm_delete_message">Voulez-vous supprimer ce courriel ?</string>
     <plurals name="dialog_confirm_delete_messages">
-        <item quantity="one">Voulez-vous supprimer ce courriel ?</item>
+        <item quantity="one">Voulez-vous supprimer <xliff:g id="message_count">%1$d</xliff:g> courriel ?</item>
         <item quantity="many">Voulez-vous supprimer <xliff:g id="message_count">%1$d</xliff:g> de courriels ?</item>
         <item quantity="other">Voulez-vous supprimer <xliff:g id="message_count">%1$d</xliff:g> courriels ?</item>
     </plurals>
@@ -584,7 +580,7 @@
     <string name="dialog_confirm_mark_all_as_read_cancel_button">Non</string>
     <string name="dialog_confirm_spam_title">Confirmer le déplacement vers le dossier des pourriels (indésirables)</string>
     <plurals name="dialog_confirm_spam_message">
-        <item quantity="one">Voulez-vous déplacer ce courriel vers le dossier des pourriels ?</item>
+        <item quantity="one">Voulez-vous déplacer <xliff:g id="message_count">%1$d</xliff:g> courriel vers le dossier des pourriels ?</item>
         <item quantity="many">Voulez-vous déplacer <xliff:g id="message_count">%1$d</xliff:g> de courriels vers le dossier des pourriels ?</item>
         <item quantity="other">Voulez-vous déplacer <xliff:g id="message_count">%1$d</xliff:g> courriels vers le dossier des pourriels ?</item>
     </plurals>
@@ -636,7 +632,7 @@
         <item quantity="other">Extraction de %d résultats</item>
     </plurals>
     <plurals name="remote_search_downloading_limited">
-        <item quantity="one">Extraction de  %1$d résultat de %2$d</item>
+        <item quantity="one">Extraction de %1$d résultat de %2$d</item>
         <item quantity="many">Extraction de %1$d résultats de %2$d</item>
         <item quantity="other">Extraction de %1$d résultats de %2$d</item>
     </plurals>
@@ -740,7 +736,6 @@
     <string name="crypto_msg_encrypted_insecure">mais le niveau de sécurité du chiffrement n’est pas suffisant</string>
     <string name="locked_attach_unlock">Déverrrouiller</string>
     <string name="locked_attach_unencrypted">Cette partie n’a pas été chiffrée et pourrait ne pas être sûre.</string>
-    <string name="locked_attach_title">Fichier joint non protégé</string>
     <string name="message_progress_text">Chargement…</string>
     <string name="messageview_decrypt_cancelled">Le déchiffrement a été annulé.</string>
     <string name="messageview_decrypt_retry">Réessayer</string>
@@ -809,25 +804,15 @@
     <string name="push_info_disable_push_text">Si vous n’avez pas besoin de notifications instantanées pour les nouveaux courriels, vous devriez désactiver le poussé et utiliser la synchronisation. La synchronisation vérifie la présence de nouveaux courriels à intervalles réguliers et n’a pas besoin de notification.</string>
     <string name="push_info_disable_push_action">Désactiver le poussé</string>
     <!--Name of the swipe action to select a message. Try to keep it short.-->
-    <string name="swipe_action_select">Sélectionner</string>
     <!--Name of the swipe action to deselect a message. Try to keep it short.-->
-    <string name="swipe_action_deselect">Dessélectionner</string>
     <!--Name of the swipe action to mark a message as read. Try to keep it short.-->
-    <string name="swipe_action_mark_as_read">Marquer comme lu</string>
     <!--Name of the swipe action to mark a message as unread. Try to keep it short.-->
-    <string name="swipe_action_mark_as_unread">Marquer comme non lu</string>
     <!--Name of the swipe action to add the star to a message. Try to keep it short.-->
-    <string name="swipe_action_add_star">Ajouter une étoile</string>
     <!--Name of the swipe action to remove the star from a message. Try to keep it short.-->
-    <string name="swipe_action_remove_star">Supprimer l’étoile</string>
     <!--Name of the swipe action to archive a message. Try to keep it short.-->
-    <string name="swipe_action_archive">Archiver</string>
     <!--Name of the swipe action to delete a message. Try to keep it short.-->
-    <string name="swipe_action_delete">Supprimer</string>
     <!--Name of the swipe action to move a message to the Spam folder. Try to keep it short.-->
-    <string name="swipe_action_spam">Pourriel (indésirable)</string>
     <!--Name of the swipe action to move a message. The ellipsis (…) indicates that there is another step (selecting a folder) before the action is performed. Try to keep it short.-->
-    <string name="swipe_action_move">Déplacer…</string>
     <!--Name of setting to configure whether to show a "compose" floating action button on top of the message list-->
     <string name="general_settings_show_compose_button_title">Afficher un bouton de rédaction flottant</string>
     <!--Displayed in the toolbar when there was an error loading the message list, e.g. because the folder no longer exists.-->
@@ -904,8 +889,36 @@
     <string name="debug_enable_sync_debug_logging_title">Activer la journalisation de débogage de la synchronisation</string>
     <string name="debug_enable_sync_debug_logging_summary">Journaliser les données de diagnostic de synchronisation pendant 24 heures</string>
     <string name="debug_sync_export_logs_title">Exporter les journaux de synchronisation</string>
-    <string name="swipe_action_archive_folder_not_set">Configurer le dossier d’archivage</string>
-    <string name="swipe_action_change_swipe_gestures">Changer\nles gestes de balayage</string>
     <string name="archiving_not_available_for_this_account">L’archivage n’est pas proposé pour ce compte.</string>
     <string name="debug_open_secret_debug_screen">Ouvrir l’écran de débogage de Secret</string>
+    <string name="debug_invalidate_access_token">Essai : invalider le jeton d’accès</string>
+    <string name="debug_invalidate_access_token_done">Le jeton d’accès a été invalidé. La prochaine requête l’actualisera.</string>
+    <string name="debug_invalidate_access_token_unavailable">Aucun jeton OAuth n’est proposé pour ce compte.</string>
+    <string name="debug_invalidate_access_token_local">Essai : invalider le jeton d’accès (local)</string>
+    <string name="debug_invalidate_access_token_local_done">L’nvalidation locale a été demandée. La prochaine requête récupérera un nouveau jeton.</string>
+    <string name="debug_invalidate_access_token_server">Essai : invalider le jeton d’accès (serveur)</string>
+    <string name="debug_invalidate_access_token_server_done">Le jeton d’accès enregistré est corrompu. La prochaine requête échouera, puis l’actualisera.</string>
+    <string name="debug_force_auth_failure">Essai : forcer un échec d’authentification maintenant</string>
+    <string name="debug_force_auth_failure_done">L’état OAuth a été effacé. La prochaine requête échouera.</string>
+    <string name="debug_force_auth_failure_unavailable">Aucune configuration OAuth n’est proposée pour ce compte.</string>
+    <string name="debug_invalidate_access_token_cannot_modify">Impossible de modifier le jeton d’accès enregistré. Essayez l’invalidation locale.</string>
+    <string name="debug_invalidate_access_token_already_modified">Le jeton d’accès enregistré est déjà modifié.</string>
+    <string name="message_view_menu_action_export_eml">Exporter en tant que EML</string>
+    <string name="set_format_html_action">Utiliser la mise en forme originale</string>
+    <string name="set_format_plain_action">Afficher le courriel non mis en forme</string>
+    <string name="set_format_plain_condensed_action">Afficher non mis en forme</string>
+    <string name="set_format_html_condensed_action">Afficher mis en forme</string>
+    <string name="global_settings_messageview_body_content_type_title">Type de contenu du corps</string>
+    <string name="global_settings_messageview_body_content_type_text_html">HTML (texte/html)</string>
+    <string name="global_settings_messageview_body_content_type_text_plain">Texte brut (texte/brute)</string>
+    <string name="account_setup_auto_select_folder">Choix automatique du dossier</string>
+    <string name="navigation_drawer_preferences">Menu latéral</string>
+    <string name="expand_folders">Développer les dossiers</string>
+    <string name="debug_feature_flags">DÉBOGAGE : Drapeaux de fonction</string>
+    <string name="print_message_action">Imprimer</string>
+    <string name="global_settings_splitview_when_unfolded">Quand l’appareil est déplié</string>
+    <string name="general_settings_message_list_date_time_format_title">Format de la date et de l’heure</string>
+    <string name="general_settings_message_list_date_time_format_contextual">Contextuel</string>
+    <string name="general_settings_message_list_date_time_format_full">Complet</string>
+    <string name="sort_by_then_by">Ensuite, par…</string>
 </resources>

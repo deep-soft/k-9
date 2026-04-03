@@ -3,10 +3,9 @@ package app.k9mail.core.ui.compose.designsystem.organism.banner.inline
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import app.k9mail.core.ui.compose.designsystem.atom.icon.Icon
-import app.k9mail.core.ui.compose.designsystem.atom.icon.Icons
-import app.k9mail.core.ui.compose.designsystem.atom.icon.outlined.Warning
 import app.k9mail.core.ui.compose.designsystem.organism.banner.BannerNotificationCardDefaults
+import net.thunderbird.core.ui.compose.designsystem.atom.icon.Icon
+import net.thunderbird.core.ui.compose.designsystem.atom.icon.Icons
 
 /**
  * Displays a warning banner inline notification card.
@@ -26,6 +25,7 @@ fun WarningBannerInlineNotificationCard(
     actions: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,
     behaviour: BannerInlineNotificationCardBehaviour = BannerNotificationCardDefaults.bannerInlineBehaviour,
+    onSupportingTextOverflow: (hasVisualOverflow: Boolean) -> Unit = {},
 ) {
     BannerInlineNotificationCard(
         icon = { Icon(imageVector = Icons.Outlined.Warning) },
@@ -36,5 +36,6 @@ fun WarningBannerInlineNotificationCard(
         behaviour = behaviour,
         colors = BannerNotificationCardDefaults.warningCardColors(),
         border = BannerNotificationCardDefaults.warningCardBorder(),
+        onSupportingTextOverflow = onSupportingTextOverflow,
     )
 }

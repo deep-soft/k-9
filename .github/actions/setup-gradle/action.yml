@@ -1,16 +1,16 @@
 name: Set up Gradle build environment
 description: Prepares environment for building with JDK and Gradle
 inputs:
-  run-release:
-    description: 'Whether to run in release mode (true/false). In release mode, Gradle cache is not used.'
-    required: false
-    default: 'false'
   add-job-summary:
     description: 'Whether to add a job summary (always, never, on-failure).'
     required: false
     default: 'always'
   write-cache:
     description: 'Whether to write to the cache (true/false).'
+    required: false
+    default: 'false'
+  disable-cache:
+    description: 'Whether to disable the cache (true/false).'
     required: false
     default: 'false'
 runs:
@@ -21,14 +21,14 @@ runs:
       run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
     - name: Set up JDK
-      uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
+      uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
       with:
         distribution: 'temurin'
         java-version: '21'
 
     - name: Set up Gradle without cache
-      uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
+      uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
       with:
-        cache-disabled: ${{ inputs.run-release }}
+        cache-disabled: ${{ inputs.disable-cache }}
         add-job-summary: ${{ inputs.add-job-summary }}
-        cache-read-only: ${{ inputs.write-cache == 'false' || inputs.run-release == 'true' }}
+        cache-read-only: ${{ inputs.write-cache == 'false' }}

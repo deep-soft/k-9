@@ -2,11 +2,13 @@ package com.fsck.k9.view
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Resources
+import android.os.Build
 import android.util.AttributeSet
-import android.webkit.WebSettings.LayoutAlgorithm
-import android.webkit.WebSettings.RenderPriority
 import android.webkit.WebView
+import com.fsck.k9.core.BuildConfig
 import com.fsck.k9.mailstore.AttachmentResolver
+import kotlin.math.roundToInt
 import net.thunderbird.core.android.common.view.showInDarkMode
 import net.thunderbird.core.android.common.view.showInLightMode
 import net.thunderbird.core.logging.legacy.Log
@@ -31,11 +33,17 @@ class MessageWebView : WebView, KoinComponent {
 
     fun configure(config: WebViewConfig) {
         isVerticalScrollBarEnabled = true
-        setVerticalScrollbarOverlay(true)
         scrollBarStyle = SCROLLBARS_INSIDE_OVERLAY
         isLongClickable = true
 
         configureDarkLightMode(this, config)
+
+        // LAYER_TYPE_HARDWARE forces the WebView into a GPU texture.
+        // On API <= 26, BakedOpRenderer calls LOG_ALWAYS_FATAL on any GL error, aborting the process
+        // and fatally crashing the app. API 28+'s SkiaPipeline handles these errors gracefully.
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1 && isHardwareAccelerated) {
+            setLayerType(LAYER_TYPE_HARDWARE, null)
+        }
 
         with(settings) {
             setSupportZoom(true)
@@ -50,18 +58,19 @@ class MessageWebView : WebView, KoinComponent {
 
             javaScriptEnabled = false
             loadsImagesAutomatically = true
-            setRenderPriority(RenderPriority.HIGH)
-
-            // TODO: Review alternatives. NARROW_COLUMNS is deprecated on KITKAT
-            layoutAlgorithm = LayoutAlgorithm.NARROW_COLUMNS
 
             overScrollMode = OVER_SCROLL_NEVER
 
             textZoom = config.textZoom
+
+            // Values range from smaller than default (1.0) to double size: 0.85, 1.0, 1.15, 1.3, 1.5, 1.8, 2.0
+            val fontScale = Resources.getSystem().configuration.fontScale
+            settings.textZoom = (settings.textZoom * fontScale).roundToInt()
         }
 
         // Disable network images by default. This is overridden by preferences.
         blockNetworkData(true)
+        setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
     }
 
     private fun configureDarkLightMode(

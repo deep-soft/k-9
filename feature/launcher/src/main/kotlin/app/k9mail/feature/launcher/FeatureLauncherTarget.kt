@@ -5,10 +5,10 @@ import android.net.Uri
 import androidx.core.net.toUri
 import app.k9mail.feature.account.edit.navigation.AccountEditRoute
 import app.k9mail.feature.account.setup.navigation.AccountSetupRoute
-import app.k9mail.feature.funding.api.FundingRoute
 import app.k9mail.feature.onboarding.main.navigation.OnboardingRoute
 import net.thunderbird.feature.account.settings.api.AccountSettingsRoute
 import net.thunderbird.feature.debug.settings.navigation.SecretDebugSettingsRoute
+import net.thunderbird.feature.funding.api.FundingRoute
 
 sealed class FeatureLauncherTarget(
     val deepLinkUri: Uri,
@@ -30,6 +30,14 @@ sealed class FeatureLauncherTarget(
         deepLinkUri = AccountSettingsRoute.GeneralSettings(accountUuid).route().toUri(),
     )
 
+    data class AccountReadingMailSettings(val accountUuid: String) : FeatureLauncherTarget(
+        deepLinkUri = AccountSettingsRoute.ReadingMailSettings(accountUuid).route().toUri(),
+    )
+
+    data class AccountSearchSettings(val accountUuid: String) : FeatureLauncherTarget(
+        deepLinkUri = AccountSettingsRoute.SearchSettings(accountUuid).route().toUri(),
+    )
+
     data object Funding : FeatureLauncherTarget(
         deepLinkUri = FundingRoute.Contribution.route().toUri(),
     )
@@ -39,7 +47,11 @@ sealed class FeatureLauncherTarget(
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK,
     )
 
-    data object SecretDebugSettings : FeatureLauncherTarget(
-        deepLinkUri = SecretDebugSettingsRoute.Notification.route().toUri(),
+    data object SecretDebugSettingsNotification : FeatureLauncherTarget(
+        deepLinkUri = SecretDebugSettingsRoute(tab = SecretDebugSettingsRoute.Tab.Notification).route().toUri(),
+    )
+
+    data object SecretDebugSettingsFeatureFlag : FeatureLauncherTarget(
+        deepLinkUri = SecretDebugSettingsRoute(tab = SecretDebugSettingsRoute.Tab.FeatureFlag).route().toUri(),
     )
 }

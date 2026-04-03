@@ -22,9 +22,7 @@ import com.fsck.k9.preferences.SettingsImporter
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestScope
-import net.thunderbird.core.logging.legacy.Log
 import net.thunderbird.core.logging.testing.TestLogger
-import org.junit.Before
 import org.junit.runner.RunWith
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doThrow
@@ -50,12 +48,8 @@ class SettingsImportViewModelTest {
         importAppFetcher = importAppFetcher,
         backgroundDispatcher = Dispatchers.Unconfined,
         viewModelScope = testScope,
+        logger = TestLogger(),
     )
-
-    @Before
-    fun setUp() {
-        Log.logger = TestLogger()
-    }
 
     @Test
     fun `scanQrCodeButton and pickAppButton should be hidden when migration feature is disabled`() {
@@ -266,7 +260,7 @@ class SettingsImportViewModelTest {
         assertThat(uiModelLiveData.value!!.statusText).isEqualTo(StatusText.IMPORTING_PROGRESS)
 
         settingsImporter.stub {
-            onBlocking { importSettings(inputStream, false, listOf("uuid-1")) } doReturn ImportResults(
+            on { importSettings(inputStream, false, listOf("uuid-1")) } doReturn ImportResults(
                 globalSettings = false,
                 importedAccounts = listOf(
                     AccountDescriptionPair(

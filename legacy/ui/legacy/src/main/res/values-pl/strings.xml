@@ -23,7 +23,7 @@
     <!--Button text of the "snack bar" that is displayed when the app was updated.-->
     <string name="changelog_snackbar_button_text">Wyświetl</string>
     <!--General strings that include the app name-->
-    <string name="account_delete_dlg_instructions_fmt">Konto „<xliff:g id="account">%1$s</xliff:g>” zostanie usunięte z <xliff:g id="app_name">%2$s</xliff:g>.</string>
+    <string name="account_delete_dlg_instructions_fmt">Konto „<xliff:g id="account">%1$s</xliff:g>” zostanie usunięte z <xliff:g id="app_name">%2$s</xliff:g>.</string>
     <!--=== General strings ==================================================================-->
     <string name="authors">Autorzy</string>
     <string name="about_title">O aplikacji <xliff:g id="app_name">%s</xliff:g></string>
@@ -81,8 +81,8 @@
         <item quantity="other">Adresy skopiowane do schowka</item>
     </plurals>
     <string name="copy_subject_to_clipboard">Skopiowano do schowka</string>
-    <string name="message_view_theme_action_dark">Przełącz na ciemny styl</string>
-    <string name="message_view_theme_action_light">Przełącz na jasny styl</string>
+    <string name="message_view_theme_action_dark">Przełącz na motyw ciemny</string>
+    <string name="message_view_theme_action_light">Przełącz na motyw jasny</string>
     <string name="mark_as_unread_action">Oznacz jako nieprzeczytane</string>
     <string name="read_receipt">Powiadomienie o przeczytaniu</string>
     <string name="read_receipt_enabled">Żadaj powiadomienia o przeczytaniu</string>
@@ -122,16 +122,16 @@
     <string name="notification_certificate_error_public">Błąd certyfikatu</string>
     <string name="notification_certificate_error_title">Błąd certyfikatu dla <xliff:g id="account">%s</xliff:g></string>
     <string name="notification_certificate_error_text">Sprawdź ustawienia serwera</string>
-    <string name="notification_authentication_error_title">Uwierzytelnianie nie powiodło się</string>
+    <string name="notification_authentication_error_title">Uwierzytelnianie się nie powiodło</string>
     <string name="notification_authentication_error_text">Uwierzytelnianie dla <xliff:g id="account">%s</xliff:g> nie powiodło się. Zaktualizuj ustawienia serwera.</string>
     <!--Title of an error notification that is displayed when creating a notification for a new message has failed-->
     <string name="notification_notify_error_title">Błąd powiadomienia</string>
     <!--Body of an error notification that is displayed when creating a notification for a new message has failed-->
-    <string name="notification_notify_error_text">Wystąpił błąd podczas próby utworzenia powiadomienia systemowego dla nowej wiadomości. Powodem jest najprawdopodobniej brak dźwięku powiadomienia.\n\nStuknij, aby otworzyć ustawienia powiadomień.</string>
-    <string name="notification_bg_sync_ticker">Sprawdzam: <xliff:g id="account">%1$s</xliff:g>:<xliff:g id="folder">%2$s</xliff:g></string>
-    <string name="notification_bg_sync_title">Sprawdzam</string>
-    <string name="notification_bg_send_ticker">Wysyłam: <xliff:g id="account">%s</xliff:g></string>
-    <string name="notification_bg_send_title">Wysyłam</string>
+    <string name="notification_notify_error_text">Wystąpił błąd podczas próby utworzenia powiadomienia systemowego o nowej wiadomości. Powodem jest najprawdopodobniej brak dźwięku powiadomienia.\n\nStuknij, aby otworzyć ustawienia powiadomień.</string>
+    <string name="notification_bg_sync_ticker">Sprawdzanie poczty: <xliff:g id="account">%1$s</xliff:g>:<xliff:g id="folder">%2$s</xliff:g></string>
+    <string name="notification_bg_sync_title">Sprawdzanie poczty</string>
+    <string name="notification_bg_send_ticker">Wysyłanie poczty: <xliff:g id="account">%s</xliff:g></string>
+    <string name="notification_bg_send_title">Wysyłanie poczty</string>
     <string name="notification_bg_title_separator">:</string>
     <string name="notification_channel_push_title">Synchronizuj (push)</string>
     <string name="notification_channel_push_description">Wyświetlane podczas oczekiwania na nowe wiadomości</string>
@@ -274,7 +274,6 @@
     <string name="archive_folder_label">Folder archiwum</string>
     <string name="spam_folder_label">Folder spamu</string>
     <string name="account_setup_incoming_subscribed_folders_only_label">Pokaż tylko subskrybowane foldery</string>
-    <string name="account_setup_auto_expand_folder">Zawsze rozwijaj folder</string>
     <string name="account_setup_options_mail_check_frequency_never">Nigdy</string>
     <string name="account_setup_options_mail_check_frequency_15min">Co 15 minut</string>
     <string name="account_setup_options_mail_check_frequency_30min">Co 30 minut</string>
@@ -306,19 +305,19 @@
     <string name="account_setup_options_mail_display_count_all">Wszystkie wiadomości</string>
     <string name="move_copy_cannot_copy_unsynced_message">Nie można skopiować ani przenieść wiadomości, która nie jest zsynchronizowana z serwerem</string>
     <string name="account_settings_push_advanced_title">Zaawansowane</string>
-    <string name="account_settings_title_fmt">Ustawienia ogólne</string>
-    <string name="account_settings_notify_label">Nowe wiadomości</string>
-    <string name="account_settings_notify_sync_label">Synchronizacja konta</string>
+    <string name="account_settings_title_fmt">Ustawienia konta</string>
+    <string name="account_settings_notify_label">Powiadomienia o nowej poczcie</string>
+    <string name="account_settings_notify_sync_label">Powiadomienia o synchronizacji</string>
     <string name="account_settings_email_label">Twój adres e-mail</string>
     <string name="account_settings_notify_summary">Powiadomiaj na pasku stanu, gdy jest nowa wiadomość</string>
     <string name="account_settings_notify_sync_summary">Powiadomiaj na pasku stanu, gdy przeprowadzasz sprawdzanie tego konta</string>
-    <string name="account_settings_notify_self_label">Moje wiadomości</string>
+    <string name="account_settings_notify_self_label">Uwzględnij pocztę wychodzącą</string>
     <string name="account_settings_notify_self_summary">Pokaż powiadomienie dla wiadomości wysłanych przeze mnie</string>
     <string name="account_notify_contacts_mail_only_label">Tylko kontakty</string>
     <string name="account_notify_contacts_mail_only_summary">Pokaż powiadomienia tylko dla wiadomości od znanych kontaktów</string>
     <string name="account_settings_ignore_chat_messages_label">Ignoruj wiadomości z czatu</string>
     <string name="account_settings_ignore_chat_messages_summary">Nie pokazuj powiadomień dla wiadomości należących do czatu e-mail</string>
-    <string name="account_settings_mark_message_as_read_on_view_label">Oznacz jako przeczytane</string>
+    <string name="account_settings_mark_message_as_read_on_view_label">Oznacz jako przeczytane po otwarciu</string>
     <string name="account_settings_mark_message_as_read_on_view_summary">Oznacz wiadomość jako przeczytaną przy otwieraniu</string>
     <string name="account_settings_mark_message_as_read_on_delete_label">Oznacz jako przeczytane po usunięciu</string>
     <string name="account_settings_mark_message_as_read_on_delete_summary">Oznacz wiadomość jako przeczytaną przy usuwaniu</string>
@@ -329,7 +328,7 @@
     <string name="account_settings_show_pictures_never">Nie</string>
     <string name="account_settings_show_pictures_only_from_contacts">Od kontaktów</string>
     <string name="account_settings_show_pictures_always">Od każdego</string>
-    <string name="account_settings_composition">Tworzenie wiadomości</string>
+    <string name="account_settings_composition">Wysyłanie poczty</string>
     <string name="account_settings_default_quoted_text_shown_label">Cytuj oryginał</string>
     <string name="account_settings_default_quoted_text_shown_summary">Dołącz oryginalną wiadomość do swojej odpowiedzi.</string>
     <string name="account_settings_reply_after_quote_label">Odpowiedź pod cytatem</string>
@@ -347,7 +346,7 @@
     <string name="account_settings_quote_style_prefix">Prefiks (jak Gmail)</string>
     <string name="account_settings_quote_style_header">Nagłówek (jak Microsoft Outlook)</string>
     <string name="account_settings_upload_sent_messages_label">Dodaj wysłane wiadomości</string>
-    <string name="account_settings_upload_sent_messages_summary">Dodaj wiadomości do folderu Wysłane po wysłaniu</string>
+    <string name="account_settings_upload_sent_messages_summary">Dodaj wiadomości do folderu wysłanych po wysłaniu</string>
     <string name="account_settings_general_title">Ustawienia ogólne</string>
     <string name="account_settings_reading_mail">Czytanie poczty</string>
     <string name="account_settings_sync">Synchronizacja folderów</string>
@@ -364,8 +363,6 @@
     <string name="account_settings_crypto_encrypt_all_drafts_on">Wszystkie wersje robocze będą szyfrowane</string>
     <string name="account_settings_crypto_encrypt_all_drafts_off">Szyfruj wersje robocze tylko wtedy, gdy szyfrowanie jest włączone</string>
     <string name="account_settings_mail_check_frequency_label">Częstotliwość sprawdzania konta</string>
-    <string name="account_settings_color_label">Kolor konta</string>
-    <string name="account_settings_color_summary">Wybierz kolor, który będzie użyty przy wyświetlaniu folderów i listy kont</string>
     <string name="account_settings_mail_display_count_label">Liczba wiadomości</string>
     <string name="account_settings_autodownload_message_size_label">Rozmiar pobieranych wiadomości</string>
     <string name="account_settings_autodownload_message_size_1">1 KiB</string>
@@ -406,7 +403,6 @@
     <string name="account_settings_incoming_summary">Ustawienia serwera poczty przychodzącej</string>
     <string name="account_settings_outgoing_label">Serwer poczty wychodzącej</string>
     <string name="account_settings_outgoing_summary">Ustawienia serwera poczty wychodzącej (SMTP)</string>
-    <string name="account_settings_description_label">Nazwa konta</string>
     <string name="account_settings_name_label">Imię i nazwisko</string>
     <string name="notifications_title">Powiadomienia</string>
     <string name="account_settings_vibration">Wibracja</string>
@@ -485,15 +481,15 @@
     <string name="sort_by_flag">Gwiazdka</string>
     <string name="sort_by_unread">Przeczytane/nieprzeczytane</string>
     <string name="sort_by_attach">Załączniki</string>
-    <string name="account_delete_dlg_title">Usuwanie</string>
+    <string name="account_delete_dlg_title">Usuń konto</string>
     <string name="folder_list_filter_hint">Nazwa folderu zawiera</string>
     <string name="account_settings_signature__location_label">Pozycja podpisu</string>
     <string name="account_settings_signature__location_before_quoted_text">Przed cytowaną wiadomością</string>
     <string name="account_settings_signature__location_after_quoted_text">Pod cytowaną wiadomością</string>
-    <string name="setting_theme_global">Użyj stylu aplikacji</string>
-    <string name="setting_theme_dark">Ciemna</string>
-    <string name="setting_theme_light">Jasna</string>
-    <string name="setting_theme_follow_system">Użyj domyślnej systemowej</string>
+    <string name="setting_theme_global">Użyj motywu aplikacji</string>
+    <string name="setting_theme_dark">Ciemny</string>
+    <string name="setting_theme_light">Jasny</string>
+    <string name="setting_theme_follow_system">Użyj domyślnego systemu</string>
     <string name="display_preferences">Wyświetlanie</string>
     <string name="global_preferences">Globalne</string>
     <string name="debug_preferences">Debugowanie</string>
@@ -503,14 +499,14 @@
     <string name="accountlist_preferences">Lista kont</string>
     <string name="messagelist_preferences">Listy wiadomości</string>
     <string name="messageview_preferences">Wiadomości</string>
-    <string name="settings_theme_label">Kolorystyka</string>
-    <string name="settings_message_theme_label">Kolorystyka widoku wiadomości</string>
-    <string name="settings_compose_theme_label">Kolorystyka widoku tworzenia wiadomości</string>
+    <string name="settings_theme_label">Motyw</string>
+    <string name="settings_message_theme_label">Motyw widoku wiadomości</string>
+    <string name="settings_compose_theme_label">Motyw widoku tworzenia wiadomości</string>
     <string name="settings_language_label">Język</string>
     <string name="preference_search_no_results">Nie znaleziono ustawień</string>
-    <string name="settings_message_theme_selection_label">Stała kolorystyka widoku wiadomości</string>
-    <string name="settings_message_theme_selection_summary_off">Wybierz kolorystykę z poziomu widoku wiadomości</string>
-    <string name="settings_message_theme_selection_summary_on">Użyj kolorystyki wskazanej w konfiguracji</string>
+    <string name="settings_message_theme_selection_label">Stały motyw wiadomości</string>
+    <string name="settings_message_theme_selection_summary_off">Wybierz motyw z poziomu widoku wiadomości</string>
+    <string name="settings_message_theme_selection_summary_on">Użyj stałego motywu widoku wiadomości</string>
     <string name="setting_language_system">Domyślny systemowy</string>
     <string name="background_ops_label">Synchronizacja w tle</string>
     <string name="background_ops_never">Nigdy</string>
@@ -578,8 +574,8 @@
         <item quantity="many">Czy chcesz usunąć <xliff:g id="message_count">%1$d</xliff:g> wiadomości?</item>
         <item quantity="other">Czy chcesz usunąć <xliff:g id="message_count">%1$d</xliff:g> wiadomości?</item>
     </plurals>
-    <string name="dialog_confirm_delete_confirm_button">Usuń</string>
-    <string name="dialog_confirm_delete_cancel_button">Nie usuwaj</string>
+    <string name="dialog_confirm_delete_confirm_button">Tak</string>
+    <string name="dialog_confirm_delete_cancel_button">Nie</string>
     <string name="dialog_confirm_mark_all_as_read_title">Potwierdź oznaczenie wszystkich jako przeczytanych</string>
     <string name="dialog_confirm_mark_all_as_read_message">Czy chcesz oznaczyć wszystkie wiadomości jako przeczytane?</string>
     <string name="dialog_confirm_empty_trash_title">Potwierdź opróżnienie kosza</string>
@@ -747,7 +743,6 @@
     <string name="crypto_msg_encrypted_insecure">ale szyfrowanie nie jest uważane za bezpieczne</string>
     <string name="locked_attach_unlock">Odblokuj</string>
     <string name="locked_attach_unencrypted">Ta część nie została zaszyfrowana i może nie być zabezpieczona.</string>
-    <string name="locked_attach_title">Niechroniony załącznik</string>
     <string name="message_progress_text">Wczytywanie…</string>
     <string name="messageview_decrypt_cancelled">Anulowano odszyfrowywanie.</string>
     <string name="messageview_decrypt_retry">Spróbuj ponownie</string>
@@ -806,7 +801,7 @@
     <string name="switch_off">Wyłącz</string>
     <string name="generic_loading_error">Podczas wczytywania danych wystąpił błąd</string>
     <string name="push_notification_state_initializing">Inicjowanie…</string>
-    <string name="push_notification_state_listening">Oczekiwanie na nowe e-maile</string>
+    <string name="push_notification_state_listening">Oczekiwanie na nowe wiadomości</string>
     <string name="push_notification_state_wait_background_sync">Uśpione, dopóki synchronizacja w tle nie będzie dozwolona</string>
     <string name="push_notification_state_wait_network">Uśpione, dopóki sieć nie będzie dostępna</string>
     <string name="push_notification_info">Stuknij, aby dowiedzieć się więcej.</string>
@@ -818,25 +813,15 @@
     <string name="push_info_disable_push_text">Jeśli nie potrzebujesz natychmiastowych powiadomień o nowych wiadomościach, wyłącz funkcję push i użyj regularnego sprawdzania. Sprawdzanie w regularnych odstępach czasu sprawdza nową pocztę i nie wymaga powiadomienia.</string>
     <string name="push_info_disable_push_action">Wyłącz funkcję push</string>
     <!--Name of the swipe action to select a message. Try to keep it short.-->
-    <string name="swipe_action_select">Wybierz</string>
     <!--Name of the swipe action to deselect a message. Try to keep it short.-->
-    <string name="swipe_action_deselect">Cofnij wybór</string>
     <!--Name of the swipe action to mark a message as read. Try to keep it short.-->
-    <string name="swipe_action_mark_as_read">Oznacz jako przeczytane</string>
     <!--Name of the swipe action to mark a message as unread. Try to keep it short.-->
-    <string name="swipe_action_mark_as_unread">Oznacz jako nieprzeczytane</string>
     <!--Name of the swipe action to add the star to a message. Try to keep it short.-->
-    <string name="swipe_action_add_star">Dodaj gwiazdkę</string>
     <!--Name of the swipe action to remove the star from a message. Try to keep it short.-->
-    <string name="swipe_action_remove_star">Usuń gwiazdkę</string>
     <!--Name of the swipe action to archive a message. Try to keep it short.-->
-    <string name="swipe_action_archive">Archiwizuj</string>
     <!--Name of the swipe action to delete a message. Try to keep it short.-->
-    <string name="swipe_action_delete">Usuń</string>
     <!--Name of the swipe action to move a message to the Spam folder. Try to keep it short.-->
-    <string name="swipe_action_spam">Spam</string>
     <!--Name of the swipe action to move a message. The ellipsis (…) indicates that there is another step (selecting a folder) before the action is performed. Try to keep it short.-->
-    <string name="swipe_action_move">Przenieś…</string>
     <!--Name of setting to configure whether to show a "compose" floating action button on top of the message list-->
     <string name="general_settings_show_compose_button_title">Pokaż przycisk pływający „Nowa wiadomość”</string>
     <!--Displayed in the toolbar when there was an error loading the message list, e.g. because the folder no longer exists.-->
@@ -909,8 +894,37 @@
     <string name="debug_enable_sync_debug_logging_summary">Rejestruj informacje diagnostyczne synchronizacji przez 24 godziny</string>
     <string name="debug_sync_export_logs_title">Eksportuj dzienniki synchronizacji</string>
     <string name="debug_enable_sync_debug_logging_title">Włącz rejestrowanie debugowania synchronizacji</string>
-    <string name="swipe_action_change_swipe_gestures">Zmień \ngesty przesunięcia</string>
     <string name="archiving_not_available_for_this_account">Archiwizacja nie jest dostępna dla tego konta.</string>
-    <string name="swipe_action_archive_folder_not_set">Skonfiguruj folder archiwum</string>
     <string name="debug_open_secret_debug_screen">Otwórz tajny ekran debugowania</string>
+    <string name="debug_invalidate_access_token_done">Token dostępu został unieważniony. Następne żądanie zostanie odświeżone.</string>
+    <string name="debug_invalidate_access_token_unavailable">Brak dostępnego tokenu OAuth dla tego konta.</string>
+    <string name="debug_invalidate_access_token_local">Test: unieważnij token dostępu (lokalnie)</string>
+    <string name="debug_invalidate_access_token_local_done">Zażądano lokalnego unieważnienia. Następne żądanie pobierze nowy token.</string>
+    <string name="debug_invalidate_access_token_server">Test: unieważnij token dostępu (serwer)</string>
+    <string name="debug_invalidate_access_token">Test: unieważnij token dostępu</string>
+    <string name="debug_invalidate_access_token_server_done">Zapisany token dostępu jest uszkodzony. Następne żądanie zakończy się niepowodzeniem i nastąpi odświeżenie.</string>
+    <string name="debug_force_auth_failure">Test: wymuś teraz błąd autoryzacji</string>
+    <string name="debug_force_auth_failure_done">Stan OAuth został wyczyszczony. Następne żądanie zakończy się niepowodzeniem.</string>
+    <string name="debug_force_auth_failure_unavailable">Brak dostępnej konfiguracji OAuth dla tego konta.</string>
+    <string name="debug_invalidate_access_token_cannot_modify">Nie można zmodyfikować zapisanego tokena dostępu. Spróbuj unieważnić lokalnie.</string>
+    <string name="debug_invalidate_access_token_already_modified">Zapisany token dostępu został już zmodyfikowany.</string>
+    <string name="message_view_menu_action_export_eml">Eksportuj jako EML</string>
+    <string name="expand_folders">Rozwiń foldery</string>
+    <string name="account_setup_auto_select_folder">Automatyczny wybór folderu</string>
+    <string name="navigation_drawer_preferences">Menu boczne</string>
+    <string name="set_format_html_action">Użyj oryginalnego formatowania</string>
+    <string name="set_format_html_condensed_action">Pokaż z formatowaniem</string>
+    <string name="set_format_plain_action">Pokaż wiadomość bez formatowania</string>
+    <string name="set_format_plain_condensed_action">Pokaż bez formatowania</string>
+    <string name="global_settings_messageview_body_content_type_title">Typ treści tekstu</string>
+    <string name="global_settings_messageview_body_content_type_text_html">HTML (tekst/HTML)</string>
+    <string name="global_settings_messageview_body_content_type_text_plain">Zwykły tekst (tekst/zwykły)</string>
+    <string name="debug_feature_flags">DEBUGOWANIE: flagi funkcji</string>
+    <string name="print_message_action">Drukuj</string>
+    <string name="global_settings_splitview_when_unfolded">Po rozłożeniu urządzenia</string>
+    <string name="general_settings_message_list_date_time_format_title">Format daty i godziny</string>
+    <string name="general_settings_message_list_date_time_format_contextual">Kontekstowy</string>
+    <string name="general_settings_message_list_date_time_format_full">Pełny</string>
+    <string name="sort_by_then_by">Następnie wg…</string>
+    <string name="general_settings_message_list_date_time_format_iso">ISO</string>
 </resources>

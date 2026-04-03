@@ -2,6 +2,7 @@ package com.fsck.k9
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.fsck.k9.notification.FakePlatformConfigProvider
 import com.fsck.k9.preferences.UnifiedInboxConfigurator
 import net.thunderbird.core.android.account.LegacyAccountDtoManager
 import net.thunderbird.core.preference.GeneralSettings
@@ -32,6 +33,7 @@ class UnifiedInboxConfiguratorTest {
         generalSettingsManager =
             FakeGeneralSettingsManager(
                 GeneralSettings(
+                    platformConfigProvider = FakePlatformConfigProvider(),
                     display = DisplaySettings(
                         inboxSettings = DisplayInboxSettings(
                             isShowUnifiedInbox = false,
@@ -105,8 +107,10 @@ class UnifiedInboxConfiguratorTest {
 }
 
 private class FakeGeneralSettingsManager(private var generalSettings: GeneralSettings) : GeneralSettingsManager {
+    @Deprecated("Use PreferenceManager<GeneralSettings>.getConfig() instead")
     override fun getSettings() = error("Not implemented")
 
+    @Deprecated("Use PreferenceManager<GeneralSettings>.getConfigFlow() instead")
     override fun getSettingsFlow() = error("Not implemented")
 
     override fun save(config: GeneralSettings) {

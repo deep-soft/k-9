@@ -10,6 +10,7 @@ import kotlin.time.ExperimentalTime
 import net.thunderbird.core.android.account.LegacyAccountDto
 import net.thunderbird.core.android.testing.MockHelper.mockBuilder
 import net.thunderbird.core.android.testing.RobolectricTest
+import net.thunderbird.core.common.appConfig.PlatformConfigProvider
 import net.thunderbird.core.preference.GeneralSettings
 import net.thunderbird.core.preference.display.DisplaySettings
 import net.thunderbird.core.preference.network.NetworkSettings
@@ -72,7 +73,7 @@ class CertificateErrorNotificationControllerTest : RobolectricTest() {
 
         controller.showCertificateErrorNotification(account, INCOMING)
 
-        verify(notificationManager).notify(notificationId, notification)
+        verify(notificationHelper).notify(notificationId, notification)
         assertCertificateErrorNotificationContents()
     }
 
@@ -91,7 +92,7 @@ class CertificateErrorNotificationControllerTest : RobolectricTest() {
 
         controller.showCertificateErrorNotification(account, OUTGOING)
 
-        verify(notificationManager).notify(notificationId, notification)
+        verify(notificationHelper).notify(notificationId, notification)
         assertCertificateErrorNotificationContents()
     }
 
@@ -152,6 +153,7 @@ class CertificateErrorNotificationControllerTest : RobolectricTest() {
                 display = DisplaySettings(),
                 notification = NotificationPreference(),
                 privacy = PrivacySettings(),
+                platformConfigProvider = FakePlatformConfigProvider(),
             )
         },
     ) {
@@ -159,4 +161,9 @@ class CertificateErrorNotificationControllerTest : RobolectricTest() {
             return contentIntent
         }
     }
+}
+
+class FakePlatformConfigProvider : PlatformConfigProvider {
+    override val isDebug: Boolean
+        get() = true
 }

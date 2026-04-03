@@ -5,17 +5,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import app.k9mail.core.ui.compose.designsystem.molecule.ErrorView
 import app.k9mail.core.ui.compose.designsystem.molecule.LoadingView
-import app.k9mail.core.ui.compose.theme2.MainTheme
 import app.k9mail.feature.account.oauth.R
 import app.k9mail.feature.account.oauth.ui.AccountOAuthContract.Event
 import app.k9mail.feature.account.oauth.ui.AccountOAuthContract.State
 import app.k9mail.feature.account.oauth.ui.view.GoogleSignInSupportText
 import app.k9mail.feature.account.oauth.ui.view.SignInView
 import net.thunderbird.core.ui.compose.common.modifier.testTagAsResourceId
+import net.thunderbird.core.ui.compose.theme2.MainTheme
 
 @Composable
 internal fun AccountOAuthContent(
@@ -24,7 +24,7 @@ internal fun AccountOAuthContent(
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
 ) {
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
 
     Column(
         modifier = Modifier

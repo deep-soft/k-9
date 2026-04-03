@@ -62,7 +62,7 @@ import com.fsck.k9.mail.AuthType;
 import com.fsck.k9.mail.AuthenticationFailedException;
 import com.fsck.k9.mail.CertificateValidationException;
 import com.fsck.k9.mail.FetchProfile;
-import com.fsck.k9.mail.Flag;
+import net.thunderbird.core.common.mail.Flag;
 import com.fsck.k9.mail.Message;
 import com.fsck.k9.mail.MessageDownloadState;
 import com.fsck.k9.mail.Part;
@@ -88,6 +88,7 @@ import net.thunderbird.core.featureflag.FeatureFlagProvider;
 import net.thunderbird.core.featureflag.compat.FeatureFlagProviderCompat;
 import net.thunderbird.core.logging.Logger;
 import net.thunderbird.core.logging.legacy.Log;
+import net.thunderbird.feature.mail.message.list.LocalDeleteOperationDecider;
 import net.thunderbird.feature.mail.folder.api.OutboxFolderManager;
 import net.thunderbird.feature.mail.folder.api.OutboxFolderManagerKt;
 import net.thunderbird.feature.notification.api.NotificationManager;
@@ -101,8 +102,9 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.fsck.k9.K9.MAX_SEND_ATTEMPTS;
 import static com.fsck.k9.controller.Preconditions.requireNotNull;
-import static com.fsck.k9.helper.ExceptionHelper.getRootCauseMessage;
-import static com.fsck.k9.mail.Flag.X_REMOTE_COPY_STARTED;
+import net.thunderbird.core.common.exception.ThrowableExtensions;
+
+import static net.thunderbird.core.common.mail.Flag.X_REMOTE_COPY_STARTED;
 import static net.thunderbird.core.android.account.AccountDefaultsProvider.DEFAULT_VISIBLE_LIMIT;
 
 
@@ -293,7 +295,7 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
     }
 
     Backend getBackend(LegacyAccountDto account) {
-        return backendManager.getBackend(account);
+        return backendManager.getBackend(account.getUuid());
     }
 
     LocalStore getLocalStoreOrThrow(LegacyAccountDto account) {
@@ -680,7 +682,7 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
         backend.sync(folderServerId, syncConfig, syncListener);
 
         if (commandException != null && !syncListener.syncFailed) {
-            String rootMessage = getRootCauseMessage(commandException);
+            String rootMessage = ThrowableExtensions.getRootCauseMessage(commandException);
             syncDebugLogger.error("MessagingException",null, () -> rootMessage);
             Log.e("Root cause failure in %s:%s was '%s'", account, folderServerId, rootMessage);
             updateFolderStatus(account, folderId, rootMessage);
@@ -1721,7 +1723,7 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
 
     private void notifySynchronizeMailboxFailed(LegacyAccountDto account, LocalFolder localFolder, Exception exception) {
         long folderId = localFolder.getDatabaseId();
-        String errorMessage = getRootCauseMessage(exception);
+        String errorMessage = ThrowableExtensions.getRootCauseMessage(exception);
         for (MessagingListener listener : getListeners()) {
             listener.synchronizeMailboxFailed(account, folderId, errorMessage);
         }
@@ -2605,32 +2607,45 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
             handleAuthenticationFailure(account, true);
             return;
         } else {
-            clearAuthenticationErrorNotification(account, true);
+            clearAuthenticationErrorNotification(account, true, true);
         }
 
         // checking outgoing server configuration
         if (isAuthenticationProblem(account, false)) {
             handleAuthenticationFailure(account, false);
         } else {
-            clearAuthenticationErrorNotification(account, false);
+            clearAuthenticationErrorNotification(account, false, true);
         }
     }
 
     private boolean isAuthenticationProblem(LegacyAccountDto account, boolean incoming) {
-        ServerSettings serverSettings = incoming ?
-                account.getIncomingServerSettings() : account.getOutgoingServerSettings();
+        final ServerSettings serverSettings = getServerSettings(account, incoming);
 
         return serverSettings.isMissingCredentials() ||
                 serverSettings.authenticationType == AuthType.XOAUTH2 && account.getOAuthState() == null;
     }
 
-    private void clearAuthenticationErrorNotification(LegacyAccountDto account, boolean incoming) {
+    private ServerSettings getServerSettings(LegacyAccountDto account, boolean incoming) {
+        return incoming ? account.getIncomingServerSettings() : account.getOutgoingServerSettings();
+    }
+
+    private void clearAuthenticationErrorNotification(
+        LegacyAccountDto account, boolean incoming, boolean clearOnlyForOAuthAccounts
+    ) {
         if (FeatureFlagProviderCompat.provide(featureFlagProvider, "display_in_app_notifications").isEnabled()) {
-            final AuthenticationErrorNotification notification = createAuthenticationErrorNotification(
-                account, incoming);
-            notificationDismisser.dismiss(notification,outcome -> {
-                Log.v("notificationDismisser outcome = " + outcome);
-            });
+            boolean shouldClear = true;
+            final ServerSettings serverSettings = getServerSettings(account, incoming);
+            if (clearOnlyForOAuthAccounts && serverSettings.authenticationType != AuthType.XOAUTH2) {
+                shouldClear = false;
+            }
+
+            if (shouldClear) {
+                final AuthenticationErrorNotification notification = createAuthenticationErrorNotification(
+                    account, incoming);
+                notificationDismisser.dismiss(notification, outcome -> {
+                    Log.v("notificationDismisser outcome = " + outcome);
+                });
+            }
         }
     }
 
@@ -2722,7 +2737,7 @@ public class MessagingController implements MessagingControllerRegistry, Messagi
 
         @Override
         public void syncAuthenticationSuccess() {
-            clearAuthenticationErrorNotification(account, true);
+            clearAuthenticationErrorNotification(account, true, false);
             notificationController.clearAuthenticationErrorNotification(account, true);
         }
 

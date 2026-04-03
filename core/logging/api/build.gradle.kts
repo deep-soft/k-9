@@ -2,11 +2,11 @@ plugins {
     id(ThunderbirdPlugins.Library.kmp)
 }
 
-android {
-    namespace = "net.thunderbird.core.logging"
-}
-
 kotlin {
+    android {
+        namespace = "net.thunderbird.core.logging"
+        withHostTest {}
+    }
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.datetime)
@@ -16,4 +16,8 @@ kotlin {
             implementation(projects.core.testing)
         }
     }
+}
+
+codeCoverage {
+    lineCoverage = 68
 }

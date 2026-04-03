@@ -8,6 +8,7 @@ import kotlinx.collections.immutable.toPersistentList
 import net.thunderbird.account.fake.FakeAccountData.ACCOUNT_ID_RAW
 import net.thunderbird.core.android.account.Identity
 import net.thunderbird.core.android.account.LegacyAccountDto
+import net.thunderbird.feature.account.avatar.Avatar
 import net.thunderbird.feature.mail.folder.api.Folder
 import net.thunderbird.feature.mail.folder.api.FolderType
 import net.thunderbird.feature.navigation.drawer.dropdown.domain.entity.DisplayFolder
@@ -42,6 +43,7 @@ internal object FakeData {
     val UNIFIED_DISPLAY_ACCOUNT = UnifiedDisplayAccount(
         unreadMessageCount = 224,
         starredMessageCount = 42,
+        hasError = false,
     )
 
     val MAIL_DISPLAY_ACCOUNT = MailDisplayAccount(
@@ -49,8 +51,10 @@ internal object FakeData {
         name = DISPLAY_NAME,
         email = EMAIL_ADDRESS,
         color = Color.Red.toArgb(),
+        avatar = Avatar.Monogram("AC"),
         unreadMessageCount = 0,
         starredMessageCount = 0,
+        hasError = false,
     )
 
     val FOLDER = Folder(
@@ -154,24 +158,30 @@ internal object FakeData {
                 name = "job@example.com",
                 email = "job@example.com",
                 color = Color.Green.toArgb(),
+                avatar = Avatar.Monogram("JD"),
                 unreadMessageCount = 2,
                 starredMessageCount = 0,
+                hasError = false,
             ),
             MailDisplayAccount(
                 id = "account2",
                 name = "Jodie Doe",
                 email = "jodie@example.com",
                 color = Color.Red.toArgb(),
+                avatar = Avatar.Monogram("JO"),
                 unreadMessageCount = 12,
                 starredMessageCount = 0,
+                hasError = false,
             ),
             MailDisplayAccount(
                 id = "account3",
                 name = "John Doe",
                 email = "john@example.com",
                 color = Color.Cyan.toArgb(),
+                avatar = Avatar.Monogram("J"),
                 unreadMessageCount = 0,
                 starredMessageCount = 0,
+                hasError = false,
             ),
         )
     }

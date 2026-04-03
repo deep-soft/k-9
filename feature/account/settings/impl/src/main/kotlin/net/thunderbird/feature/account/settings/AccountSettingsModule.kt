@@ -1,26 +1,35 @@
 package net.thunderbird.feature.account.settings
 
+import kotlinx.collections.immutable.ImmutableList
+import net.thunderbird.core.common.resources.StringsResourceManager
 import net.thunderbird.feature.account.settings.api.AccountSettingsNavigation
 import net.thunderbird.feature.account.settings.impl.DefaultAccountSettingsNavigation
-import net.thunderbird.feature.account.settings.impl.domain.AccountSettingsDomainContract.ResourceProvider
 import net.thunderbird.feature.account.settings.impl.domain.AccountSettingsDomainContract.UseCase
 import net.thunderbird.feature.account.settings.impl.domain.usecase.GetAccountName
-import net.thunderbird.feature.account.settings.impl.domain.usecase.GetGeneralPreferences
-import net.thunderbird.feature.account.settings.impl.domain.usecase.UpdateGeneralPreferences
-import net.thunderbird.feature.account.settings.impl.ui.general.GeneralResourceProvider
+import net.thunderbird.feature.account.settings.impl.domain.usecase.GetAccountProfile
+import net.thunderbird.feature.account.settings.impl.domain.usecase.GetLegacyAccount
+import net.thunderbird.feature.account.settings.impl.domain.usecase.UpdateAvatarImage
+import net.thunderbird.feature.account.settings.impl.domain.usecase.UpdateGeneralSettings
+import net.thunderbird.feature.account.settings.impl.domain.usecase.UpdateReadEmailSettings
+import net.thunderbird.feature.account.settings.impl.domain.usecase.UpdateSearchSettings
+import net.thunderbird.feature.account.settings.impl.domain.usecase.ValidateAccountName
+import net.thunderbird.feature.account.settings.impl.domain.usecase.ValidateAvatarMonogram
+import net.thunderbird.feature.account.settings.impl.ui.general.GeneralSettingsBuilder
+import net.thunderbird.feature.account.settings.impl.ui.general.GeneralSettingsContract
+import net.thunderbird.feature.account.settings.impl.ui.general.GeneralSettingsValidator
 import net.thunderbird.feature.account.settings.impl.ui.general.GeneralSettingsViewModel
-import org.koin.android.ext.koin.androidContext
+import net.thunderbird.feature.account.settings.impl.ui.readingMail.ReadingMailSettingsBuilder
+import net.thunderbird.feature.account.settings.impl.ui.readingMail.ReadingMailSettingsContract
+import net.thunderbird.feature.account.settings.impl.ui.readingMail.ReadingMailSettingsViewModel
+import net.thunderbird.feature.account.settings.impl.ui.search.SearchSettingBuilder
+import net.thunderbird.feature.account.settings.impl.ui.search.SearchSettingsContract
+import net.thunderbird.feature.account.settings.impl.ui.search.SearchSettingsViewModel
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val featureAccountSettingsModule = module {
     single<AccountSettingsNavigation> { DefaultAccountSettingsNavigation() }
-
-    factory<ResourceProvider.GeneralResourceProvider> {
-        GeneralResourceProvider(
-            context = androidContext(),
-        )
-    }
 
     factory<UseCase.GetAccountName> {
         GetAccountName(
@@ -28,16 +37,58 @@ val featureAccountSettingsModule = module {
         )
     }
 
-    factory<UseCase.GetGeneralPreferences> {
-        GetGeneralPreferences(
+    factory<UseCase.UpdateReadMailSettings> {
+        UpdateReadEmailSettings(
             repository = get(),
-            resourceProvider = get(),
         )
     }
 
-    factory<UseCase.UpdateGeneralPreferences> {
-        UpdateGeneralPreferences(
+    factory<UseCase.UpdateSearchSettings> {
+        UpdateSearchSettings(
             repository = get(),
+        )
+    }
+
+    factory<UseCase.GetAccountProfile> {
+        GetAccountProfile(
+            repository = get(),
+        )
+    }
+
+    factory<UseCase.GetLegacyAccount> {
+        GetLegacyAccount(
+            repository = get(),
+        )
+    }
+
+    factory<UseCase.UpdateAvatarImage> {
+        UpdateAvatarImage(
+            repository = get(),
+            mimeTypeResolver = get(),
+        )
+    }
+
+    factory<UseCase.UpdateGeneralSettings> {
+        UpdateGeneralSettings(
+            repository = get(),
+        )
+    }
+
+    factory<GeneralSettingsContract.Validator> {
+        GeneralSettingsValidator(
+            accountNameValidator = ValidateAccountName(),
+            avatarMonogramValidator = ValidateAvatarMonogram(),
+        )
+    }
+
+    factory<GeneralSettingsContract.SettingsBuilder> {
+        GeneralSettingsBuilder(
+            resources = get<StringsResourceManager>(),
+            accountColors = get<ImmutableList<Int>>(named("AccountColors")),
+            monogramCreator = get(),
+            validator = get(),
+            featureFlagProvider = get(),
+            iconCatalog = get(),
         )
     }
 
@@ -45,8 +96,44 @@ val featureAccountSettingsModule = module {
         GeneralSettingsViewModel(
             accountId = params.get(),
             getAccountName = get(),
-            getGeneralPreferences = get(),
-            updateGeneralPreferences = get(),
+            getAccountProfile = get(),
+            updateGeneralSettings = get(),
+            updateAvatarImage = get(),
+            logger = get(),
+        )
+    }
+
+    factory<ReadingMailSettingsContract.SettingsBuilder> {
+        ReadingMailSettingsBuilder(
+            resources = get<StringsResourceManager>(),
+        )
+    }
+
+    factory<SearchSettingsContract.SettingsBuilder> {
+        SearchSettingBuilder(
+            resources = get<StringsResourceManager>(),
+        )
+    }
+
+    viewModel { params ->
+        ReadingMailSettingsViewModel(
+            accountId = params.get(),
+            getAccountName = get(),
+            getLegacyAccount = get(),
+            updateReadMailSettings = get(),
+            resources = get(),
+            logger = get(),
+        )
+    }
+
+    viewModel { params ->
+        SearchSettingsViewModel(
+            accountId = params.get(),
+            getAccountName = get(),
+            getLegacyAccount = get(),
+            updateSearchSettings = get(),
+            logger = get(),
+            resources = get(),
         )
     }
 }

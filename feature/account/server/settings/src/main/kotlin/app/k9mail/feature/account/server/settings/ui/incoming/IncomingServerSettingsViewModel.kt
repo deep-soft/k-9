@@ -1,6 +1,5 @@
 package app.k9mail.feature.account.server.settings.ui.incoming
 
-import app.k9mail.core.ui.compose.common.mvi.BaseViewModel
 import app.k9mail.feature.account.common.domain.AccountDomainContract
 import app.k9mail.feature.account.common.domain.entity.ConnectionSecurity
 import app.k9mail.feature.account.common.domain.entity.IncomingProtocolType
@@ -11,7 +10,9 @@ import app.k9mail.feature.account.server.settings.ui.incoming.IncomingServerSett
 import app.k9mail.feature.account.server.settings.ui.incoming.IncomingServerSettingsContract.State
 import app.k9mail.feature.account.server.settings.ui.incoming.IncomingServerSettingsContract.Validator
 import app.k9mail.feature.account.server.settings.ui.incoming.IncomingServerSettingsContract.ViewModel
-import net.thunderbird.core.common.domain.usecase.validation.ValidationResult
+import net.thunderbird.core.outcome.Outcome
+import net.thunderbird.core.ui.contract.mvi.BaseViewModel
+import net.thunderbird.core.validation.ValidationSuccess
 
 open class IncomingServerSettingsViewModel(
     initialState: State = State(),
@@ -98,20 +99,20 @@ open class IncomingServerSettingsViewModel(
         val passwordResult = if (authenticationType.isPasswordRequired) {
             validator.validatePassword(password.value)
         } else {
-            ValidationResult.Success
+            ValidationSuccess
         }
         val imapPrefixResult = validator.validateImapPrefix(imapPrefix.value)
 
         val hasError = listOf(serverResult, portResult, usernameResult, passwordResult, imapPrefixResult)
-            .any { it is ValidationResult.Failure }
+            .any { it is Outcome.Failure }
 
         updateState {
             it.copy(
-                server = it.server.updateFromValidationResult(serverResult),
-                port = it.port.updateFromValidationResult(portResult),
-                username = it.username.updateFromValidationResult(usernameResult),
-                password = it.password.updateFromValidationResult(passwordResult),
-                imapPrefix = it.imapPrefix.updateFromValidationResult(imapPrefixResult),
+                server = it.server.updateFromValidationOutcome(serverResult),
+                port = it.port.updateFromValidationOutcome(portResult),
+                username = it.username.updateFromValidationOutcome(usernameResult),
+                password = it.password.updateFromValidationOutcome(passwordResult),
+                imapPrefix = it.imapPrefix.updateFromValidationOutcome(imapPrefixResult),
             )
         }
 

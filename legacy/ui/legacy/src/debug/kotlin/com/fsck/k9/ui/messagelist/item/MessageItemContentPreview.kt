@@ -1,10 +1,13 @@
 package com.fsck.k9.ui.messagelist.item
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import app.k9mail.core.android.common.contact.Contact
+import app.k9mail.core.android.common.contact.ContactRepository
 import app.k9mail.core.ui.compose.designsystem.PreviewWithThemesLightDark
 import com.fsck.k9.FontSizes
-import com.fsck.k9.UiDensity
 import com.fsck.k9.mail.AuthType
 import com.fsck.k9.mail.ConnectionSecurity
 import com.fsck.k9.mail.ServerSettings
@@ -12,7 +15,11 @@ import com.fsck.k9.ui.messagelist.MessageListAppearance
 import com.fsck.k9.ui.messagelist.MessageListItem
 import net.thunderbird.core.android.account.Identity
 import net.thunderbird.core.android.account.LegacyAccount
+import net.thunderbird.core.common.mail.EmailAddress
+import net.thunderbird.core.preference.display.visualSettings.message.list.MessageListDateTimeFormat
+import net.thunderbird.core.preference.display.visualSettings.message.list.UiDensity
 import net.thunderbird.feature.account.AccountIdFactory
+import net.thunderbird.feature.account.avatar.AvatarMonogramCreator
 import net.thunderbird.feature.account.storage.profile.AvatarDto
 import net.thunderbird.feature.account.storage.profile.AvatarTypeDto
 import net.thunderbird.feature.account.storage.profile.ProfileDto
@@ -25,6 +32,8 @@ internal fun MessageItemContentPreview() {
             item = fakeMessageListItem,
             isActive = true,
             isSelected = false,
+            contactRepository = fakeContactRepository,
+            avatarMonogramCreator = fakeAvatarMonogramCreator,
             onClick = {},
             onLongClick = {},
             onAvatarClick = {},
@@ -72,6 +81,7 @@ private val fakeMessageListItem = MessageListItem(
     internalDate = 1234456789L,
     displayName = "Sender Name",
     displayAddress = null,
+    displayMessageDateTime = "Today",
     previewText = "This is the preview text.",
     isMessageEncrypted = false,
     isRead = false,
@@ -84,6 +94,7 @@ private val fakeMessageListItem = MessageListItem(
     messageUid = "654321",
     databaseId = 1L,
     threadRoot = 1L,
+    contactColor = Color.Magenta.toArgb(),
 )
 
 private val fakeMessageListAppearance = MessageListAppearance(
@@ -96,4 +107,25 @@ private val fakeMessageListAppearance = MessageListAppearance(
     backGroundAsReadIndicator = false,
     showAccountIndicator = true,
     density = UiDensity.Default,
+    dateTimeFormat = MessageListDateTimeFormat.Contextual,
 )
+
+private val fakeContactRepository = object : ContactRepository {
+    override fun getContactFor(emailAddress: EmailAddress): Contact? {
+        error("Not implemented")
+    }
+
+    override fun hasContactFor(emailAddress: EmailAddress): Boolean {
+        error("Not implemented")
+    }
+
+    override fun hasAnyContactFor(emailAddresses: List<EmailAddress>): Boolean {
+        error("Not implemented")
+    }
+
+    override fun getPhotoUri(emailAddress: String) = null
+}
+
+private val fakeAvatarMonogramCreator = object : AvatarMonogramCreator {
+    override fun create(name: String?, email: String?) = "SE"
+}

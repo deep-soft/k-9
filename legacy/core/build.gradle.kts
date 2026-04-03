@@ -10,6 +10,7 @@ dependencies {
     api(projects.core.mail.mailserver)
     api(projects.core.android.common)
     api(projects.core.android.account)
+    api(projects.core.common)
     api(projects.core.preference.impl)
     api(projects.core.android.logging)
     api(projects.core.logging.implFile)
@@ -45,17 +46,20 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.mime4j.core)
     implementation(libs.mime4j.dom)
+    implementation(libs.uri)
     implementation(projects.feature.navigation.drawer.api)
+    implementation(projects.feature.mail.message.list.api)
+    implementation(projects.feature.mail.message.reader.api)
 
-    testApi(projects.core.testing)
-    testApi(projects.core.android.testing)
+    testImplementation(projects.core.testing)
+    testImplementation(projects.core.android.testing)
     testImplementation(projects.core.logging.testing)
     testImplementation(projects.feature.telemetry.noop)
     testImplementation(projects.mail.testing)
     testImplementation(projects.backend.imap)
     testImplementation(projects.mail.protocols.smtp)
     testImplementation(projects.legacy.storage)
-
+    testImplementation(projects.core.android.common)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlin.reflect)
     testImplementation(libs.robolectric)
@@ -73,4 +77,15 @@ android {
     buildFeatures {
         buildConfig = true
     }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+}
+
+codeCoverage {
+    branchCoverage = 41
+    lineCoverage = 46
 }
