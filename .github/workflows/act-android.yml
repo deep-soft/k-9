@@ -1,4 +1,4 @@
-#2026-04-03 20:00
+#2026-04-03 20:45
 # act-android.yml
 # full and foss, gradle 4.4.1
 #act-android.yml
@@ -138,10 +138,10 @@ jobs:
       - name: Print ref, build version
         shell: bash
         run: |
-          echo "VER: ${{ env.PRG_VERSION }}
-          echo "TAG: ${{ env.TAG_VERSION }}
-          echo "REF: ${{ env.TAG_REF }}
-          echo "BLD: ${{ env.TAG_BUILD }}
+          echo "VER: ${{ env.PRG_VERSION }}";
+          echo "TAG: ${{ env.TAG_VERSION }}";
+          echo "REF: ${{ env.TAG_REF }}";
+          echo "BLD: ${{ env.TAG_BUILD }}";
           echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > _tag_name_.txt
           echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE_FULL }}-release-signed.txt
           echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE_FOSS }}-release-signed.txt
