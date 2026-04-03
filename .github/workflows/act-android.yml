@@ -114,20 +114,23 @@ jobs:
           fetch-depth: 1
 
       - name: Get ref, set build version
+        continue-on-error: true
         shell: bash
         run: |
-          _ref_all_=$(git log -1 --format='%H')
-          # _ref_=$(echo ${_ref_all_::7})
-          _ref_org_=${{ env.TAG_REF }}
-          _ref_len_="${#_ref_org_}"
-          _ref_=$(echo ${_ref_all_::$_ref_len_})
-          _prg_version_=$(grep "versionName " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}')
-          _prg_ver_suf_=$(grep "versionNameSuffix " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}')
-          echo "TAG_REF=$_ref_" >> $GITHUB_ENV
-          _build_=${{ env.TAG_BUILD }}.$_ref_
-          echo "TAG_BUILD=$_build_" >> $GITHUB_ENV
-          echo "PRG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV
-          echo "TAG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV
+          _ref_all_=$(git log -1 --format='%H');
+          _ref_org_=${{ env.TAG_REF }};
+          _ref_len_=${#_ref_org_};
+          _ref_=$(echo ${_ref_all_::$_ref_len_});
+          echo "app-${{ env.PRG_NAME }}/build.gradle.kts";
+          cat "app-${{ env.PRG_NAME }}/build.gradle.kts" || true;
+          _prg_version_=$(grep "versionName " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}');
+          _prg_ver_suf_=$(grep "versionNameSuffix " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}');
+          echo "TAG_REF=$_ref_" >> $GITHUB_ENV;
+          _build_=${{ env.TAG_BUILD }}.$_ref_;
+          echo "TAG_BUILD=$_build_" >> $GITHUB_ENV;
+          echo "PRG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV;
+          echo "TAG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV;
+
       - name: Print ref, build version
         shell: bash
         run: |
@@ -138,6 +141,7 @@ jobs:
           echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > _tag_name_.txt
           echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE_FULL }}-release-signed.txt
           echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE_FOSS }}-release-signed.txt
+
       - name: Create source archive
         continue-on-error: true
         uses: deep-soft/zip-release@v2.2
@@ -160,6 +164,7 @@ jobs:
           tag_name: ${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}${{ env.TAG_BUILD }}
           files: |
             ${{ env.ASSET_SRC }}
+
       - name: Setup Gradle environment
         uses: ./.github/actions/setup-gradle
 
