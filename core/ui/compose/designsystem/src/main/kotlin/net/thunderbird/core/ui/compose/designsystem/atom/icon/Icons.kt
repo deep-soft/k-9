@@ -14,8 +14,6 @@ import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.ChevronLeft
-import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Drafts
@@ -26,8 +24,8 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Inbox
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Menu
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Report
 import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material.icons.outlined.Settings
@@ -37,10 +35,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.dualtone.DualToneWarningIcon
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.filled.FilledDotIcon
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.filled.FilledStarIcon
+import net.thunderbird.core.ui.compose.designsystem.atom.icon.filled.FilledThundermail
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedAccountIcon
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedBadgeIcon
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedBankIcon
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedBookIcon
+import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedDescriptionIcon
+import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedDownloadIcon
+import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedDriveFileMove
+import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedEncrypted
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedFavoriteFolderIcon
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedFingerprintIcon
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedFlowerIcon
@@ -49,9 +52,13 @@ import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedG
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedGroupIcon
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedHearthIcon
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedImageIcon
+import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedLockIcon
+import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedMarkEmailRead
+import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedMarkEmailUnread
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedOpenInNewIcon
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedPersonIcon
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedPetsIcon
+import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedQrCode
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedRocketIcon
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedSchoolIcon
 import net.thunderbird.core.ui.compose.designsystem.atom.icon.outlined.OutlinedSmileIcon
@@ -88,6 +95,8 @@ object Icons {
         val CheckCircle: ImageVector = Icons.Filled.CheckCircle
         val Dot: ImageVector = FilledDotIcon
         val Star: ImageVector = FilledStarIcon
+
+        val Thundermail: ImageVector = FilledThundermail
     }
 
     /**
@@ -108,13 +117,15 @@ object Icons {
 
         val Check: ImageVector = Icons.Outlined.Check
         val CheckCircle: ImageVector = Icons.Outlined.CheckCircle
-        val ChevronLeft: ImageVector = Icons.Outlined.ChevronLeft
-        val ChevronRight: ImageVector = Icons.Outlined.ChevronRight
         val Close: ImageVector = Icons.Outlined.Close
 
         val Delete: ImageVector = Icons.Outlined.Delete
+        val Description: ImageVector = OutlinedDescriptionIcon
         val Drafts: ImageVector = Icons.Outlined.Drafts
+        val Download: ImageVector = OutlinedDownloadIcon
+        val DriveFileMove: ImageVector = OutlinedDriveFileMove
 
+        val Encrypted: ImageVector = OutlinedEncrypted
         val ErrorOutline: ImageVector = Icons.Outlined.ErrorOutline
         val ExpandMore: ImageVector = Icons.Outlined.ExpandMore
         val ExpandLess: ImageVector = Icons.Outlined.ExpandLess
@@ -135,15 +146,22 @@ object Icons {
         val Info: ImageVector = Icons.Outlined.Info
 
         val KeyboardArrowDown: ImageVector = Icons.Outlined.KeyboardArrowDown
-        val KeyboardArrowUp: ImageVector = Icons.Outlined.KeyboardArrowUp
+
+        val Lock: ImageVector = OutlinedLockIcon
+
+        val MarkEmailRead: ImageVector = OutlinedMarkEmailRead
+        val MarkEmailUnread: ImageVector = OutlinedMarkEmailUnread
 
         val Menu: ImageVector = Icons.Outlined.Menu
+        val MoreVert: ImageVector = Icons.Outlined.MoreVert
 
         val OpenInNew: ImageVector = OutlinedOpenInNewIcon
         val Outbox: ImageVector = Icons.Filled.Outbox
 
         val Person: ImageVector = OutlinedPersonIcon
         val Pets: ImageVector = OutlinedPetsIcon
+
+        val QrCode: ImageVector = OutlinedQrCode
 
         val Report: ImageVector = Icons.Outlined.Report
         val Rocket: ImageVector = OutlinedRocketIcon

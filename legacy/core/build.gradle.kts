@@ -10,6 +10,7 @@ dependencies {
     api(projects.core.mail.mailserver)
     api(projects.core.android.common)
     api(projects.core.android.account)
+    api(projects.core.common)
     api(projects.core.preference.impl)
     api(projects.core.android.logging)
     api(projects.core.logging.implFile)
@@ -50,8 +51,8 @@ dependencies {
     implementation(projects.feature.mail.message.list.api)
     implementation(projects.feature.mail.message.reader.api)
 
-    testApi(projects.core.testing)
-    testApi(projects.core.android.testing)
+    testImplementation(projects.core.testing)
+    testImplementation(projects.core.android.testing)
     testImplementation(projects.core.logging.testing)
     testImplementation(projects.feature.telemetry.noop)
     testImplementation(projects.mail.testing)

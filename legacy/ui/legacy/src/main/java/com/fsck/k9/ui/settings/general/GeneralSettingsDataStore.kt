@@ -12,9 +12,10 @@ import net.thunderbird.core.preference.AppTheme
 import net.thunderbird.core.preference.BackgroundOps
 import net.thunderbird.core.preference.BodyContentType
 import net.thunderbird.core.preference.GeneralSettingsManager
-import net.thunderbird.core.preference.NotificationQuickDelete
+import net.thunderbird.core.preference.LockScreenNotificationVisibility
 import net.thunderbird.core.preference.SplitViewMode
 import net.thunderbird.core.preference.SubTheme
+import net.thunderbird.core.preference.display.visualSettings.message.list.MessageListDateTimeFormat
 import net.thunderbird.core.preference.display.visualSettings.message.list.UiDensity
 import net.thunderbird.core.preference.update
 
@@ -59,6 +60,7 @@ class GeneralSettingsDataStore(
             "drawerExpandAllFolder" -> visualSettings.drawerExpandAllFolder
             "quiet_time_enabled" -> notificationSettings.isQuietTimeEnabled
             "disable_notifications_during_quiet_time" -> !notificationSettings.isNotificationDuringQuietTimeEnabled
+            "notification_summary_delete" -> notificationSettings.isSummaryDeleteActionEnabled
             "privacy_hide_useragent" -> privacySettings.isHideUserAgent
             "privacy_hide_timezone" -> privacySettings.isHideTimeZone
             "debug_logging" -> debuggingSettings.isDebugLoggingEnabled
@@ -100,6 +102,7 @@ class GeneralSettingsDataStore(
             "messageview_autofit_width" -> setIsAutoFitWidth(isAutoFitWidth = value)
             "quiet_time_enabled" -> setIsQuietTimeEnabled(isQuietTimeEnabled = value)
             "disable_notifications_during_quiet_time" -> setIsNotificationDuringQuietTimeEnabled(!value)
+            "notification_summary_delete" -> setIsSummaryDeleteActionEnabled(isSummaryDeleteActionEnabled = value)
             "privacy_hide_useragent" -> setIsHideUserAgent(isHideUserAgent = value)
             "privacy_hide_timezone" -> setIsHideTimeZone(isHideTimeZone = value)
             "debug_logging" -> setIsDebugLoggingEnabled(isDebugLoggingEnabled = value)
@@ -148,9 +151,10 @@ class GeneralSettingsDataStore(
             "message_compose_theme" -> subThemeToString(coreSettings.messageComposeTheme)
             "messageViewTheme" -> subThemeToString(coreSettings.messageViewTheme)
             "messagelist_preview_lines" -> messageListSettings.previewLines.toString()
+            "message_list_date_time_format" -> messageListSettings.dateTimeFormat.toString()
             "splitview_mode" -> coreSettings.splitViewMode.name
             "notification_quick_delete" -> notificationSettings.notificationQuickDeleteBehaviour.name
-            "lock_screen_notification_visibility" -> K9.lockScreenNotificationVisibility.name
+            "lock_screen_notification_visibility" -> notificationSettings.lockScreenNotificationVisibility.name
             "background_ops" -> networkSettings.backgroundOps.name
             "quiet_time_starts" -> notificationSettings.quietTimeStarts
             "quiet_time_ends" -> notificationSettings.quietTimeEnds
@@ -187,15 +191,10 @@ class GeneralSettingsDataStore(
             "message_compose_theme" -> setMessageComposeTheme(value)
             "messageViewTheme" -> setMessageViewTheme(value)
             "messagelist_preview_lines" -> setMessageListPreviewLines(value.toInt())
+            "message_list_date_time_format" -> updateMessageListDateTimeFormat(value)
             "splitview_mode" -> setSplitViewModel(SplitViewMode.valueOf(value.uppercase()))
-            "notification_quick_delete" -> {
-                setNotificationQuickDeleteBehaviour(
-                    behaviour = NotificationQuickDelete.valueOf(value),
-                )
-            }
-
             "lock_screen_notification_visibility" -> {
-                K9.lockScreenNotificationVisibility = K9.LockScreenNotificationVisibility.valueOf(value)
+                setLockScreenNotificationVisibility(LockScreenNotificationVisibility.valueOf(value))
             }
 
             "background_ops" -> setBackgroundOps(value)
@@ -227,6 +226,7 @@ class GeneralSettingsDataStore(
     }
 
     override fun getStringSet(key: String, defValues: Set<String>?): Set<String>? {
+        val visualSettings = generalSettingsManager.getConfig().display.visualSettings
         return when (key) {
             "confirm_actions" -> {
                 mutableSetOf<String>().apply {
@@ -242,11 +242,11 @@ class GeneralSettingsDataStore(
 
             "messageview_visible_refile_actions" -> {
                 mutableSetOf<String>().apply {
-                    if (K9.isMessageViewDeleteActionVisible) add("delete")
-                    if (K9.isMessageViewArchiveActionVisible) add("archive")
-                    if (K9.isMessageViewMoveActionVisible) add("move")
-                    if (K9.isMessageViewCopyActionVisible) add("copy")
-                    if (K9.isMessageViewSpamActionVisible) add("spam")
+                    if (visualSettings.isMessageViewDeleteActionVisible) add("delete")
+                    if (visualSettings.isMessageViewArchiveActionVisible) add("archive")
+                    if (visualSettings.isMessageViewMoveActionVisible) add("move")
+                    if (visualSettings.isMessageViewCopyActionVisible) add("copy")
+                    if (visualSettings.isMessageViewSpamActionVisible) add("spam")
                 }
             }
 
@@ -274,11 +274,20 @@ class GeneralSettingsDataStore(
             }
 
             "messageview_visible_refile_actions" -> {
-                K9.isMessageViewDeleteActionVisible = "delete" in checkedValues
-                K9.isMessageViewArchiveActionVisible = "archive" in checkedValues
-                K9.isMessageViewMoveActionVisible = "move" in checkedValues
-                K9.isMessageViewCopyActionVisible = "copy" in checkedValues
-                K9.isMessageViewSpamActionVisible = "spam" in checkedValues
+                skipSaveSettings = true
+                generalSettingsManager.update { settings ->
+                    settings.copy(
+                        display = settings.display.copy(
+                            visualSettings = settings.display.visualSettings.copy(
+                                isMessageViewArchiveActionVisible = "archive" in checkedValues,
+                                isMessageViewDeleteActionVisible = "delete" in checkedValues,
+                                isMessageViewMoveActionVisible = "move" in checkedValues,
+                                isMessageViewCopyActionVisible = "copy" in checkedValues,
+                                isMessageViewSpamActionVisible = "spam" in checkedValues,
+                            ),
+                        ),
+                    )
+                }
             }
 
             else -> return
@@ -364,13 +373,6 @@ class GeneralSettingsDataStore(
                     ),
                 ),
             )
-        }
-    }
-
-    private fun setNotificationQuickDeleteBehaviour(behaviour: NotificationQuickDelete) {
-        skipSaveSettings = true
-        generalSettingsManager.update { settings ->
-            settings.copy(notification = settings.notification.copy(notificationQuickDeleteBehaviour = behaviour))
         }
     }
 
@@ -657,6 +659,17 @@ class GeneralSettingsDataStore(
         }
     }
 
+    private fun setIsSummaryDeleteActionEnabled(isSummaryDeleteActionEnabled: Boolean) {
+        skipSaveSettings = true
+        generalSettingsManager.update { settings ->
+            settings.copy(
+                notification = settings.notification.copy(
+                    isSummaryDeleteActionEnabled = isSummaryDeleteActionEnabled,
+                ),
+            )
+        }
+    }
+
     private fun setIsHideTimeZone(isHideTimeZone: Boolean) {
         skipSaveSettings = true
         generalSettingsManager.update { settings ->
@@ -849,6 +862,32 @@ class GeneralSettingsDataStore(
                             uiDensity = UiDensity.valueOf(value),
                         ),
                     ),
+                ),
+            )
+        }
+    }
+
+    private fun updateMessageListDateTimeFormat(value: String) {
+        skipSaveSettings = true
+        generalSettingsManager.update { settings ->
+            settings.copy(
+                display = settings.display.copy(
+                    visualSettings = settings.display.visualSettings.copy(
+                        messageListSettings = settings.display.visualSettings.messageListSettings.copy(
+                            dateTimeFormat = MessageListDateTimeFormat.valueOf(value),
+                        ),
+                    ),
+                ),
+            )
+        }
+    }
+
+    private fun setLockScreenNotificationVisibility(value: LockScreenNotificationVisibility) {
+        skipSaveSettings = true
+        generalSettingsManager.update { settings ->
+            settings.copy(
+                notification = settings.notification.copy(
+                    lockScreenNotificationVisibility = value,
                 ),
             )
         }

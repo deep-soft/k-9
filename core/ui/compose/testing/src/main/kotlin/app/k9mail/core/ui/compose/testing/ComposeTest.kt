@@ -14,12 +14,15 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.test.espresso.Espresso
-import app.k9mail.core.ui.compose.theme2.thunderbird.ThunderbirdTheme2
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.test.runTest
+import net.thunderbird.core.ui.compose.theme2.thunderbird.ThunderbirdTheme2
 import org.junit.Rule
 import org.junit.runner.RunWith
+import org.koin.compose.KoinApplicationPreview
+import org.koin.dsl.ModuleDeclaration
+import org.koin.dsl.module
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
@@ -56,6 +59,21 @@ fun ComposeTest.setContentWithTheme(content: @Composable () -> Unit) = composeTe
         content()
     }
 }
+
+/**
+ * Sets the Compose content for testing with Koin dependency injection and the default theme applied.
+ *
+ * @param modules The Koin module declaration containing the dependencies to be injected during the test
+ * @param content The composable content to be tested
+ */
+fun ComposeTest.setContentWithKoinAndTheme(modules: ModuleDeclaration, content: @Composable () -> Unit) =
+    composeTestRule.setContent {
+        KoinApplicationPreview(application = { modules(listOf(module(moduleDeclaration = modules))) }) {
+            ThunderbirdTheme2 {
+                content()
+            }
+        }
+    }
 
 fun ComposeTest.onNodeWithTag(
     tag: String,

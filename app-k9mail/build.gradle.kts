@@ -1,8 +1,8 @@
 plugins {
     id(ThunderbirdPlugins.App.androidCompose)
     alias(libs.plugins.dependency.guard)
-    id("thunderbird.app.version.info")
-    id("thunderbird.quality.badging")
+    alias(libs.plugins.tb.app.badging)
+    alias(libs.plugins.tb.app.versioning)
 }
 
 val testCoverageEnabled = hasProperty("testCoverageEnabled")
@@ -14,8 +14,8 @@ android {
         applicationId = "com.fsck.k9"
         testApplicationId = "com.fsck.k9.tests"
 
-        versionCode = 39034
-        versionName = "17.0"
+        versionCode = 39036
+        versionName = "19.0"
 
         buildConfigField("String", "CLIENT_INFO_APP_NAME", "\"K-9 Mail\"")
     }
@@ -84,12 +84,15 @@ android {
     }
 
     buildTypes {
+        val isCI = project.findProperty("ci") == "true"
         release {
             signingConfig = signingConfigs.getByType(SigningType.K9_RELEASE)
 
-            isMinifyEnabled = true
+            isMinifyEnabled = !isCI
+            isShrinkResources = !isCI
+
             proguardFiles(
-                getDefaultProguardFile("proguard-android.txt"),
+                getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
         }
@@ -135,6 +138,7 @@ android {
 
 dependencies {
     implementation(projects.appCommon)
+    implementation(projects.core.ui.compose.common)
     implementation(projects.core.ui.compose.theme2.k9mail)
     implementation(projects.core.ui.legacy.theme2.k9mail)
     implementation(projects.feature.launcher)
@@ -153,6 +157,9 @@ dependencies {
     "fullImplementation"(projects.feature.funding.googleplay)
     implementation(projects.feature.migration.launcher.noop)
     implementation(projects.feature.onboarding.migration.noop)
+    implementation(projects.feature.thundermail.api)
+    implementation(projects.feature.thundermail.k9mail)
+    implementation(projects.feature.thundermail.api)
     implementation(projects.feature.telemetry.noop)
     implementation(projects.feature.widget.messageList)
     implementation(projects.feature.widget.messageListGlance)
@@ -168,6 +175,7 @@ dependencies {
     // Required for DependencyInjectionTest
     testImplementation(projects.feature.account.api)
     testImplementation(projects.feature.account.common)
+    testImplementation(projects.feature.thundermail.internal.common)
     testImplementation(projects.plugins.openpgpApiLib.openpgpApi)
     testImplementation(libs.appauth)
 }

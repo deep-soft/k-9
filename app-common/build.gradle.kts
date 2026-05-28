@@ -21,6 +21,7 @@ dependencies {
     implementation(projects.legacy.core)
     implementation(projects.legacy.ui.base)
     implementation(projects.core.android.account)
+    implementation(projects.core.android.common)
 
     implementation(projects.core.logging.api)
     implementation(projects.core.logging.implComposite)
@@ -40,6 +41,7 @@ dependencies {
 
     implementation(projects.feature.account.avatar.api)
     implementation(projects.feature.account.avatar.impl)
+    implementation(projects.feature.account.settings.api)
     implementation(projects.feature.account.setup)
     implementation(projects.feature.mail.account.api)
     implementation(projects.feature.mail.message.composer)
@@ -57,12 +59,16 @@ dependencies {
     implementation(projects.mail.protocols.imap)
     implementation(projects.backend.imap)
 
+    implementation(projects.feature.thundermail.internal.common)
+
     implementation(libs.androidx.work.runtime)
     implementation(libs.androidx.lifecycle.process)
     implementation(libs.kotlinx.collections.immutable)
 
     testImplementation(projects.feature.account.fake)
     testImplementation(projects.core.testing)
+    testImplementation(projects.core.android.testing)
+    testImplementation(projects.core.logging.testing)
 }
 
 codeCoverage {

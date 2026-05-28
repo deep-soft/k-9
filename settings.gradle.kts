@@ -161,6 +161,7 @@ include(
     ":core:common",
     ":core:configstore:api",
     ":core:configstore:impl-backend",
+    ":core:configstore:testing",
     ":core:featureflag",
     ":core:logging:api",
     ":core:logging:config",
@@ -189,6 +190,7 @@ include(
 )
 
 include(
+    ":core:ui:contract",
     ":core:ui:setting:api",
     ":core:ui:setting:component",
     ":core:ui:setting:impl-dialog",
@@ -198,7 +200,6 @@ include(
     ":core:ui:account",
     ":core:ui:compose:common",
     ":core:ui:compose:designsystem",
-    ":core:ui:compose:navigation",
     ":core:ui:compose:testing",
     ":core:ui:compose:theme2:common",
     ":core:ui:compose:theme2:k9mail",
@@ -207,6 +208,7 @@ include(
     ":core:ui:legacy:theme2:common",
     ":core:ui:legacy:theme2:k9mail",
     ":core:ui:legacy:theme2:thunderbird",
+    ":core:ui:navigation",
     ":core:ui:theme:api",
     ":core:ui:theme:manager",
 )
@@ -254,6 +256,7 @@ include(
     ":cli:html-cleaner-cli",
     ":cli:resource-mover-cli",
     ":cli:translation-cli",
+    ":cli:weblate-cli",
 )
 
 include(
@@ -267,6 +270,13 @@ include(
 
 include(
     ":feature:debug-settings",
+)
+
+include(
+    ":feature:thundermail:api",
+    ":feature:thundermail:internal:common",
+    ":feature:thundermail:thunderbird",
+    ":feature:thundermail:k9mail",
 )
 
 check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)) {
