@@ -15,7 +15,7 @@ android {
         testApplicationId = "net.thunderbird.android.tests"
 
         versionCode = 4
-        versionName = "19.0"
+        versionName = "21.0"
 
         buildConfigField("String", "CLIENT_INFO_APP_NAME", "\"Thunderbird for Android\"")
     }
@@ -217,7 +217,7 @@ val fullReleaseImplementation by configurations.creating
 dependencies {
     implementation(projects.appCommon)
     implementation(projects.core.ui.compose.common)
-    implementation(projects.core.ui.compose.theme2.thunderbird)
+    implementation(projects.core.ui.compose.theme2)
     implementation(projects.core.ui.legacy.theme2.thunderbird)
     implementation(projects.feature.launcher)
 
@@ -258,6 +258,8 @@ dependencies {
 
     implementation(projects.feature.onboarding.migration.thunderbird)
     implementation(projects.feature.migration.launcher.thunderbird)
+    implementation(projects.feature.thundermail.api)
+    implementation(projects.feature.thundermail.thunderbird)
 
     // TODO remove once OAuth ids have been moved from TBD to TBA
     releaseImplementation(libs.appauth)
@@ -265,6 +267,7 @@ dependencies {
     // Required for DependencyInjectionTest
     testImplementation(projects.feature.account.api)
     testImplementation(projects.feature.account.common)
+    testImplementation(projects.feature.thundermail.internal.common)
     testImplementation(projects.plugins.openpgpApiLib.openpgpApi)
     testImplementation(libs.appauth)
 }

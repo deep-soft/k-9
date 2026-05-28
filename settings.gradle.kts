@@ -201,9 +201,7 @@ include(
     ":core:ui:compose:common",
     ":core:ui:compose:designsystem",
     ":core:ui:compose:testing",
-    ":core:ui:compose:theme2:common",
-    ":core:ui:compose:theme2:k9mail",
-    ":core:ui:compose:theme2:thunderbird",
+    ":core:ui:compose:theme2",
     ":core:ui:legacy:designsystem",
     ":core:ui:legacy:theme2:common",
     ":core:ui:legacy:theme2:k9mail",
@@ -256,6 +254,7 @@ include(
     ":cli:html-cleaner-cli",
     ":cli:resource-mover-cli",
     ":cli:translation-cli",
+    ":cli:weblate-cli",
 )
 
 include(
@@ -269,6 +268,13 @@ include(
 
 include(
     ":feature:debug-settings",
+)
+
+include(
+    ":feature:thundermail:api",
+    ":feature:thundermail:internal:common",
+    ":feature:thundermail:thunderbird",
+    ":feature:thundermail:k9mail",
 )
 
 check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)) {
