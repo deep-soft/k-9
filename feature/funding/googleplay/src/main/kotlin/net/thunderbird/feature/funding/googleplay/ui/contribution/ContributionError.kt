@@ -40,7 +40,9 @@ internal fun ContributionError(
             modifier = modifier,
         )
 
-        is ContributionError.UserCancelled -> Unit // could be ignored
+        is ContributionError.UserCancelled -> Unit
+
+        // could be ignored
         null -> Unit
     }
 }
@@ -70,6 +72,7 @@ private fun ContributionErrorView(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(MainTheme.spacings.half),
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 TextBodyLarge(
                     text = title,
@@ -98,6 +101,7 @@ private fun ContributionErrorView(
                 TextBodySmall(
                     text = description,
                     color = MainTheme.colors.onErrorContainer,
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }

@@ -113,9 +113,6 @@ object K9 : KoinComponent {
     @JvmStatic
     val fontSizes = FontSizes()
 
-    var messageViewPostMarkAsUnreadNavigation: PostMarkAsUnreadNavigation =
-        PostMarkAsUnreadNavigation.ReturnToMessageList
-
     @get:Synchronized
     @set:Synchronized
     @JvmStatic
@@ -172,9 +169,6 @@ object K9 : KoinComponent {
     @JvmStatic
     @Suppress("LongMethod")
     fun loadPrefs(storage: Storage) {
-        messageViewPostMarkAsUnreadNavigation =
-            storage.getEnum("messageViewPostMarkAsUnreadAction", PostMarkAsUnreadNavigation.ReturnToMessageList)
-
         sortType = storage.getEnum("sortTypeEnum", AccountDefaultsProvider.DEFAULT_SORT_TYPE)
 
         val sortAscendingSetting = storage.getBoolean("sortAscending", AccountDefaultsProvider.DEFAULT_SORT_ASCENDING)
@@ -199,8 +193,6 @@ object K9 : KoinComponent {
 
     @Suppress("LongMethod")
     internal fun save(editor: StorageEditor) {
-        editor.putEnum("messageViewPostMarkAsUnreadAction", messageViewPostMarkAsUnreadNavigation)
-
         editor.putEnum("sortTypeEnum", sortType)
         editor.putBoolean("sortAscending", sortAscending[sortType] ?: false)
 
@@ -236,8 +228,6 @@ object K9 : KoinComponent {
         putString(key, value.name)
     }
 
-    const val LOCAL_UID_PREFIX = "K9LOCAL:"
-
     const val IDENTITY_HEADER = K9MailLib.IDENTITY_HEADER
 
     /**
@@ -254,13 +244,4 @@ object K9 : KoinComponent {
     const val MAX_SEND_ATTEMPTS = 5
 
     const val MANUAL_WAKE_LOCK_TIMEOUT = 120000
-
-    /**
-     * The navigation actions that can be to performed after the user has marked a message as unread from the message
-     * view screen.
-     */
-    enum class PostMarkAsUnreadNavigation {
-        StayOnCurrentMessage,
-        ReturnToMessageList,
-    }
 }

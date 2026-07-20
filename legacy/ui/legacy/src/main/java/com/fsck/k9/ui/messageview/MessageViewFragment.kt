@@ -10,8 +10,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.os.SystemClock
-import android.print.PrintAttributes
-import android.print.PrintManager
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.Menu
@@ -20,7 +18,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.webkit.WebView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.collectAsState
@@ -44,6 +41,7 @@ import com.fsck.k9.activity.MessageCompose
 import com.fsck.k9.activity.MessageLoaderHelper
 import com.fsck.k9.activity.MessageLoaderHelper.MessageLoaderCallbacks
 import com.fsck.k9.activity.MessageLoaderHelperFactory
+import com.fsck.k9.activity.compose.MessageActions
 import com.fsck.k9.controller.MessagingController
 import com.fsck.k9.fragment.AttachmentDownloadDialogFragment
 import com.fsck.k9.fragment.ConfirmationDialogFragment
@@ -51,6 +49,7 @@ import com.fsck.k9.fragment.ConfirmationDialogFragment.ConfirmationDialogFragmen
 import com.fsck.k9.helper.HttpsUnsubscribeUri
 import com.fsck.k9.helper.MailtoUnsubscribeUri
 import com.fsck.k9.helper.UnsubscribeUri
+import com.fsck.k9.mail.Part
 import com.fsck.k9.mailstore.AttachmentViewInfo
 import com.fsck.k9.mailstore.LocalMessage
 import com.fsck.k9.mailstore.MessageViewInfo
@@ -88,8 +87,11 @@ import net.thunderbird.core.ui.theme.manager.ThemeManager
 import net.thunderbird.feature.mail.folder.api.OutboxFolderManager
 import net.thunderbird.feature.mail.message.export.MessageExporter
 import net.thunderbird.feature.mail.message.export.MessageFileNameSuggester
+import net.thunderbird.feature.mail.message.reader.api.ui.MessageReaderViewContract
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.openintents.openpgp.util.OpenPgpIntentStarter
+import net.thunderbird.feature.mail.message.reader.api.R as MessageReaderR
 
 @Suppress("LargeClass")
 class MessageViewFragment :
@@ -107,6 +109,7 @@ class MessageViewFragment :
     private val outboxFolderManager: OutboxFolderManager by inject()
     private val featureFlagProvider: FeatureFlagProvider by inject()
     private val appNameProvider: AppNameProvider by inject()
+    private val messageReaderViewModel: MessageReaderViewContract.ViewModel<Part> by viewModel()
 
     private val createDocumentLauncher: ActivityResultLauncher<CreateDocumentResultContract.Input> =
         registerForActivityResult(CreateDocumentResultContract()) { documentUri ->
@@ -250,6 +253,7 @@ class MessageViewFragment :
         }
 
         messageTopView.setAttachmentCallback(this)
+        messageTopView.setMessageReaderViewModel(messageReaderViewModel)
         messageTopView.setMessageCryptoPresenter(messageCryptoPresenter)
 
         messageTopView.setOnToggleFlagClickListener {
@@ -470,6 +474,7 @@ class MessageViewFragment :
 
             R.id.set_format_plain -> onDisplayPlainText()
             R.id.set_format_html -> onDisplayHTML()
+            R.id.view_compose -> MessageActions.actionCompose(requireActivity(), account)
             else -> return false
         }
 
@@ -477,20 +482,12 @@ class MessageViewFragment :
     }
 
     private fun printMessage() {
-        val context = context
-        val webView = view?.findViewById<WebView>(R.id.message_content)
-        val printManager = context?.getSystemService(Context.PRINT_SERVICE) as? PrintManager
-        if (context == null || webView == null || printManager == null) return
-
-        val subject = mMessageViewInfo?.subject ?: getString(R.string.general_no_subject)
-        val jobName = appNameProvider.appName + ": " + subject
-        val printAdapter = webView.createPrintDocumentAdapter(jobName)
-
-        printManager.print(
-            jobName,
-            printAdapter,
-            PrintAttributes.Builder().build(),
-        )
+        val messageViewInfo = mMessageViewInfo ?: return
+        MessagePrinter(
+            context = requireContext(),
+            appName = appNameProvider.appName,
+            noSubjectText = getString(R.string.general_no_subject),
+        ).print(messageViewInfo)
     }
 
     private fun onShowHeaders() {
@@ -1193,8 +1190,10 @@ class MessageViewFragment :
         try {
             createDocumentLauncher.launch(
                 input = CreateDocumentResultContract.Input(
-                    title = attachment.displayName,
-                    mimeType = attachment.mimeType,
+                    title = attachment.displayName ?: getString(MessageReaderR.string.unnamed_attachment_title),
+                    mimeType = requireNotNull(attachment.mimeType) {
+                        "Invalid attachment type. The mimeType is null. Attachment = $attachment"
+                    },
                 ),
             )
         } catch (_: ActivityNotFoundException) {

@@ -14,8 +14,8 @@ android {
         applicationId = "com.fsck.k9"
         testApplicationId = "com.fsck.k9.tests"
 
-        versionCode = 39036
-        versionName = "19.0"
+        versionCode = 39040
+        versionName = "21.0"
 
         buildConfigField("String", "CLIENT_INFO_APP_NAME", "\"K-9 Mail\"")
     }
@@ -139,7 +139,7 @@ android {
 dependencies {
     implementation(projects.appCommon)
     implementation(projects.core.ui.compose.common)
-    implementation(projects.core.ui.compose.theme2.k9mail)
+    implementation(projects.core.ui.compose.theme2)
     implementation(projects.core.ui.legacy.theme2.k9mail)
     implementation(projects.feature.launcher)
     implementation(projects.feature.mail.message.list.api)
@@ -151,6 +151,7 @@ dependencies {
 
     implementation(projects.core.featureflag)
 
+    implementation(projects.feature.autodiscovery.api)
     implementation(projects.feature.account.settings.impl)
 
     "fossImplementation"(projects.feature.funding.noop)
@@ -168,7 +169,6 @@ dependencies {
 
     implementation(libs.androidx.work.runtime)
 
-    implementation(projects.feature.autodiscovery.api)
     debugImplementation(projects.backend.demo)
     debugImplementation(projects.feature.autodiscovery.demo)
 
@@ -177,6 +177,9 @@ dependencies {
     testImplementation(projects.feature.account.common)
     testImplementation(projects.feature.thundermail.internal.common)
     testImplementation(projects.plugins.openpgpApiLib.openpgpApi)
+    testImplementation(projects.feature.changelog.api)
+    testImplementation(projects.feature.changelog.internal)
+
     testImplementation(libs.appauth)
 }
 

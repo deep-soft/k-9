@@ -17,6 +17,7 @@ import net.thunderbird.feature.navigation.drawer.dropdown.domain.DomainContract.
 import net.thunderbird.feature.navigation.drawer.dropdown.domain.entity.DisplayAccount
 import net.thunderbird.feature.navigation.drawer.dropdown.domain.entity.DisplayFolder
 import net.thunderbird.feature.navigation.drawer.dropdown.domain.entity.DisplayTreeFolder
+import net.thunderbird.feature.navigation.drawer.dropdown.domain.entity.MailDisplayAccount
 import net.thunderbird.feature.navigation.drawer.dropdown.domain.entity.MailDisplayFolder
 import net.thunderbird.feature.navigation.drawer.dropdown.domain.entity.UnifiedDisplayFolder
 import net.thunderbird.feature.navigation.drawer.dropdown.ui.DrawerContract.Effect
@@ -152,10 +153,13 @@ internal class DrawerViewModel(
     override fun event(event: Event) {
         when (event) {
             is Event.SelectAccount -> selectAccount(event.accountId)
+
             is Event.SelectFolder -> selectFolder(event.folderId)
 
             is Event.OnAccountClick -> openAccount(event.account)
+
             is Event.OnFolderClick -> openFolder(event.folder)
+
             is Event.OnAccountViewClick -> {
                 openAccount(
                     state.value.accounts.nextOrFirst(event.account),
@@ -175,9 +179,13 @@ internal class DrawerViewModel(
             }
 
             Event.OnManageFoldersClick -> emitEffect(Effect.OpenManageFolders)
+
             Event.OnSettingsClick -> emitEffect(Effect.OpenSettings)
+
             Event.OnSyncAccount -> onSyncAccount()
+
             Event.OnSyncAllAccounts -> onSyncAllAccounts()
+
             Event.OnAddAccountClick -> emitEffect(Effect.OpenAddAccount)
         }
     }
@@ -219,6 +227,12 @@ internal class DrawerViewModel(
     private fun openAccount(account: DisplayAccount?) {
         if (account != null) {
             emitEffect(Effect.OpenAccount(account.id))
+            if (account is MailDisplayAccount && account.hasAutoExpandFolder) {
+                viewModelScope.launch {
+                    delay(DRAWER_CLOSE_DELAY)
+                    emitEffect(Effect.CloseDrawer)
+                }
+            }
         }
     }
 

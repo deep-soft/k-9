@@ -3,11 +3,11 @@ package com.fsck.k9.ui.settings.general
 import androidx.preference.PreferenceDataStore
 import app.k9mail.feature.telemetry.api.TelemetryManager
 import com.fsck.k9.K9
-import com.fsck.k9.K9.PostMarkAsUnreadNavigation
 import com.fsck.k9.job.K9JobManager
 import com.fsck.k9.ui.base.AppLanguageManager
 import net.thunderbird.core.common.action.SwipeAction
 import net.thunderbird.core.common.action.SwipeActions
+import net.thunderbird.core.preference.AnimationPreference
 import net.thunderbird.core.preference.AppTheme
 import net.thunderbird.core.preference.BackgroundOps
 import net.thunderbird.core.preference.BodyContentType
@@ -17,6 +17,7 @@ import net.thunderbird.core.preference.SplitViewMode
 import net.thunderbird.core.preference.SubTheme
 import net.thunderbird.core.preference.display.visualSettings.message.list.MessageListDateTimeFormat
 import net.thunderbird.core.preference.display.visualSettings.message.list.UiDensity
+import net.thunderbird.core.preference.interaction.PostMarkAsUnreadNavigation
 import net.thunderbird.core.preference.update
 
 @Suppress("LargeClass")
@@ -42,7 +43,6 @@ class GeneralSettingsDataStore(
         val messageListSettings = visualSettings.messageListSettings
         return when (key) {
             "fixed_message_view_theme" -> coreSettings.fixedMessageViewTheme
-            "animations" -> visualSettings.isShowAnimations
             "show_unified_inbox" -> inboxSettings.isShowUnifiedInbox
             "show_starred_count" -> inboxSettings.isShowStarredCount
             "messagelist_stars" -> inboxSettings.isShowMessageListStars
@@ -61,6 +61,7 @@ class GeneralSettingsDataStore(
             "quiet_time_enabled" -> notificationSettings.isQuietTimeEnabled
             "disable_notifications_during_quiet_time" -> !notificationSettings.isNotificationDuringQuietTimeEnabled
             "notification_summary_delete" -> notificationSettings.isSummaryDeleteActionEnabled
+            "notification_show_contact_picture" -> notificationSettings.isShowContactPictureInNotification
             "privacy_hide_useragent" -> privacySettings.isHideUserAgent
             "privacy_hide_timezone" -> privacySettings.isHideTimeZone
             "debug_logging" -> debuggingSettings.isDebugLoggingEnabled
@@ -75,7 +76,6 @@ class GeneralSettingsDataStore(
     override fun putBoolean(key: String, value: Boolean) {
         when (key) {
             "fixed_message_view_theme" -> setFixedMessageViewTheme(value)
-            "animations" -> setIsShowAnimations(isShowAnimations = value)
             "drawerExpandAllFolder" -> setDrawerExpandAllFolder(drawerExpandAllFolder = value)
             "show_unified_inbox" -> setIsShowUnifiedInbox(value)
             "show_starred_count" -> setIsShowStarredCount(isShowStarredCount = value)
@@ -103,6 +103,10 @@ class GeneralSettingsDataStore(
             "quiet_time_enabled" -> setIsQuietTimeEnabled(isQuietTimeEnabled = value)
             "disable_notifications_during_quiet_time" -> setIsNotificationDuringQuietTimeEnabled(!value)
             "notification_summary_delete" -> setIsSummaryDeleteActionEnabled(isSummaryDeleteActionEnabled = value)
+            "notification_show_contact_picture" -> setIsShowContactPictureInNotification(
+                isShowContactPictureInNotification = value,
+            )
+
             "privacy_hide_useragent" -> setIsHideUserAgent(isHideUserAgent = value)
             "privacy_hide_timezone" -> setIsHideTimeZone(isHideTimeZone = value)
             "debug_logging" -> setIsDebugLoggingEnabled(isDebugLoggingEnabled = value)
@@ -148,6 +152,7 @@ class GeneralSettingsDataStore(
         return when (key) {
             "language" -> appLanguageManager.getAppLanguage()
             "theme" -> appThemeToString(coreSettings.appTheme)
+            "animations" -> animationPreferenceToString(visualSettings.animationPreference)
             "message_compose_theme" -> subThemeToString(coreSettings.messageComposeTheme)
             "messageViewTheme" -> subThemeToString(coreSettings.messageViewTheme)
             "messagelist_preview_lines" -> messageListSettings.previewLines.toString()
@@ -173,7 +178,7 @@ class GeneralSettingsDataStore(
             "swipe_action_left" -> swipeActionToString(interactionSettings.swipeActions.leftAction)
             "message_list_density" -> messageListSettings.uiDensity.toString()
             "post_remove_navigation" -> interactionSettings.messageViewPostRemoveNavigation
-            "post_mark_as_unread_navigation" -> K9.messageViewPostMarkAsUnreadNavigation.name
+            "post_mark_as_unread_navigation" -> interactionSettings.messageViewPostMarkAsUnreadNavigation.name
             else -> defValue
         }
     }
@@ -188,6 +193,7 @@ class GeneralSettingsDataStore(
             }
 
             "theme" -> setTheme(value)
+            "animations" -> setAnimationPreference(stringToAnimationPreference(value))
             "message_compose_theme" -> setMessageComposeTheme(value)
             "messageViewTheme" -> setMessageViewTheme(value)
             "messagelist_preview_lines" -> setMessageListPreviewLines(value.toInt())
@@ -215,10 +221,7 @@ class GeneralSettingsDataStore(
             "swipe_action_left" -> updateSwipeAction(value) { swipeAction -> copy(leftAction = swipeAction) }
             "message_list_density" -> updateMessageListDensity(value)
             "post_remove_navigation" -> setMessageViewPostRemoveNavigation(value)
-            "post_mark_as_unread_navigation" -> {
-                K9.messageViewPostMarkAsUnreadNavigation = PostMarkAsUnreadNavigation.valueOf(value)
-            }
-
+            "post_mark_as_unread_navigation" -> setMessageViewPostMarkAsUnreadNavigation(value)
             else -> return
         }
 
@@ -428,13 +431,13 @@ class GeneralSettingsDataStore(
         }
     }
 
-    private fun setIsShowAnimations(isShowAnimations: Boolean) {
+    private fun setAnimationPreference(animationPreference: AnimationPreference) {
         skipSaveSettings = true
         generalSettingsManager.update { settings ->
             settings.copy(
                 display = settings.display.copy(
                     visualSettings = settings.display.visualSettings.copy(
-                        isShowAnimations = isShowAnimations,
+                        animationPreference = animationPreference,
                     ),
                 ),
             )
@@ -670,6 +673,17 @@ class GeneralSettingsDataStore(
         }
     }
 
+    private fun setIsShowContactPictureInNotification(isShowContactPictureInNotification: Boolean) {
+        skipSaveSettings = true
+        generalSettingsManager.update { settings ->
+            settings.copy(
+                notification = settings.notification.copy(
+                    isShowContactPictureInNotification = isShowContactPictureInNotification,
+                ),
+            )
+        }
+    }
+
     private fun setIsHideTimeZone(isHideTimeZone: Boolean) {
         skipSaveSettings = true
         generalSettingsManager.update { settings ->
@@ -747,6 +761,17 @@ class GeneralSettingsDataStore(
         }
     }
 
+    private fun setMessageViewPostMarkAsUnreadNavigation(value: String) {
+        skipSaveSettings = true
+        generalSettingsManager.update { settings ->
+            settings.copy(
+                interaction = settings.interaction.copy(
+                    messageViewPostMarkAsUnreadNavigation = PostMarkAsUnreadNavigation.valueOf(value),
+                ),
+            )
+        }
+    }
+
     private fun appThemeToString(theme: AppTheme) = when (theme) {
         AppTheme.LIGHT -> "light"
         AppTheme.DARK -> "dark"
@@ -770,6 +795,19 @@ class GeneralSettingsDataStore(
         "light" -> SubTheme.LIGHT
         "dark" -> SubTheme.DARK
         "global" -> SubTheme.USE_GLOBAL
+        else -> throw AssertionError()
+    }
+
+    private fun animationPreferenceToString(pref: AnimationPreference) = when (pref) {
+        AnimationPreference.ON -> "ON"
+        AnimationPreference.OFF -> "OFF"
+        AnimationPreference.FOLLOW_SYSTEM -> "FOLLOW_SYSTEM"
+    }
+
+    private fun stringToAnimationPreference(value: String) = when (value) {
+        "ON" -> AnimationPreference.ON
+        "OFF" -> AnimationPreference.OFF
+        "FOLLOW_SYSTEM" -> AnimationPreference.FOLLOW_SYSTEM
         else -> throw AssertionError()
     }
 

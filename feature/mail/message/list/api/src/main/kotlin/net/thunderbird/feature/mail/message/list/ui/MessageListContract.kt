@@ -3,17 +3,20 @@ package net.thunderbird.feature.mail.message.list.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
-import net.thunderbird.core.common.state.sideeffect.StateSideEffectHandler
 import net.thunderbird.core.logging.Logger
 import net.thunderbird.core.ui.compose.common.mvi.BaseStateMachineViewModel
 import net.thunderbird.core.ui.contract.mvi.BaseViewModel
 import net.thunderbird.core.ui.contract.mvi.observe
 import net.thunderbird.feature.account.AccountId
+import net.thunderbird.feature.mail.message.list.ui.component.MessageListScope
+import net.thunderbird.feature.mail.message.list.ui.component.rememberMessageListScope
 import net.thunderbird.feature.mail.message.list.ui.effect.MessageListEffect
 import net.thunderbird.feature.mail.message.list.ui.event.MessageListEvent
+import net.thunderbird.feature.mail.message.list.ui.legacy.LegacyMessageListBridge
 import net.thunderbird.feature.mail.message.list.ui.state.MessageListState
+import net.thunderbird.feature.mail.message.list.ui.state.sideeffect.MessageListStateSideEffectHandlerFactory
 import net.thunderbird.feature.notification.api.content.InAppNotification
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
  * Defines the contract between the View and the ViewModel for the message list screen.
@@ -46,6 +49,8 @@ interface MessageListContract {
         data class Args(
             val accountIds: Set<AccountId>,
             val folderId: Long?,
+            // Temporary argument just to allow using the current legacy implementation.
+            val legacyMessageListBridge: LegacyMessageListBridge,
         )
     }
 
@@ -64,15 +69,13 @@ interface MessageListContract {
          *
          * @param state The current state of the message list to be rendered.
          * @param dispatchEvent A lambda function to be invoked when a user action or other UI event occurs.
-         * @param onEffect A lambda function to handle one-time side effects from the ViewModel.
          * @param modifier The modifier to be applied to the root container of the message list screen.
          * @param inAppNotificationEventFilter A filter to decide whether an in-app notification should be displayed.
          */
         @Composable
-        fun Render(
+        fun MessageListScope.Render(
             state: MessageListState,
             dispatchEvent: (MessageListEvent) -> Unit,
-            onEffect: (MessageListEffect) -> Unit,
             modifier: Modifier = Modifier,
             inAppNotificationEventFilter: (InAppNotification) -> Boolean = { true },
         )
@@ -90,15 +93,16 @@ interface MessageListContract {
          */
         @Composable
         fun Render(
-            onEffect: (MessageListEffect) -> Unit,
+            onEffect: MessageListScope.(MessageListEffect) -> Unit,
             modifier: Modifier = Modifier,
             viewModel: ViewModel = koinViewModel(),
             inAppNotificationEventFilter: (InAppNotification) -> Boolean = { true },
         ) {
-            val (state, dispatchEvent) = viewModel.observe(onEffect)
-            Render(state.value, dispatchEvent, onEffect, modifier, inAppNotificationEventFilter)
+            val scope = rememberMessageListScope()
+            val (state, dispatchEvent) = viewModel.observe { effect ->
+                scope.onEffect(effect)
+            }
+            scope.Render(state.value, dispatchEvent, modifier, inAppNotificationEventFilter)
         }
     }
 }
-
-interface MessageListStateSideEffectHandlerFactory : StateSideEffectHandler.Factory<MessageListState, MessageListEvent>
