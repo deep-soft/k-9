@@ -47,10 +47,31 @@ dependencyResolutionManagement {
     }
 }
 
+val useLocalComponents = providers.gradleProperty("tb.components.local")
+    .map(String::toBoolean)
+    .getOrElse(true)
+
+val useLocalBolt = providers.gradleProperty("tb.components.local.bolt")
+    .map(String::toBoolean)
+    .getOrElse(useLocalComponents)
+
+if (useLocalComponents || useLocalBolt) {
+    includeBuild("components") {
+        dependencySubstitution {
+            if (useLocalBolt) {
+                substitute(module("net.thunderbird.components.ui.bolt:bolt")).using(project(":ui:bolt"))
+            }
+
+            if (useLocalComponents) {
+                substitute(module("net.thunderbird.components.ui:testing")).using(project(":ui:testing"))
+            }
+        }
+    }
+}
+
 include(
     ":app-k9mail",
     ":app-thunderbird",
-    ":app-ui-catalog",
 )
 
 include(
@@ -118,6 +139,7 @@ include(
 include(
     ":feature:navigation:drawer:api",
     ":feature:navigation:drawer:dropdown",
+    ":feature:changelog:api",
 )
 
 include(
@@ -198,10 +220,9 @@ include(
 
 include(
     ":core:ui:account",
+    ":core:ui:animation:manager",
     ":core:ui:compose:common",
-    ":core:ui:compose:designsystem",
     ":core:ui:compose:testing",
-    ":core:ui:compose:theme2",
     ":core:ui:legacy:designsystem",
     ":core:ui:legacy:theme2:common",
     ":core:ui:legacy:theme2:k9mail",
@@ -288,3 +309,4 @@ check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)) {
         https://developer.android.com/build/jdks#jdk-config-in-studio
     """.trimIndent()
 }
+include(":feature:changelog:internal")

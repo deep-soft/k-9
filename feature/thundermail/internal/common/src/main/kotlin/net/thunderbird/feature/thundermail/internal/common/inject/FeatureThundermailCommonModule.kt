@@ -15,6 +15,7 @@ val featureThundermailCommonModule = module {
             getOAuthRequestIntent = get(),
             finishOAuthSignIn = get(),
             checkIsGoogleSignIn = get(),
+            logger = get(),
         )
     }
     viewModel<ThundermailContract.ViewModel> {
@@ -26,5 +27,5 @@ val featureThundermailCommonModule = module {
         )
     }
     single<CreateAccountStateUseCase> { CreateAccountStateUseCase(get()) }
-    single<ThundermailNavigation> { DefaultThundermailNavigation() }
+    single<ThundermailNavigation> { DefaultThundermailNavigation(get()) }
 }

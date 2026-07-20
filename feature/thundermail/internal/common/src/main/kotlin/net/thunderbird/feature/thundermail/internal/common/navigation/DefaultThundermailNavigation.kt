@@ -1,41 +1,22 @@
 package net.thunderbird.feature.thundermail.internal.common.navigation
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraphBuilder
-import app.k9mail.core.ui.compose.designsystem.atom.CircularProgressIndicator
-import app.k9mail.core.ui.compose.designsystem.atom.text.TextBodyLarge
 import app.k9mail.feature.account.setup.navigation.AccountSetupNavHost
 import app.k9mail.feature.account.setup.navigation.AccountSetupRoute
 import app.k9mail.feature.onboarding.permissions.ui.PermissionsScreen
 import app.k9mail.feature.settings.import.ui.SettingsImportAction
 import app.k9mail.feature.settings.import.ui.SettingsImportScreen
-import net.thunderbird.core.ui.compose.theme2.MainTheme
-import net.thunderbird.core.ui.contract.mvi.observe
+import net.thunderbird.core.common.provider.BrandNameProvider
 import net.thunderbird.core.ui.navigation.deepLinkComposable
-import net.thunderbird.feature.thundermail.internal.common.R
-import net.thunderbird.feature.thundermail.internal.common.ui.ThundermailContract
+import net.thunderbird.feature.thundermail.internal.common.ui.ThundermailOAuthRedirectScreen
+import net.thunderbird.feature.thundermail.internal.common.ui.account.ThundermailAddAccountScreen
 import net.thunderbird.feature.thundermail.navigation.ThundermailNavigation
 import net.thunderbird.feature.thundermail.navigation.ThundermailRoute
 import net.thunderbird.feature.thundermail.navigation.ThundermailRoute.Companion.ACCOUNT_ID_ROUTE_PARAM
-import org.koin.androidx.compose.koinViewModel
 
-class DefaultThundermailNavigation : ThundermailNavigation {
+class DefaultThundermailNavigation(
+    private val brandNameProvider: BrandNameProvider,
+) : ThundermailNavigation {
     override fun registerRoutes(
         navGraphBuilder: NavGraphBuilder,
         onBack: () -> Unit,
@@ -45,7 +26,7 @@ class DefaultThundermailNavigation : ThundermailNavigation {
             deepLinkComposable<ThundermailRoute.SignInWithThundermail>(
                 basePath = ThundermailRoute.SIGN_IN_WITH_THUNDERMAIL_ROUTE,
             ) {
-                ThundermailOAuthRedirectScreen(onFinish = onFinish)
+                ThundermailOAuthRedirectScreen(onFinish = onFinish, onBack = onBack)
             }
 
             deepLinkComposable<ThundermailRoute.ScanQrCode>(
@@ -74,6 +55,7 @@ class DefaultThundermailNavigation : ThundermailNavigation {
                             )
 
                             AccountSetupRoute.ThundermailScanQrCode -> onFinish(ThundermailRoute.ScanQrCode)
+
                             AccountSetupRoute.ThundermailSignIn -> onFinish(ThundermailRoute.SignInWithThundermail)
                         }
                     },
@@ -91,52 +73,48 @@ class DefaultThundermailNavigation : ThundermailNavigation {
                     onNext = { onFinish(ThundermailRoute.OnboardComplete(accountId)) },
                 )
             }
+
+            deepLinkComposable<ThundermailRoute.AddAccount>(
+                basePath = ThundermailRoute.THUNDERMAIL_ADD_ACCOUNT_ROUTE,
+            ) {
+                ThundermailAddAccountScreen(
+                    appTitle = brandNameProvider.brandName,
+                    onAddAccountClick = { onFinish(ThundermailRoute.AccountSetup()) },
+                    onSignInWithThundermail = { onFinish(ThundermailRoute.SignInWithThundermail) },
+                )
+            }
+
+            registerAccountSetupRoute(onBack, onFinish)
         }
     }
-}
 
-@Composable
-private fun ThundermailOAuthRedirectScreen(
-    viewModel: ThundermailContract.ViewModel = koinViewModel<ThundermailContract.ViewModel>(),
-    onFinish: (ThundermailRoute) -> Unit,
-) {
-    val oAuthLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
+    private fun NavGraphBuilder.registerAccountSetupRoute(
+        onBack: () -> Unit,
+        onFinish: (ThundermailRoute) -> Unit,
     ) {
-        viewModel.event(ThundermailContract.Event.OnOAuthResult(it.resultCode, it.data))
-    }
-
-    val (state, dispatch) = viewModel.observe { effect ->
-        when (effect) {
-            is ThundermailContract.Effect.LaunchOAuth -> oAuthLauncher.launch(effect.intent)
-            is ThundermailContract.Effect.NavigateToIncomingServerSettings ->
-                onFinish(ThundermailRoute.IncomingSettings)
-        }
-    }
-
-    var launchedOAuth by remember { mutableStateOf(false) }
-
-    LaunchedEffect(state.value.initialized) {
-        if (state.value.initialized && !launchedOAuth) {
-            dispatch(ThundermailContract.Event.SignInClicked)
-            launchedOAuth = true
-        }
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .safeContentPadding(),
-    ) {
-        Column(
-            modifier = Modifier.align(Alignment.Center),
-            verticalArrangement = Arrangement.spacedBy(MainTheme.spacings.double),
-            horizontalAlignment = Alignment.CenterHorizontally,
+        deepLinkComposable<ThundermailRoute.AccountSetup>(
+            basePath = ThundermailRoute.ACCOUNT_SETUP_ROUTE,
         ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(MainTheme.sizes.medium),
+            AccountSetupNavHost(
+                onBack = onBack,
+                onFinish = { route: AccountSetupRoute ->
+                    when (route) {
+                        is AccountSetupRoute.AccountSetup -> onFinish(
+                            ThundermailRoute.Permissions(
+                                accountId = requireNotNull(route.accountId) {
+                                    "Something went wrong. We should have an account-id at this point. " +
+                                        "Please report."
+                                },
+                            ),
+                        )
+
+                        AccountSetupRoute.ThundermailScanQrCode -> onFinish(ThundermailRoute.ScanQrCode)
+
+                        AccountSetupRoute.ThundermailSignIn -> onFinish(ThundermailRoute.SignInWithThundermail)
+                    }
+                },
+                skipToIncomingValidation = false,
             )
-            TextBodyLarge(stringResource(R.string.thundermail_redirecting))
         }
     }
 }

@@ -4,6 +4,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import app.k9mail.feature.account.edit.navigation.AccountEditNavigation
@@ -16,6 +17,7 @@ import net.thunderbird.feature.account.settings.api.AccountSettingsNavigation
 import net.thunderbird.feature.debug.settings.navigation.SecretDebugSettingsNavigation
 import net.thunderbird.feature.debug.settings.navigation.SecretDebugSettingsRoute
 import net.thunderbird.feature.funding.api.FundingNavigation
+import net.thunderbird.feature.navigation.changelog.api.ChangelogNavigation
 import net.thunderbird.feature.thundermail.navigation.ThundermailNavigation
 import net.thunderbird.feature.thundermail.navigation.ThundermailRoute
 import org.koin.compose.koinInject
@@ -34,6 +36,7 @@ fun FeatureLauncherNavHost(
     fundingNavigation: FundingNavigation = koinInject(),
     secretDebugSettingsNavigation: SecretDebugSettingsNavigation = koinInject(),
     thundermailNavigation: ThundermailNavigation = koinInject(),
+    changelogNavigation: ChangelogNavigation = koinInject(),
 ) {
     val activity = LocalActivity.current as ComponentActivity
 
@@ -42,6 +45,11 @@ fun FeatureLauncherNavHost(
         startDestination = OnboardingRoute.Onboarding(),
         modifier = modifier,
     ) {
+        changelogNavigation.registerRoutes(
+            navGraphBuilder = this,
+            onBack = onBack,
+            onFinish = { onBack() },
+        )
         onboardingNavigation.registerRoutes(
             navGraphBuilder = this,
             onBack = onBack,
@@ -57,29 +65,18 @@ fun FeatureLauncherNavHost(
 
                     is OnboardingRoute.ThundermailSignIn ->
                         navController.navigate(ThundermailRoute.SignInWithThundermail)
+
+                    is OnboardingRoute.ThundermailAddAccount ->
+                        navController.navigate(ThundermailRoute.AddAccount)
                 }
             },
         )
 
-        thundermailNavigation.registerRoutes(
-            navGraphBuilder = this,
-            onBack = onBack,
-            onFinish = { route ->
-                when (route) {
-                    is ThundermailRoute.IncomingSettings ->
-                        navController.navigate(ThundermailRoute.IncomingSettings)
-
-                    is ThundermailRoute.AccountSetup ->
-                        messageListLauncher.launch(accountUuid = route.accountId)
-
-                    is ThundermailRoute.Permissions -> {
-                        messageListLauncher.launch(route.accountId)
-                        activity.finish()
-                    }
-
-                    else -> Unit
-                }
-            },
+        registerThundermailNavigation(
+            thundermailNavigation = thundermailNavigation,
+            navController = navController,
+            messageListLauncher = messageListLauncher,
+            activity = activity,
         )
 
         accountSetupNavigation.registerRoutes(
@@ -131,4 +128,41 @@ fun FeatureLauncherNavHost(
             },
         )
     }
+}
+
+private fun NavGraphBuilder.registerThundermailNavigation(
+    thundermailNavigation: ThundermailNavigation,
+    navController: NavHostController,
+    messageListLauncher: MessageListLauncher,
+    activity: ComponentActivity,
+) {
+    thundermailNavigation.registerRoutes(
+        navGraphBuilder = this,
+        onBack = { navController.popBackStack() },
+        onFinish = { route ->
+            when (route) {
+                is ThundermailRoute.IncomingSettings ->
+                    navController.navigate(ThundermailRoute.IncomingSettings)
+
+                is ThundermailRoute.AccountSetup if route.accountId != null ->
+                    messageListLauncher.launch(accountUuid = route.accountId)
+
+                is ThundermailRoute.AccountSetup ->
+                    navController.navigate(ThundermailRoute.AccountSetup())
+
+                is ThundermailRoute.Permissions -> {
+                    messageListLauncher.launch(route.accountId)
+                    activity.finish()
+                }
+
+                is ThundermailRoute.AddAccount ->
+                    navController.navigate(ThundermailRoute.AddAccount)
+
+                is ThundermailRoute.SignInWithThundermail ->
+                    navController.navigate(ThundermailRoute.SignInWithThundermail)
+
+                else -> Unit
+            }
+        },
+    )
 }

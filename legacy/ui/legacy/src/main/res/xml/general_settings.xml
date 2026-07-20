@@ -192,9 +192,12 @@
 
             </PreferenceScreen>
 
-            <CheckBoxPreference
+            <ListPreference
+                android:dialogTitle="@string/animations_title"
+                android:entries="@array/animation_entries"
+                android:entryValues="@array/animation_values"
                 android:key="animations"
-                android:summary="@string/animations_summary"
+                app:useSimpleSummaryProvider="true"
                 android:title="@string/animations_title"
                 />
 
@@ -548,6 +551,12 @@
             android:key="privacy_hide_timezone"
             android:summary="@string/global_settings_privacy_hide_timezone_detail"
             android:title="@string/global_settings_privacy_hide_timezone"
+            />
+
+        <CheckBoxPreference
+            android:key="privacy_incognito_keyboard"
+            android:summary="@string/global_settings_privacy_incognito_keyboard_detail"
+            android:title="@string/global_settings_privacy_incognito_keyboard"
             />
 
     </PreferenceScreen>
