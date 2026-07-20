@@ -1,0 +1,99 @@
+name: act - Build - CLI Tools
+# act-build-cli-tools.yml
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  CLI_TOOLS: "CLI_TOOLS"
+  PRG_NAME: "k9mail"
+  PRG_VERSION: "v0.000"
+  TAG_NAME: "k9mail"
+  TAG_VERSION: "v0.000"
+  TAG_BUILD: "-b"
+  TAG_REF: "0000000"
+  PRG_TYPE: "full"
+  PRG_TYPE_FULL: "full"
+  PRG_TYPE_FOSS: "foss"
+  ANDROID_SIGNING_KEY: '${{ secrets.ANDROID_SIGNING_KEY }}'
+  #  signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
+  #  alias: ${{ secrets.ANDROID_ALIAS }}
+  #  keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+  #  keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}  
+
+jobs:
+  build-cli-tools:
+    name: Build CLI tools
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout the repo
+        uses: deep-soft/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Get ref, set build version
+        shell: bash
+        run: |
+          _ref_all_=$(git log -1 --format='%H');
+          # _ref_=$(echo ${_ref_all_::7});
+          _ref_org_=${{ env.TAG_REF }};
+          _ref_len_="${#_ref_org_}";
+          _ref_=$(echo ${_ref_all_::$_ref_len_});
+          _prg_version_=$(grep "versionName " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}') || true;
+          _prg_ver_suf_=$(grep "versionNameSuffix " "app-${{ env.PRG_NAME }}/build.gradle.kts" | awk -F '= ' '{print $2}' | awk -F '"' '{print $2}') || true;
+          echo "TAG_REF=$_ref_" >> $GITHUB_ENV;
+          _build_=${{ env.TAG_BUILD }}.$_ref_;
+          echo "TAG_BUILD=$_build_" >> $GITHUB_ENV;
+          if [ "$_prg_ver_suf_" != "" ]; then
+            echo "PRG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV;
+            echo "TAG_VERSION=$_prg_version_$_prg_ver_suf_" >> $GITHUB_ENV;
+          else
+            echo "PRG_VERSION=$_prg_version_" >> $GITHUB_ENV;
+            echo "TAG_VERSION=$_prg_version_" >> $GITHUB_ENV;
+          fi
+
+      - name: Print ref, build version
+        shell: bash
+        run: |
+          echo "VER: ${{ env.PRG_VERSION }}";
+          echo "TAG: ${{ env.TAG_VERSION }}";
+          echo "REF: ${{ env.TAG_REF }}";
+          echo "BLD: ${{ env.TAG_BUILD }}";
+          echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > _tag_name_.txt
+          echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE_FULL }}-release-signed.txt
+          echo "${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}-${{ env.TAG_BUILD }}" > ${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.PRG_TYPE_FOSS }}-release-signed.txt
+
+      - name: Setup Gradle environment
+        uses: ./.github/actions/setup-gradle
+
+      - name: Build CLI tools
+        shell: bash
+        run: |
+          ./gradlew buildCliTools
+
+      - name: Create archive
+        continue-on-error: true
+        uses: deep-soft/zip-release@v2.2
+        with:
+          type: 'tar.xz'
+          filename: "${{ env.PRG_NAME }}-${{ env.PRG_VERSION }}-${{ env.TAG_BUILD }}-${{ env.CLI_TOOLS }}"
+          directory: '.'
+          exclusions: ''
+          recursive_exclusions: ''
+          ignore_git: 'yes'
+          path: '.'
+          env_variable: ASSET_CLI_TOOLS
+        # archive name is ${{ env.ZIP_RELEASE_ARCHIVE }}
+
+      - name: Publish archive
+        continue-on-error: true
+        uses: deep-soft/action-gh-release@v2.1
+        with:
+          draft: true
+          tag_name: ${{ env.TAG_NAME }}-${{ env.TAG_VERSION }}${{ env.TAG_BUILD }}-${{ env.CLI_TOOLS }}
+          files: |
+            ${{ env.ASSET_CLI_TOOLS }}
