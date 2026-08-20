@@ -15,6 +15,13 @@ plugins {
     id("thunderbird.dependency.check")
     id("net.thunderbird.gradle.plugin.quality.coverage")
     id("net.thunderbird.gradle.plugin.quality.spotless")
+    alias(libs.plugins.tb.featureflag.root)
+}
+
+featureFlag {
+    val dir = project.layout.projectDirectory
+    schema.set(dir.file("config/featureflag/thunderbird_mobile_featureflag.schema.json"))
+    catalog.set(dir.file("config/featureflag/thunderbird_mobile_featureflag.catalog.json"))
 }
 
 tasks.withType<Test>().configureEach {
@@ -27,9 +34,14 @@ tasks.withType<Test>().configureEach {
 }
 
 tasks.register("buildCliTools") {
-    val cliToolsProjects = subprojects.filter { it.path.startsWith(":cli:") }
+    description = "Builds all CLI tools"
+    // Keep this list up to date with the CLI tools in the project. This is used by the CI to build all CLI tools.
     dependsOn(
-        cliToolsProjects.map { project -> project.tasks.named("build") },
+        ":cli:autodiscovery-cli:build",
+        ":cli:html-cleaner-cli:build",
+        ":cli:resource-mover-cli:build",
+        ":cli:translation-cli:build",
+        ":cli:weblate-cli:build",
     )
 }
 
