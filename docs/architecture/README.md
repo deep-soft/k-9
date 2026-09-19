@@ -176,6 +176,8 @@ The data layer is responsible for data retrieval, storage, and synchronization.
 - **🔌 Data Sources**: Provide data from specific sources (API, database, preferences)
 - **📄 Data Transfer Objects**: Represent data at the data layer
 
+See the [Repository Pattern](repository-pattern.md) guide for repository responsibilities and API conventions.
+
 **Pattern: Data Source Pattern**
 - 🔍 Abstracts data sources behind a clean API
 -  Maps data between domain models and data transfer objects
@@ -341,7 +343,8 @@ maintainability an reliability.
 In Thunderbird for Android, several cross-cutting concerns are implemented as dedicated core modules to provide
 standardized solutions that can be reused across the application:
 
-- **⚠️ Error Handling**: Comprehensive error handling (`core/outcome`) transforms exceptions into domain-specific errors and provides user-friendly feedback.
+- **⚠️ Error Handling**: The Thunderbird Mobile Components `outcome` artifact transforms exceptions into domain-specific
+  errors and provides user-friendly feedback.
 - **📋 Logging**: Centralized logging system (`core/logging`) ensures consistent log formatting, levels, and storage.
 - **🔒 Security**: Modules like `core/security` handle encryption, authentication, and secure data storage.
 

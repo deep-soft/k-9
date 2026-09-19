@@ -17,7 +17,7 @@ dependencies {
     api(projects.core.logging.implComposite)
     api(projects.core.logging.config)
     api(projects.core.android.network)
-    api(projects.core.outcome)
+    api(libs.tb.mobile.components.core.outcome)
     api(projects.feature.mail.folder.api)
     api(projects.feature.account.storage.legacy)
 
@@ -50,6 +50,7 @@ dependencies {
     implementation(projects.feature.navigation.drawer.api)
     implementation(projects.feature.mail.message.list.api)
     implementation(projects.feature.mail.message.reader.api)
+    implementation(projects.feature.mail.message.composer.api)
 
     testImplementation(projects.core.testing)
     testImplementation(libs.tb.mobile.components.ui.testing)

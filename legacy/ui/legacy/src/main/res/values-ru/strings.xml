@@ -177,7 +177,7 @@
     <!--Displayed in the message view screen in front of the number of additional recipients (the ones that are not displayed).-->
     <string name="message_view_additional_recipient_prefix">+</string>
     <!--Displayed in the message view screen if the message was addressed to the user. Make sure this works with 'message_view_recipient_prefix'. In English it's "to me".-->
-    <string name="message_view_me_text">мне</string>
+    <string name="message_view_to_me_text">мне</string>
     <!--Text of the button that is displayed below the message header when the message body references one or more remote images-->
     <string name="message_view_show_remote_images_action">Загрузить изображения</string>
     <string name="message_view_no_viewer">Отсутствует просмотрщик <xliff:g id="mimetype">%s</xliff:g>.</string>
@@ -966,4 +966,11 @@
     <string name="global_settings_privacy_incognito_keyboard_detail">Запрещать клавиатуре обучаться на том, что вы вводите при написании сообщений</string>
     <string name="global_settings_privacy_incognito_keyboard">Инкогнито-клавиатура</string>
     <string name="sort_by_indicator">•</string>
+    <string name="camera_capture_lost">Захваченное изображение утеряно, потому что приложение было закрыто. Повторите попытку.</string>
+    <string name="account_settings_signature_html_label">Подпись HTML</string>
+    <string name="account_settings_signature_is_html_label">Сохранить подпись как HTML</string>
+    <string name="account_settings_signature_is_html_summary">Интерпретировать подпись как HTML. Скрипты и обработчики событий будут удалены в целях безопасности.</string>
+    <string name="account_settings_signature_preview">Просмотр подписи</string>
+    <string name="account_settings_signature_clear_label">Удалить подпись</string>
+    <string name="message_compose_encrypting_message">Шифрование сообщения…</string>
 </resources>

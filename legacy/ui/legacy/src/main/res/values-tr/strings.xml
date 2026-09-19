@@ -817,7 +817,7 @@
     <!--A user visible label for the name and email address copied to the clipboard-->
     <!--Might be displayed in a notification when deleting an account (in the background)-->
     <string name="action_copy_email_address">E-posta adresini kopyala</string>
-    <string name="message_view_me_text">ben</string>
+    <string name="message_view_to_me_text">ben</string>
     <string name="action_compose_message_to">Bu kişiye ileti oluştur</string>
     <string name="account_settings_vibrate_pattern_label">Titreşim şablonu</string>
     <string name="message_list_content_description_unread_prefix">okunmadı, %s</string>
@@ -951,4 +951,11 @@
     <string name="global_settings_privacy_incognito_keyboard">Gizli klavye</string>
     <string name="global_settings_privacy_incognito_keyboard_detail">İleti oluştururken klavyenin yazdıklarınızı öğrenmemesini isteyin</string>
     <string name="sort_by_indicator">•</string>
+    <string name="camera_capture_lost">Uygulama kapatıldığı için yakalanan resim kayboldu. Lütfen tekrar deneyin.</string>
+    <string name="account_settings_signature_html_label">HTML İmza</string>
+    <string name="account_settings_signature_is_html_label">İmzayı HTML olarak kaydet</string>
+    <string name="account_settings_signature_is_html_summary">İmzayı HTML olarak yorumla. Güvenlik nedeniyle betikler ve olay işleyicileri kaldırılacaktır.</string>
+    <string name="account_settings_signature_preview">İmza ön izlemesi</string>
+    <string name="account_settings_signature_clear_label">İmzayı Temizle</string>
+    <string name="message_compose_encrypting_message">İleti şifreleniyor…</string>
 </resources>

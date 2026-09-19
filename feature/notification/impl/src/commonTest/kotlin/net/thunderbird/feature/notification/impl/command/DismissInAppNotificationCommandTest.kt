@@ -9,11 +9,12 @@ import assertk.assertions.isInstanceOf
 import assertk.assertions.prop
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
+import net.thunderbird.components.core.outcome.Outcome
 import net.thunderbird.core.featureflag.FeatureFlagKey
 import net.thunderbird.core.featureflag.FeatureFlagProvider
 import net.thunderbird.core.featureflag.FeatureFlagResult
+import net.thunderbird.core.featureflag.keys.GeneratedFeatureFlagKey
 import net.thunderbird.core.logging.testing.TestLogger
-import net.thunderbird.core.outcome.Outcome
 import net.thunderbird.feature.notification.api.NotificationRegistry
 import net.thunderbird.feature.notification.api.command.outcome.CommandExecutionFailed
 import net.thunderbird.feature.notification.api.command.outcome.Success
@@ -32,7 +33,7 @@ class DismissInAppNotificationCommandTest {
             val testSubject = createTestSubject(
                 featureFlagProvider = { key ->
                     when (key) {
-                        FeatureFlagKey.DisplayInAppNotifications -> FeatureFlagResult.Disabled
+                        GeneratedFeatureFlagKey.DISPLAY_IN_APP_NOTIFICATIONS -> FeatureFlagResult.Disabled
                         else -> FeatureFlagResult.Enabled
                     }
                 },
@@ -52,7 +53,7 @@ class DismissInAppNotificationCommandTest {
                     prop(UnsupportedCommand<InAppNotification>::reason)
                         .isInstanceOf<UnsupportedCommand.Reason.FeatureFlagDisabled>()
                         .prop(UnsupportedCommand.Reason.FeatureFlagDisabled::key)
-                        .isEqualTo(FeatureFlagKey.DisplayInAppNotifications)
+                        .isEqualTo(GeneratedFeatureFlagKey.DISPLAY_IN_APP_NOTIFICATIONS)
                 }
         }
 
@@ -63,7 +64,7 @@ class DismissInAppNotificationCommandTest {
             val testSubject = createTestSubject(
                 featureFlagProvider = { key ->
                     when (key) {
-                        FeatureFlagKey.DisplayInAppNotifications -> FeatureFlagResult.Unavailable
+                        GeneratedFeatureFlagKey.DISPLAY_IN_APP_NOTIFICATIONS -> FeatureFlagResult.Unavailable
                         else -> FeatureFlagResult.Enabled
                     }
                 },
@@ -83,7 +84,7 @@ class DismissInAppNotificationCommandTest {
                     prop(UnsupportedCommand<InAppNotification>::reason)
                         .isInstanceOf<UnsupportedCommand.Reason.FeatureFlagDisabled>()
                         .prop(UnsupportedCommand.Reason.FeatureFlagDisabled::key)
-                        .isEqualTo(FeatureFlagKey.DisplayInAppNotifications)
+                        .isEqualTo(GeneratedFeatureFlagKey.DISPLAY_IN_APP_NOTIFICATIONS)
                 }
         }
 
