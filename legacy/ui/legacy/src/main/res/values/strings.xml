@@ -401,6 +401,7 @@
     <string name="archive_folder_label">Archive folder</string>
     <string name="spam_folder_label">Spam folder</string>
 
+    <string name="account_setup_visibility_and_syncing">Folder sync &amp; push</string>
     <string name="account_setup_incoming_subscribed_folders_only_label">Show only subscribed folders</string>
     <string name="account_setup_auto_select_folder">Auto-select folder</string>
 
@@ -496,6 +497,10 @@
 
     <string name="account_settings_general_title">General settings</string>
     <string name="account_settings_reading_mail">Reading mail</string>
+    <string name="account_settings_sync_and_notifications">Sync &amp; notifications</string>
+    <string name="account_settings_folder_sync_and_push">Folder sync &amp; push</string>
+    <string name="account_settings_fetching_and_data_limits">Fetching &amp; data limits</string>
+    <string name="account_settings_folder_visibility">Folder visibility</string>
     <string name="account_settings_sync">Fetching mail</string>
     <string name="account_settings_folders">Folders</string>
     <string name="account_settings_quote_prefix_label">Quoted text prefix</string>
@@ -630,6 +635,7 @@
     <string name="account_settings_signature_is_html_label">Save signature as HTML</string>
     <string name="account_settings_signature_is_html_summary">Interpret the signature as HTML. Scripts and event handlers will be removed for security.</string>
     <string name="account_settings_signature_preview">Signature preview</string>
+    <string name="account_settings_signature_preview_empty">Your signature preview will appear here</string>
     <string name="account_settings_signature_clear_label">Clear Signature</string>
 
     <string name="default_identity_description">Initial identity</string>
@@ -685,6 +691,7 @@
     <string name="navigation_drawer_preferences">Side Menu</string>
     <string name="messagelist_preferences">Message lists</string>
     <string name="messageview_preferences">Messages</string>
+    <string name="remote_feature_flag_preferences">Remote Feature Flags</string>
     <string name="settings_theme_label">Theme</string>
     <string name="settings_message_theme_label">Message view theme</string>
     <string name="settings_compose_theme_label">Composer theme</string>
@@ -1120,6 +1127,7 @@ You can keep this message and use it as a backup for your secret key. If you wan
 
     <!-- Name of the action to add a person to contacts. Usually displayed in a menu or in a tooltip when long-pressing the associated icon. -->
     <string name="action_add_to_contacts">Add to contacts</string>
+    <string name="error_no_contact_provider">No contacts app was found. Install a contacts app to add this address.</string>
     <!-- Name of the action to compose a new message to a particular address. Usually displayed in a menu or in a tooltip when long-pressing the associated icon. -->
     <string name="action_compose_message_to">Compose message to</string>
     <!-- Name of the action to copy an email address to the clipboard. Usually displayed in a menu or in a tooltip when long-pressing the associated icon. -->

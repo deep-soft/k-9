@@ -19,16 +19,16 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
+import net.thunderbird.components.core.logging.Logger
+import net.thunderbird.components.core.logging.testing.TestLogger
 import net.thunderbird.core.common.state.sideeffect.StateSideEffectHandler
-import net.thunderbird.core.logging.Logger
-import net.thunderbird.core.logging.testing.TestLogger
 import net.thunderbird.feature.account.AccountId
 import net.thunderbird.feature.account.AccountIdFactory
 import net.thunderbird.feature.account.UnifiedAccountId
 import net.thunderbird.feature.account.avatar.Avatar
 import net.thunderbird.feature.account.profile.AccountProfile
 import net.thunderbird.feature.account.profile.AccountProfileRepository
-import net.thunderbird.feature.mail.folder.api.FolderType
+import net.thunderbird.feature.mail.folder.FolderType
 import net.thunderbird.feature.mail.folder.api.RemoteFolder
 import net.thunderbird.feature.mail.folder.api.data.repository.FolderQueryRepository
 import net.thunderbird.feature.mail.folder.api.data.repository.RemoteFolderQueryRepository
@@ -306,7 +306,10 @@ class LoadFolderInformationSideEffectTest : BaseSideEffectHandlerTest() {
                         id = accountId,
                         name = "Test",
                         color = expectedColor,
-                        avatar = Avatar.Monogram("T"),
+                        avatar = Avatar.Monogram(
+                            accountId = accountId,
+                            value = "T",
+                        ),
                     ),
                 ),
             ),
@@ -485,7 +488,10 @@ class LoadFolderInformationSideEffectTest : BaseSideEffectHandlerTest() {
             id = accountId,
             name = "Test $accountId",
             color = color.toArgb(),
-            avatar = Avatar.Monogram("T"),
+            avatar = Avatar.Monogram(
+                accountId = accountId,
+                value = "T",
+            ),
         )
 
     private class FakeAccountProfileRepository(

@@ -7,10 +7,11 @@ import assertk.assertions.isEqualTo
 import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import net.thunderbird.components.core.logging.testing.TestLogger
 import net.thunderbird.core.featureflag.FeatureFlagKey
 import net.thunderbird.core.featureflag.FeatureFlagResult
 import net.thunderbird.core.featureflag.TestingFeatureFlagKey
@@ -27,7 +28,6 @@ import net.thunderbird.core.featureflag.model.FlagRegistryOverride
 import net.thunderbird.core.featureflag.provider.context.FeatureFlagContext
 import net.thunderbird.core.featureflag.provider.context.FeatureFlagContext.Value
 import net.thunderbird.core.featureflag.provider.context.ImmutableFeatureFlagContext
-import net.thunderbird.core.logging.testing.TestLogger
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BundledCatalogFeatureFlagProviderTest {
@@ -295,9 +295,11 @@ private class FakeFeatureFlagCatalogDataSource(
     var loadCount: Int = 0
         private set
 
-    override fun load(): Flow<FeatureFlagCatalog> = flow {
+    override fun observe(): Flow<FeatureFlagCatalog> = emptyFlow()
+
+    override suspend fun load(): FeatureFlagCatalog {
         loadCount++
-        emit(catalog)
+        return catalog
     }
 }
 

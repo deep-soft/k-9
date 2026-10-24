@@ -23,7 +23,7 @@ import net.thunderbird.feature.mail.folder.api.data.repository.RemoteFolderDetai
 import net.thunderbird.feature.mail.folder.api.data.repository.RemoteFolderQueryRepository
 import org.koin.dsl.module
 
-val mailStoreModule = module {
+val legacyMailStoreModule = module {
     single<PushFolderTrackingRepository> {
         DefaultPushFolderTrackingRepository(logger = get(), messageStoreManager = get())
     }
@@ -71,7 +71,7 @@ val mailStoreModule = module {
     single { SpecialFolderSelectionStrategy() }
     single<BackendStorageFactory> {
         K9BackendStorageFactory(
-            preferences = get(),
+            storageProvider = get(),
             accountManager = get(),
             folderQueryRepository = get(),
             messageStoreManager = get(),
@@ -79,8 +79,14 @@ val mailStoreModule = module {
             saveMessageDataCreator = get(),
         )
     }
-    factory { SpecialLocalFoldersCreator(preferences = get(), localStoreProvider = get(), outboxFolderManager = get()) }
-    single { MessageStoreManager(accountManager = get(), messageStoreFactory = get()) }
+    factory {
+        SpecialLocalFoldersCreator(
+            accountManager = get(),
+            localStoreProvider = get(),
+            outboxFolderManager = get(),
+        )
+    }
+    single { MessageStoreManager(messageStoreFactory = get()) }
     single { MessageRepository(messageStoreManager = get()) }
     factory { MessagePreviewCreator.newInstance() }
     factory { MessageFulltextCreator.newInstance() }
@@ -97,7 +103,6 @@ val mailStoreModule = module {
     single<OutboxFolderManager> {
         DefaultOutboxFolderManager(
             logger = get(),
-            accountManager = get(),
             localStoreProvider = get(),
             outboxFolderIdCache = TimeLimitedCache(),
         )

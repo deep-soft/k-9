@@ -5,13 +5,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.WearableExtender
 import androidx.core.graphics.drawable.IconCompat
 import com.fsck.k9.notification.NotificationChannelManager.ChannelType
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import net.thunderbird.legacy.logging.Log
 import net.thunderbird.core.preference.notification.NotificationPreferenceManager
 import androidx.core.app.NotificationCompat.Builder as NotificationBuilder
+
+private const val TAG = "SingleMessageNotificationCreator"
 
 internal class SingleMessageNotificationCreator(
     private val notificationHelper: NotificationHelper,
@@ -21,18 +19,20 @@ internal class SingleMessageNotificationCreator(
     private val notificationPreferenceManager: NotificationPreferenceManager,
     private val application: Application,
 ) {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-
     fun createSingleNotification(
         baseNotificationData: BaseNotificationData,
         singleNotificationData: SingleNotificationData,
         isGroupSummary: Boolean = false,
-    ) = scope.launch {
-        val account = baseNotificationData.account
+    ) {
+        val accountId = baseNotificationData.accountId
         val notificationId = singleNotificationData.notificationId
         val content = singleNotificationData.content
 
-        val notification = notificationHelper.createNotificationBuilder(account, ChannelType.MESSAGES)
+        val notification = notificationHelper.createNotificationBuilder(
+            accountId,
+            ChannelType.MESSAGES,
+            baseNotificationData.messagesNotificationChannelVersion,
+        )
             .setCategory(NotificationCompat.CATEGORY_EMAIL)
             .setGroup(baseNotificationData.groupKey)
             .setGroupSummary(isGroupSummary)
@@ -56,15 +56,16 @@ internal class SingleMessageNotificationCreator(
 
         if (isGroupSummary) {
             Log.v(
+                TAG,
                 "Creating single summary notification (silent=%b): %s",
                 singleNotificationData.isSilent,
                 notification,
             )
         }
-        notificationHelper.notify(account, notificationId, notification)
+        notificationHelper.notify(accountId, notificationId, notification)
     }
 
-    private suspend fun NotificationBuilder.setAvatar(content: NotificationContent) = apply {
+    private fun NotificationBuilder.setAvatar(content: NotificationContent) = apply {
         if (!notificationPreferenceManager.getConfig().isShowContactPictureInNotification) return@apply
 
         resourceProvider.avatar(content.sender)?.let {

@@ -9,7 +9,7 @@ import net.thunderbird.components.core.outcome.Outcome
 import net.thunderbird.core.android.account.LegacyAccountManager
 import net.thunderbird.core.common.exception.MessagingException
 import net.thunderbird.feature.account.AccountId
-import net.thunderbird.feature.mail.folder.api.FolderType
+import net.thunderbird.feature.mail.folder.FolderType
 import net.thunderbird.feature.mail.folder.api.RemoteFolder
 import net.thunderbird.feature.mail.folder.api.SpecialFolderSelection
 import net.thunderbird.feature.mail.folder.api.SpecialFolderUpdater
@@ -27,8 +27,8 @@ internal class SetArchiveFolder(
         accountId: AccountId,
         folder: RemoteFolder,
     ): Outcome<SetAccountFolderOutcome.Success, SetAccountFolderOutcome.Error> {
-        val account = withContext(ioDispatcher) {
-            accountManager.getById(accountId).firstOrNull()
+        withContext(ioDispatcher) {
+            accountManager.observeById(accountId).firstOrNull()
         } ?: return Outcome.Failure(SetAccountFolderOutcome.Error.AccountNotFound)
 
         val backend = backendStorageFactory.createBackendStorage(accountId)
@@ -48,8 +48,8 @@ internal class SetArchiveFolder(
                             folderId = folder.id,
                             selection = SpecialFolderSelection.MANUAL,
                         )
+                        // The special folder updater saves the account; saving the copy read above would undo that
                         specialFolderUpdater.updateSpecialFolders()
-                        accountManager.saveAccount(account)
 
                         Outcome.success(SetAccountFolderOutcome.Success)
                     }

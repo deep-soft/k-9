@@ -24,6 +24,11 @@ plugins {
 dependencyResolutionManagement {
     repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     repositories {
+        mavenLocal {
+            content {
+                includeGroupAndSubgroups("net.thunderbird.components")
+            }
+        }
         google {
             mavenContent {
                 includeGroupAndSubgroups("androidx")
@@ -77,11 +82,16 @@ if (useLocalComponents || useLocalBolt) {
 
 include(
     ":app-k9mail",
+    ":app-k9mail:benchmarks",
     ":app-thunderbird",
+    ":app-thunderbird:benchmarks",
 )
+
+include(":benchmarks")
 
 include(
     ":app-common",
+    ":app-composition",
 )
 
 include(
@@ -90,6 +100,7 @@ include(
 
 include(
     ":feature:account:api",
+    ":feature:account:internal",
     ":feature:account:avatar:api",
     ":feature:account:avatar:impl",
     ":feature:account:core",
@@ -124,6 +135,7 @@ include(
 
 include(
     ":feature:mail:account:api",
+    ":feature:mail:account:fake",
     ":feature:mail:folder:api",
     ":feature:mail:message:api",
     ":feature:mail:message:composer:api",
@@ -134,6 +146,8 @@ include(
     ":feature:mail:message:export:impl-eml",
     ":feature:mail:message:reader:api",
     ":feature:mail:message:reader:impl",
+    ":feature:mail:storage:global-db-migration:api",
+    ":feature:mail:storage:global-db-migration:internal",
 )
 
 include(
@@ -194,11 +208,7 @@ include(
     ":core:configstore:testing",
     ":core:featureflag",
     ":core:logging:api",
-    ":core:logging:config",
-    ":core:logging:impl-composite",
-    ":core:logging:impl-console",
-    ":core:logging:impl-file",
-    ":core:logging:testing",
+    ":core:logging:internal",
     ":core:file",
     ":core:mail:mailserver",
     ":core:preference:api",
@@ -209,14 +219,13 @@ include(
 
 include(
     ":core:android:account",
+    ":core:android:account:fake",
     ":core:android:common",
     ":core:android:contact",
-    ":core:android:logging",
     ":core:android:network",
     ":core:android:permissions",
     ":core:android:testing",
-    ":core:android:webkit:api",
-    ":core:android:webkit:internal",
+    ":core:android:webkit",
 )
 
 include(
@@ -321,3 +330,4 @@ check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)) {
     """.trimIndent()
 }
 include(":feature:changelog:internal")
+include(":feature:funding:common")

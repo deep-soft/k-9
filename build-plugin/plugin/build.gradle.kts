@@ -34,6 +34,7 @@ dependencies {
     implementation(plugin(libs.plugins.dependency.check))
     implementation(plugin(libs.plugins.detekt))
     implementation(plugin(libs.plugins.spotless))
+    implementation(plugin(libs.plugins.buildconfig))
 
     compileOnly(plugin(libs.plugins.kover))
     implementation(libs.diff.utils)
@@ -42,6 +43,8 @@ dependencies {
     implementation(libs.networknt.jsonSchemaValidator)
     implementation(libs.kotlinpoet)
     compileOnly(libs.kotlin.gradle.plugin.api)
+
+    implementation(plugin(libs.plugins.androidx.baselineprofile))
 
     testImplementation(gradleTestKit())
     testImplementation(libs.junit)
@@ -95,6 +98,14 @@ gradlePlugin {
         register("PiiSafe") {
             id = "net.thunderbird.piisafe"
             implementationClass = "net.thunderbird.gradle.plugin.piisafe.PiiSafeGradleSubplugin"
+        }
+        register("BaselineProfileProducerAppPlugin") {
+            id = "net.thunderbird.baselineprofile.producer.app"
+            implementationClass = "net.thunderbird.gradle.plugin.app.baselineprofile.BaselineProfileProducerAppPlugin"
+        }
+        register("BaselineProfileConsumerAppPlugin") {
+            id = "net.thunderbird.baselineprofile.consumer.app"
+            implementationClass = "net.thunderbird.gradle.plugin.app.baselineprofile.BaselineProfileConsumerAppPlugin"
         }
     }
 }

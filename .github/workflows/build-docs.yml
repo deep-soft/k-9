@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - 'docs/**'
+      - 'config/featureflag/**'
 
   workflow_dispatch:
 
@@ -24,7 +25,7 @@ jobs:
     environment: botmobile
     steps:
       - name: App token generate
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1  # v3.2.0
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510  # v3.3.0
         if: ${{ vars.BOT_CLIENT_ID }}
         id: app-token
         with:
@@ -51,6 +52,10 @@ jobs:
           echo "BUILD_DIR=${BUILD_DIR}" >> $GITHUB_ENV
           echo "Building docs into ${BUILD_DIR}"
           mdbook build docs --dest-dir="${BUILD_DIR}"
+
+          # Copy the remote feature-flag catalog to the assets folder
+          cp "config/featureflag/thunderbird_mobile_featureflag.catalog.json" "${BUILD_DIR}/assets/thunderbird_mobile_featureflag.catalog.json"
+
           echo "Build output preview:"
           ls -la "${BUILD_DIR}" || true
 

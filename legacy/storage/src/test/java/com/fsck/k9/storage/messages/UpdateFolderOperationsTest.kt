@@ -8,10 +8,10 @@ import assertk.assertions.none
 import assertk.assertions.prop
 import com.fsck.k9.storage.RobolectricTest
 import net.thunderbird.legacy.logging.Log
-import net.thunderbird.core.logging.testing.TestLogger
+import net.thunderbird.components.core.logging.testing.TestLogger
 import net.thunderbird.feature.mail.folder.api.Folder
 import net.thunderbird.feature.mail.folder.api.FolderDetails
-import net.thunderbird.feature.mail.folder.api.FolderType
+import net.thunderbird.feature.mail.folder.FolderType
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

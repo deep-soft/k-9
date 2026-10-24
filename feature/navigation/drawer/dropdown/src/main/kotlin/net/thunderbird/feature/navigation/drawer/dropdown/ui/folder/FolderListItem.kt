@@ -25,7 +25,7 @@ import net.thunderbird.components.ui.bolt.atom.icon.Icons
 import net.thunderbird.components.ui.bolt.atom.text.TextLabelLarge
 import net.thunderbird.components.ui.bolt.organism.drawer.NavigationDrawerItem
 import net.thunderbird.components.ui.bolt.theme.BoltTheme
-import net.thunderbird.feature.mail.folder.api.FolderType
+import net.thunderbird.feature.mail.folder.FolderType
 import net.thunderbird.feature.navigation.drawer.dropdown.R
 import net.thunderbird.feature.navigation.drawer.dropdown.domain.entity.DisplayFolder
 import net.thunderbird.feature.navigation.drawer.dropdown.domain.entity.DisplayTreeFolder
@@ -76,10 +76,10 @@ internal fun FolderListItem(
                     },
                 )
             },
-            selected = selectedFolderId == displayFolder.id,
+            selected = selectedFolderId == displayFolder.folderId,
             onClick = {
                 when (displayFolder) {
-                    is MailDisplayFolder if displayFolder.accountId == null -> isExpanded.value = !isExpanded.value
+                    is MailDisplayFolder if displayFolder.isPlaceholder -> isExpanded.value = !isExpanded.value
                     else -> onClick(displayFolder)
                 }
             },
@@ -184,8 +184,7 @@ private fun mapFolderIcon(folder: DisplayFolder): ImageVector {
 }
 
 private fun mapDisplayAccountFolderIcon(folder: MailDisplayFolder): ImageVector {
-    // Show a special icon for top-group regular folders, but not for placeholders (accountId == null)
-    if (folder.folder.type == FolderType.REGULAR && folder.isInTopGroup && folder.accountId != null) {
+    if (folder.folder.type == FolderType.REGULAR && folder.isInTopGroup && !folder.isPlaceholder) {
         return Icons.Outlined.FavoriteFolder
     }
 

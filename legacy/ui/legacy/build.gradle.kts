@@ -16,11 +16,10 @@ dependencies {
     implementation(projects.mail.common)
     implementation(projects.uiUtils.toolbarBottomSheet)
     implementation(projects.core.android.contact)
-    implementation(projects.core.android.webkit.api)
+    implementation(projects.core.android.webkit)
     implementation(projects.feature.changelog.internal)
 
     implementation(projects.core.featureflag)
-    implementation(projects.core.logging.api)
     implementation(projects.core.ui.compose.common)
     implementation(projects.core.ui.theme.api)
     implementation(projects.feature.launcher)
@@ -81,7 +80,7 @@ dependencies {
     implementation(libs.glide)
     annotationProcessor(libs.glide.compiler)
 
-    testImplementation(projects.core.logging.testing)
+    testImplementation(projects.core.android.account.fake)
     testImplementation(projects.feature.account.fake)
 
     // This is necessary as RecipientPresenterTest fails to inject
